@@ -11,6 +11,7 @@ import type { Level, LevelObject } from "./level.ts";
 import { P, propInt, propFloat, propBool } from "./props.ts";
 import { NO_HSV, lightBgColor, parseHSV, transformColor, type HSV } from "./color.ts";
 import { easedValue } from "./easing.ts";
+import type { ViewStatic } from "./camera.ts";
 
 /** an animated colour channel */
 export interface ColorState {
@@ -435,12 +436,7 @@ export interface TriggerRuntime {
    * log 2026-10-03, steps 18400–21957): the view parks on the 2016 guide of
    * group 345 at x 21855 while the player wanders ±650 around it.
    */
-  viewStatic: {
-    group: number; axis: number; dur: number; type: number; rate: number; t: number;
-    exit: boolean; fromX: number | null; fromY: number | null;
-    /** key 212 (follow) with key 213 easing: the view chases the target, 1/easing a frame */
-    follow: number;
-  } | null;
+  viewStatic: ViewStatic | null;
   tweens: Tween[];
   /** spawn-trigger activations still counting down */
   pending: {
@@ -1231,17 +1227,26 @@ function fire(rt: TriggerRuntime, t: Trigger, playerX: number, playerY: number) 
     const dur = Math.max(0, propFloat(t.props, P.DURATION, 0));
     const ease = { type: propInt(t.props, P.EASING, 0), rate: propFloat(t.props, P.EASING_RATE, 2) };
     if (propBool(t.props, P.CAMERA_EXIT_STATIC)) {
+      // `exitStaticCamera` (m1 0x12b6b0): the exit releases only the axes its
+      // key 101 names — exitX = axis != 2, exitY = axis != 1 — and an axis
+      // that has no static keeps none. The other axis's static stays in place.
+      const axis = propInt(t.props, P.CAMERA_AXIS, 0);
+      const mask = (axis !== 2 ? 1 : 0) | (axis !== 1 ? 2 : 0);
+      // the physics band (`cameraStatic`) is released by any exit: keeping it
+      // after an x-only exit faults Dash's replay at f15767 (macro-compare)
       rt.cameraStatic = null;
-      if (rt.viewStatic && !rt.viewStatic.exit) {
-        const instant = propBool(t.props, 453);
-        rt.viewStatic = { ...rt.viewStatic, ...ease, dur: instant ? 0 : dur, t: 0, exit: true, fromX: null, fromY: null };
+      if (rt.viewStatic) {
+        // key 465 is `m_exitInstant` (Geode bindings, CameraTriggerGameObject); 453 is `m_smoothVelocity`
+        const instant = propBool(t.props, 465);
+        rt.viewStatic = { ...rt.viewStatic, ...ease, dur: instant ? 0 : dur, t: 0, exit: true,
+          exitAxis: rt.viewStatic.exitAxis | mask, fromX: null, fromY: null };
       }
       return;
     }
     const vGroup = propInt(t.props, P.SECONDARY_GROUP_ID, -1);
     if (vGroup > 0) {
       rt.viewStatic = { group: vGroup, axis: propInt(t.props, P.CAMERA_AXIS, 0), dur, ...ease, t: 0,
-        exit: false, fromX: null, fromY: null,
+        exit: false, exitAxis: 0, fromX: null, fromY: null,
         follow: propBool(t.props, 212) ? Math.max(1, propFloat(t.props, 213, 1)) : 0 };
     }
     const group = propInt(t.props, P.SECONDARY_GROUP_ID, -1);

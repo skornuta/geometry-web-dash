@@ -19,6 +19,7 @@
 // and for ball, -38 / 358 give centre - 105 and centre + 106. Both land on a
 // symmetric band around the camera centre, which is the useful way to hold it.
 import type { Gamemode } from "./gamemodes.ts";
+import { easedValue } from "./easing.ts";
 
 /**
  * **Coordinate offset — read this before touching any constant below.**
@@ -260,4 +261,58 @@ export const CAMERA_LEAD = 75;
 /** the view's left edge for a player at `x` */
 export function cameraLeftFor(x: number, viewW: number): number {
   return x - (viewW / 2 - CAMERA_LEAD);
+}
+
+/**
+ * A Camera Static (1914) view: `TriggerRuntime.viewStatic`. `axis` is key 101
+ * (0 both, 1 x, 2 y). `exitAxis` is the mask of axes an exit has released
+ * (bit 1 x, bit 2 y), which the view eases back to the player.
+ */
+export interface ViewStatic {
+  group: number; axis: number; dur: number; type: number; rate: number; t: number;
+  exit: boolean; exitAxis: number; fromX: number | null; fromY: number | null;
+  /** key 212 (follow) with key 213 easing: the view chases the target, 1/easing a frame */
+  follow: number;
+}
+
+/**
+ * One frame of a Camera Static's view, written to `out`. Returns false once
+ * every axis is released and eased home, so the caller can drop the static.
+ *
+ * `exitStaticCamera` (m1 0x12b6b0) releases an axis only when the exit's
+ * flag is set for it (exitX = axis != 2, exitY = axis != 1) and the axis has
+ * a static active; the other axis keeps its static. So an x-only exit leaves
+ * the y target in place (Dash x 15767: key 101 = 1, the view's bottom stays
+ * on group 304's guide while x follows the player, native f11616–15472).
+ *
+ * `frame` is the 60 Hz frame count since the static began (for follow).
+ */
+export function stepViewStatic(
+  vs: ViewStatic, tgX: number, tgY: number, camX: number, camY: number,
+  lastX: number, lastY: number, frame: number, paused: boolean,
+  out: { x: number; y: number },
+): boolean {
+  const hold = vs.axis === 0 ? 3 : vs.axis;
+  const rel = vs.exitAxis & hold;
+  const relX = (rel & 1) !== 0, relY = (rel & 2) !== 0;
+  const holdX = (hold & 1) !== 0 && !relX, holdY = (hold & 2) !== 0 && !relY;
+  if (vs.fromX === null || vs.fromY === null) { vs.fromX = lastX; vs.fromY = lastY; }
+  const k = vs.dur > 0 ? easedValue(Math.min(1, vs.t / vs.dur), vs.type, vs.rate) : 1;
+  out.x = camX; out.y = camY;
+  if (holdX && vs.follow > 0) {
+    // follow: chase the (moving) target by 1/easing of the gap a 60 Hz frame
+    const f = paused ? 0 : Math.min(1, (frame * 60) / vs.follow);
+    vs.fromX += (tgX - vs.fromX) * f;
+    out.x = vs.fromX;
+  } else if (holdX || relX) {
+    out.x = vs.fromX + ((relX ? camX : tgX) - vs.fromX) * k;
+  }
+  if (holdY && vs.follow > 0) {
+    const f = paused ? 0 : Math.min(1, (frame * 60) / vs.follow);
+    vs.fromY += (tgY - vs.fromY) * f;
+    out.y = vs.fromY;
+  } else if (holdY || relY) {
+    out.y = vs.fromY + ((relY ? camY : tgY) - vs.fromY) * k;
+  }
+  return holdX || holdY || k < 1;
 }

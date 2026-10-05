@@ -78,7 +78,7 @@ import {
 import { EndSequence } from "../gd/endSequence.ts";
 import { easedValue } from "../gd/easing.ts";
 import { groupAnchor } from "../gd/triggers.ts";
-import { scaledBandEdge } from "../gd/camera.ts";
+import { scaledBandEdge, stepViewStatic } from "../gd/camera.ts";
 import type { CustomLevel } from "../gd/gmd.ts";
 import {
   createEndViewTextures, drawEndFlash, drawEndGhosts, drawEndPortal, drawEndScreen, drawEndWorld,
@@ -89,6 +89,8 @@ import {
 const MAX_FRAME = 0.25;
 /** how long the cube stays dead before the level restarts */
 const RESPAWN_DELAY = 0.8;
+/** the view a Camera Static holds this frame, written by `stepViewStatic` (reused, no per-frame allocation) */
+const VIEW_OUT = { x: 0, y: 0 };
 /** the ball's roll, degrees per world unit travelled (native macros, see the "ball" case) */
 const BALL_ROLL_PER_UNIT = 2.5 / (311.58 / 240);
 
@@ -1259,21 +1261,10 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     if (vs && sim.triggers) {
       const tg = groupAnchor(sim.triggers.level, rtc, vs.group);
       if (tg) {
-        if (vs.fromX === null || vs.fromY === null) { vs.fromX = lastView.x; vs.fromY = lastView.y; }
-        const toX = vs.exit ? camX : tg.x, toY = vs.exit ? camCentreY : tg.y;
-        if (vs.follow > 0 && !vs.exit) {
-          // follow: chase the (moving) target by 1/easing of the gap a 60 Hz frame
-          const k = paused ? 0 : Math.min(1, (frame * 60) / vs.follow);
-          vs.fromX += (toX - vs.fromX) * k;
-          vs.fromY += (toY - vs.fromY) * k;
-          if (vs.axis !== 2) sX = vs.fromX;
-          if (vs.axis !== 1) sY = vs.fromY;
-        } else {
-          const k = vs.dur > 0 ? easedValue(Math.min(1, vs.t / vs.dur), vs.type, vs.rate) : 1;
-          if (vs.exit || vs.axis !== 2) sX = vs.fromX + (toX - vs.fromX) * k;
-          if (vs.exit || vs.axis !== 1) sY = vs.fromY + (toY - vs.fromY) * k;
-          if (vs.exit && k >= 1) rtc!.viewStatic = null;
-        }
+        // per-axis: `stepViewStatic` (gd/camera.ts) — an exit releases only its own axes
+        if (!stepViewStatic(vs, tg.x, tg.y, camX, camCentreY, lastView.x, lastView.y,
+          frame, paused, VIEW_OUT)) rtc!.viewStatic = null;
+        sX = VIEW_OUT.x; sY = VIEW_OUT.y;
       }
     }
     // Camera Edge (2062): the left/right edge groups bound the view
