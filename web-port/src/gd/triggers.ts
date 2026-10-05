@@ -519,7 +519,7 @@ const UNIMPLEMENTED = new Set([
 const TRIGGER_IDS = new Set<number>([
   ...Object.keys(LEGACY_COLOR_TARGET).map(Number),
   899, 901, 1006, 1007, 1049, 1268, 1346, 1520,
-  1585, 1611, 1616, 1811, 1812, 1815, 1817, 1913, 1914, 1916, 1935, 2015, 2067, 2903, 2904, 2910, 2911, 2905, 2907, 2913, 2914, 2916, 2919, 2920, 2921, 2922, 2923, 2900, 2899, 2999, 3029, 2062, 3608, 3010, 3600,
+  1585, 1611, 1616, 1811, 1812, 1815, 1817, 3620, 1913, 1914, 1916, 1935, 2015, 2067, 2903, 2904, 2910, 2911, 2905, 2907, 2913, 2914, 2916, 2919, 2920, 2921, 2922, 2923, 2900, 2899, 2999, 3029, 2062, 3608, 3010, 3600,
   ...UNIMPLEMENTED,
 ]);
 
@@ -1107,6 +1107,22 @@ function toggleGroupTriggered(rt: TriggerRuntime, group: number, activate: boole
   if (activate) rt.pending.push({ at: rt.time, group });
 }
 
+/** a value rounded to 3 decimals, half away from zero (the binary's `* 1000`, `frinta`, `/ 1000`) */
+function roundThousandth(v: number): number {
+  return Math.sign(v) * Math.round(Math.abs(v) * 1000) / 1000;
+}
+
+/** the item operators: 1 add, 2 sub, 3 mul, 4 div (a zero divisor gives 0) */
+function applyItemOp(a: number, b: number, op: number): number {
+  switch (op) {
+    case 1: return a + b;
+    case 2: return a - b;
+    case 3: return a * b;
+    case 4: return b === 0 ? 0 : a / b;
+    default: return 0;
+  }
+}
+
 /** `GJEffectManager::countForItem` (m1 `0x281adc`) */
 export function itemCount(rt: TriggerRuntime, item: number): number {
   return rt.items.get(item) ?? 0;
@@ -1305,6 +1321,31 @@ function fire(rt: TriggerRuntime, t: Trigger, playerX: number, playerY: number) 
       const mode = propInt(t.props, P.INSTANT_COUNT_COMPARISON, 0);
       const hit = mode === 1 ? have > want : mode === 2 ? have < want : have === want;
       if (hit) toggleGroupTriggered(rt, group, propBool(t.props, P.ACTIVATE_GROUP));
+      return;
+    }
+    case 3620: { // Item Compare: `activateItemCompareTrigger` (m1 0x11f16c), keys from customObjectSetup (m1 0x199df4)
+      // Decoded for the one-item case (item 2 absent, key 477 = 0; item 1 in count mode,
+      // key 476 <= 1). Other shapes are not decoded yet and stay inert.
+      if (propInt(t.props, 477, 0) !== 0 || propInt(t.props, 476, 0) > 1) return;
+      // key 480 < 1 is read as multiply (the binary clamps the operator to 3)
+      const op = propInt(t.props, 480, 0) < 1 ? 3 : propInt(t.props, 480, 0);
+      if (op > 4) return;
+      const mod1 = roundThousandth(propFloat(t.props, 479, 0));
+      const constant = roundThousandth(propFloat(t.props, 483, 0));
+      const tol = roundThousandth(propFloat(t.props, 484, 0));
+      const count = itemCount(rt, propInt(t.props, 80, 0));
+      const a = applyItemOp(count, mod1, op);
+      let ok = false;
+      switch (propInt(t.props, 482, 0)) {
+        case 0: ok = Math.abs(a - constant) <= tol; break; // ==
+        case 1: ok = a + tol > constant; break; // >
+        case 2: ok = a + tol >= constant; break; // >=
+        case 3: ok = a - tol < constant; break; // <
+        case 4: ok = a - tol <= constant; break; // <=
+        case 5: ok = Math.abs(a - constant) > tol; break; // !=
+      }
+      // both outcomes toggle their group with activate = false (the binary passes w2 = 0)
+      toggleGroupTriggered(rt, propInt(t.props, ok ? 51 : 71, 0), false);
       return;
     }
     case 1817: { // pickup: change the item (`GJBaseGameLayer::addPickupTrigger`)
