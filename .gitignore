@@ -28,3 +28,7 @@ agent-handshake.json
 *.swp
 .swp
 .vscode/
+
+# Notes and docs stay local (only the top-level README is published)
+*.md
+!/README.md

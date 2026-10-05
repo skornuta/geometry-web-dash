@@ -46,9 +46,3 @@ npx tsc --noEmit
 # Run headless 22-level physics sweep
 npm run sweep
 ```
-
-## Project Documentation
-
-- [ROADMAP.md](ROADMAP.md) — Active project goals and task checklist.
-- [DEVLOG.md](DEVLOG.md) — Hack Club progress log & updates.
-- [PHYSICS-FROM-BINARY.md](PHYSICS-FROM-BINARY.md) — Sourced GD 2.2081 binary physics constants.
