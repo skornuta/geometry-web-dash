@@ -1,0 +1,309 @@
+{
+  "capturedAt": "2026-09-09T17:25:19.090Z",
+  "kind": "current-port-before-ui-parity",
+  "viewport": {
+    "width": 1280,
+    "height": 720,
+    "deviceScaleFactor": 1
+  },
+  "storage": "isolated fresh browser context; does not modify user's save",
+  "captures": [
+    {
+      "name": "root-level-select",
+      "url": "http://localhost:3222/",
+      "state": {
+        "sel": 0,
+        "level": 1,
+        "name": "Stereo Madness",
+        "totalCoins": 0
+      }
+    },
+    {
+      "name": "icon-kit",
+      "url": "http://localhost:3222/?icons=1",
+      "state": {
+        "panel": "icons",
+        "tab": 0,
+        "mode": "cube",
+        "selected": 1,
+        "focus": "grid",
+        "col1": 0,
+        "col2": 3,
+        "glow": false,
+        "musicVolume": 1,
+        "sfxVolume": 1,
+        "saved": {
+          "cube": 1,
+          "ship": 1,
+          "ball": 1,
+          "ufo": 1,
+          "wave": 1,
+          "robot": 1,
+          "spider": 1,
+          "swing": 1,
+          "col1": 0,
+          "col2": 3,
+          "glow": false
+        },
+        "savedSettings": {
+          "musicVolume": 1,
+          "sfxVolume": 1
+        }
+      }
+    },
+    {
+      "name": "settings",
+      "url": "http://localhost:3222/?settings=1",
+      "state": {
+        "panel": "settings",
+        "tab": 0,
+        "mode": "cube",
+        "selected": 1,
+        "focus": "grid",
+        "col1": 0,
+        "col2": 3,
+        "glow": false,
+        "musicVolume": 1,
+        "sfxVolume": 1,
+        "saved": {
+          "cube": 1,
+          "ship": 1,
+          "ball": 1,
+          "ufo": 1,
+          "wave": 1,
+          "robot": 1,
+          "spider": 1,
+          "swing": 1,
+          "col1": 0,
+          "col2": 3,
+          "glow": false
+        },
+        "savedSettings": {
+          "musicVolume": 1,
+          "sfxVolume": 1
+        }
+      }
+    },
+    {
+      "name": "attempt-start",
+      "url": "http://localhost:3222/?level=1&manual=1",
+      "state": {
+        "attempts": 1,
+        "dead": false,
+        "x": 0,
+        "y": 15,
+        "percent": 0,
+        "maxX": 26384,
+        "mode": "cube",
+        "mini": false,
+        "coins": 0,
+        "speed": 311.58,
+        "mirrored": false,
+        "paused": false,
+        "audioState": "none",
+        "camY": -89.62032127883451,
+        "dualY": null,
+        "practice": false,
+        "checkpoints": [],
+        "autoCheckpoints": true,
+        "completed": false,
+        "saved": {
+          "normal": 0,
+          "practice": 0,
+          "coins": [],
+          "attempts": 0,
+          "jumps": 0
+        },
+        "skipped": 19,
+        "skippedArt": 0,
+        "skippedInvisible": 19,
+        "unknownIds": [],
+        "objects": 2291,
+        "particles": 21,
+        "shake": 0,
+        "shakeOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "triggerShake": 0
+      }
+    },
+    {
+      "name": "gameplay-hud",
+      "url": "http://localhost:3222/?level=1&manual=1",
+      "state": {
+        "attempts": 1,
+        "dead": false,
+        "x": 207.71999999999963,
+        "y": 15,
+        "percent": 0.7872953305033339,
+        "maxX": 26384,
+        "mode": "cube",
+        "mini": false,
+        "coins": 0,
+        "speed": 311.58,
+        "mirrored": false,
+        "paused": false,
+        "audioState": "none",
+        "camY": -89.88557851325888,
+        "dualY": null,
+        "practice": false,
+        "checkpoints": [],
+        "autoCheckpoints": true,
+        "completed": false,
+        "saved": {
+          "normal": 0,
+          "practice": 0,
+          "coins": [],
+          "attempts": 0,
+          "jumps": 0
+        },
+        "skipped": 19,
+        "skippedArt": 0,
+        "skippedInvisible": 19,
+        "unknownIds": [],
+        "objects": 2291,
+        "particles": 19,
+        "shake": 0,
+        "shakeOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "triggerShake": 0
+      }
+    },
+    {
+      "name": "pause-normal",
+      "url": "http://localhost:3222/?level=1&manual=1",
+      "state": {
+        "attempts": 1,
+        "dead": false,
+        "x": 207.71999999999963,
+        "y": 15,
+        "percent": 0.7872953305033339,
+        "maxX": 26384,
+        "mode": "cube",
+        "mini": false,
+        "coins": 0,
+        "speed": 311.58,
+        "mirrored": false,
+        "paused": true,
+        "audioState": "none",
+        "camY": -89.97760125135508,
+        "dualY": null,
+        "practice": false,
+        "checkpoints": [],
+        "autoCheckpoints": true,
+        "completed": false,
+        "saved": {
+          "normal": 0,
+          "practice": 0,
+          "coins": [],
+          "attempts": 0,
+          "jumps": 0
+        },
+        "skipped": 19,
+        "skippedArt": 0,
+        "skippedInvisible": 19,
+        "unknownIds": [],
+        "objects": 2291,
+        "particles": 20,
+        "shake": 0,
+        "shakeOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "triggerShake": 0
+      }
+    },
+    {
+      "name": "pause-practice",
+      "url": "http://localhost:3222/?level=1&manual=1",
+      "state": {
+        "attempts": 2,
+        "dead": false,
+        "x": 0,
+        "y": 15,
+        "percent": 0,
+        "maxX": 26384,
+        "mode": "cube",
+        "mini": false,
+        "coins": 0,
+        "speed": 311.58,
+        "mirrored": false,
+        "paused": true,
+        "audioState": "none",
+        "camY": -73.79286485906177,
+        "dualY": null,
+        "practice": true,
+        "checkpoints": [],
+        "autoCheckpoints": true,
+        "completed": false,
+        "saved": {
+          "normal": 0,
+          "practice": 0,
+          "coins": [],
+          "attempts": 0,
+          "jumps": 0
+        },
+        "skipped": 19,
+        "skippedArt": 0,
+        "skippedInvisible": 19,
+        "unknownIds": [],
+        "objects": 2291,
+        "particles": 9,
+        "shake": 0,
+        "shakeOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "triggerShake": 0
+      }
+    },
+    {
+      "name": "completion-normal",
+      "url": "http://localhost:3222/?level=1&manual=1",
+      "state": {
+        "attempts": 1,
+        "dead": false,
+        "x": 26390.82599999679,
+        "y": 165.53690084373548,
+        "percent": 100,
+        "maxX": 26384,
+        "mode": "ship",
+        "mini": false,
+        "coins": 0,
+        "speed": 311.58,
+        "mirrored": false,
+        "paused": false,
+        "audioState": "running",
+        "camY": -10,
+        "dualY": null,
+        "practice": false,
+        "checkpoints": [],
+        "autoCheckpoints": true,
+        "completed": true,
+        "saved": {
+          "normal": 0,
+          "practice": 0,
+          "coins": [],
+          "attempts": 0,
+          "jumps": 0
+        },
+        "skipped": 19,
+        "skippedArt": 0,
+        "skippedInvisible": 19,
+        "unknownIds": [],
+        "objects": 2291,
+        "particles": 1,
+        "shake": 0,
+        "shakeOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "triggerShake": 0
+      }
+    }
+  ],
+  "errors": []
+}

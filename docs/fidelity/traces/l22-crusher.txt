@@ -1,0 +1,22 @@
+t=0.00 x=2601 g265 dy=0.0 enabled=true dead=false
+t=0.25 x=2678 g265 dy=0.0 enabled=true dead=false
+t=0.50 x=2757 g265 dy=-0.0 enabled=true dead=false
+t=0.75 x=2835 g265 dy=-1.9 enabled=true dead=false
+t=1.00 x=2913 g265 dy=-7.7 enabled=true dead=false
+t=1.25 x=2991 g265 dy=-18.0 enabled=true dead=false
+t=1.50 x=3069 g265 dy=-33.6 enabled=true dead=false
+t=1.75 x=3147 g265 dy=-54.7 enabled=true dead=false
+t=2.00 x=3224 g265 dy=-81.8 enabled=true dead=false
+t=2.25 x=3301 g265 dy=-114.6 enabled=true dead=false
+t=2.50 x=3379 g265 dy=-122.1 enabled=true dead=false
+t=2.75 x=3457 g265 dy=-122.1 enabled=true dead=false
+t=3.00 x=3535 g265 dy=-122.1 enabled=true dead=false
+t=3.25 x=3613 g265 dy=-122.1 enabled=true dead=false
+t=3.50 x=3691 g265 dy=-122.1 enabled=true dead=false
+t=3.75 x=3768 g265 dy=-122.1 enabled=true dead=false
+t=4.00 x=3846 g265 dy=-122.1 enabled=true dead=false
+t=4.25 x=3924 g265 dy=-122.1 enabled=true dead=false
+t=4.50 x=4002 g265 dy=-122.1 enabled=true dead=false
+t=4.75 x=4080 g265 dy=-122.1 enabled=true dead=false
+t=5.00 x=4158 g265 dy=-122.1 enabled=true dead=false
+events: 

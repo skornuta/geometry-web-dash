@@ -1,0 +1,140 @@
+OBJECT id=61 uid=225
+  self pos=(2115,94) size=(30,26) anchor=(0.5,0.5) scale=(0,0) rot=0 z=2 vis=1 rect=(643,157,30,18) offset=(0,0) flip=(0,0) color=(0,0,0) op=0
+OBJECT id=61 uid=226
+  self pos=(2145,94) size=(30,26) anchor=(0.5,0.5) scale=(0.359089,0.359089) rot=0 z=2 vis=1 rect=(643,157,30,18) offset=(0,0) flip=(0,0) color=(0,0,0) op=91
+OBJECT id=61 uid=227
+  self pos=(2175,94) size=(30,26) anchor=(0.5,0.5) scale=(0.78766,0.78766) rot=0 z=2 vis=1 rect=(643,157,30,18) offset=(0,0) flip=(0,0) color=(0,0,0) op=200
+OBJECT id=113 uid=228
+  self pos=(2175,106) size=(125,40) anchor=(0.5,0.5) scale=(0.78766,0.78766) rot=0 z=9 vis=1 rect=(1,49,125,40) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=96 uid=229
+  self pos=(2115,285) size=(30,30) anchor=(0.5,0.5) scale=(0,0) rot=-90 z=2 vis=1 rect=(488,188,2,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=0
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=0
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(-1,1) rot=0 z=1 vis=1 rect=(488,188,2,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=0
+  glowSprite pos=(2115,285) size=(40,30) anchor=(0.5,0.5) scale=(0,0) rot=-90 z=-1000 vis=1 rect=(203,312,12,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=0
+OBJECT id=96 uid=230
+  self pos=(2145,285) size=(30,30) anchor=(0.5,0.5) scale=(0.359089,0.359089) rot=-90 z=2 vis=1 rect=(488,188,2,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=91
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=91
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(-1,1) rot=0 z=1 vis=1 rect=(488,188,2,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=91
+  glowSprite pos=(2145,285) size=(40,30) anchor=(0.5,0.5) scale=(0.359089,0.359089) rot=-90 z=-1000 vis=1 rect=(203,312,12,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=91
+OBJECT id=96 uid=231
+  self pos=(2175,285) size=(30,30) anchor=(0.5,0.5) scale=(0.78766,0.78766) rot=-90 z=2 vis=1 rect=(488,188,2,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=200
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=200
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(-1,1) rot=0 z=1 vis=1 rect=(488,188,2,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=200
+  glowSprite pos=(2175,285) size=(40,30) anchor=(0.5,0.5) scale=(0.78766,0.78766) rot=-90 z=-1000 vis=1 rect=(203,312,12,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=200
+OBJECT id=8 uid=232
+  self pos=(2247,255) size=(30,30) anchor=(0.5,0.5) scale=(1,-1) rot=0 z=2 vis=1 rect=(646,763,30,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  glowSprite pos=(2247,255) size=(37,40) anchor=(0.5,0.5) scale=(1,-1) rot=0 z=-1000 vis=1 rect=(319,463,37,40) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=8 uid=233
+  self pos=(2219,255) size=(30,30) anchor=(0.5,0.5) scale=(1,-1) rot=0 z=2 vis=1 rect=(646,763,30,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  glowSprite pos=(2219,255) size=(37,40) anchor=(0.5,0.5) scale=(1,-1) rot=0 z=-1000 vis=1 rect=(319,463,37,40) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=106 uid=237
+  self pos=(2295,332) size=(27,66) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(56,578,27,66) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=17 uid=238
+  self pos=(2295,263) size=(6,13) anchor=(0.5,0.5) scale=(1,-1) rot=0 z=-6 vis=1 rect=(985,753,6,13) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=37 uid=239
+  self pos=(2295,246.5) size=(30,30) anchor=(0.5,0.5) scale=(0.1,0.1) rot=0 z=10 vis=1 rect=(614,737,30,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=95 uid=240
+  self pos=(2295,135) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=2 vis=1 rect=(579,177,30,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  glowSprite pos=(2295,135) size=(40,40) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1000 vis=1 rect=(170,464,40,38) offset=(0,2) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=91 uid=241
+  self pos=(2295,105) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=-90 z=2 vis=1 rect=(755,570,30,2) offset=(0,28) flip=(0,0) color=(255,255,255) op=255
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  glowSprite pos=(2295,105) size=(30,40) anchor=(0.5,0.5) scale=(1,1) rot=-90 z=-1000 vis=1 rect=(107,557,30,12) offset=(0,28) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=13 uid=247
+  self pos=(2295,213) size=(45,86) anchor=(0.5,0.5) scale=(1,1) rot=0 z=13 vis=1 rect=(2,475,35,86) offset=(10,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(34.5,43) size=(24,33) anchor=(0.5,0.5) scale=(1,1) rot=0 z=100 vis=1 rect=(270,695,24,33) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+    grandchild pos=(12,16.5) size=(19,25) anchor=(0.5,0.5) scale=(1,1) rot=0 z=1 vis=1 rect=(381,436,19,25) offset=(0,0) flip=(0,0) color=(255,255,255) op=79
+  child pos=(32.5,43) size=(14,10) anchor=(0.5,0.5) scale=(1,1) rot=0 z=101 vis=1 rect=(405,708,14,10) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=38 uid=248
+  self pos=(2295,213) size=(49,78) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-89 vis=1 rect=(227,102,27,78) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=10 uid=249
+  self pos=(2299,213) size=(35,77) anchor=(0.5,0.5) scale=(1,1) rot=0 z=13 vis=1 rect=(40,617,27,77) offset=(8,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(32.5,38.5) size=(24,33) anchor=(0.5,0.5) scale=(1,1) rot=0 z=100 vis=1 rect=(246,736,24,33) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+    grandchild pos=(12,16.5) size=(19,25) anchor=(0.5,0.5) scale=(1,1) rot=0 z=1 vis=1 rect=(381,436,19,25) offset=(0,0) flip=(0,0) color=(255,255,255) op=79
+  child pos=(31,38.5) size=(13,12) anchor=(0.5,0.5) scale=(1,1) rot=0 z=101 vis=1 rect=(463,641,13,12) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=38 uid=250
+  self pos=(2299,213) size=(43,78) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-89 vis=1 rect=(37,293,23,78) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=137 uid=251
+  self pos=(2295,213) size=(80,80) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(1,260,40,80) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(40,40) size=(80,80) anchor=(0.5,0.5) scale=(1,1) rot=207.117 z=-1 vis=1 rect=(1,260,40,80) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(40,40) size=(80,80) anchor=(0.5,0.5) scale=(1,1) rot=207.117 z=-1 vis=1 rect=(1,260,40,80) offset=(40,0) flip=(1,0) color=(255,255,255) op=255
+OBJECT id=138 uid=252
+  self pos=(2295,213) size=(51,51) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(44,373,51,51) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(25.5,25.5) size=(51,51) anchor=(0.5,0.5) scale=(1,1) rot=-226.582 z=-1 vis=1 rect=(44,373,51,51) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=91 uid=256
+  self pos=(2325,105) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=2 vis=1 rect=(755,570,30,2) offset=(0,28) flip=(0,0) color=(255,255,255) op=255
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  glowSprite pos=(2325,105) size=(30,40) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1000 vis=1 rect=(107,557,30,12) offset=(0,28) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=91 uid=257
+  self pos=(2355,105) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=2 vis=1 rect=(755,570,30,2) offset=(0,28) flip=(0,0) color=(255,255,255) op=255
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  glowSprite pos=(2355,105) size=(30,40) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1000 vis=1 rect=(107,557,30,12) offset=(0,28) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=89 uid=264
+  self pos=(2309,121) size=(60,60) anchor=(0.5,0.5) scale=(1,1) rot=0 z=1 vis=1 rect=(1,778,60,60) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  child pos=(30,30) size=(60,60) anchor=(0.5,0.5) scale=(1,1) rot=476.001 z=-1 vis=1 rect=(1,778,60,60) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+OBJECT id=87 uid=265
+  self pos=(2309,121) size=(38,38) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(352,180,38,38) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(19,19) size=(38,38) anchor=(0.5,0.5) scale=(1,1) rot=-160.987 z=-1 vis=1 rect=(352,180,38,38) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=94 uid=267
+  self pos=(2355,315) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+OBJECT id=94 uid=268
+  self pos=(2385,315) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+OBJECT id=94 uid=269
+  self pos=(2385,345) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+OBJECT id=139 uid=279
+  self pos=(2385,115) size=(28,27) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(756,632,28,27) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(14,13.5) size=(28,27) anchor=(0.5,0.5) scale=(1,1) rot=157.834 z=-1 vis=1 rect=(756,632,28,27) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=138 uid=280
+  self pos=(2385,113) size=(51,51) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(44,373,51,51) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(25.5,25.5) size=(51,51) anchor=(0.5,0.5) scale=(1,1) rot=-132.951 z=-1 vis=1 rect=(44,373,51,51) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=50 uid=281
+  self pos=(2385,115) size=(30,30) anchor=(0.5,0.5) scale=(0.1,0.1) rot=0 z=9 vis=1 rect=(521,302,30,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=92 uid=287
+  self pos=(2445,225) size=(30,30) anchor=(0.5,0.5) scale=(1,-1) rot=0 z=2 vis=1 rect=(611,157,30,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  glowSprite pos=(2445,225) size=(40,40) anchor=(0.5,0.5) scale=(1,-1) rot=0 z=-1000 vis=1 rect=(278,464,38,38) offset=(0,2) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=93 uid=289
+  self pos=(2445,285) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=-90 z=2 vis=1 rect=(795,498,2,2) offset=(0,28) flip=(0,0) color=(255,255,255) op=255
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+OBJECT id=88 uid=292
+  self pos=(2489,211) size=(84,82) anchor=(0.5,0.5) scale=(1,1) rot=0 z=1 vis=1 rect=(1,176,42,82) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  child pos=(42,41) size=(84,82) anchor=(0.5,0.5) scale=(1,1) rot=-236 z=-1 vis=1 rect=(1,176,42,82) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  child pos=(42,41) size=(84,82) anchor=(0.5,0.5) scale=(1,1) rot=-236 z=-1 vis=1 rect=(1,176,42,82) offset=(42,0) flip=(1,1) color=(0,0,0) op=255
+OBJECT id=86 uid=293
+  self pos=(2489,211) size=(54,55) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(1,895,54,55) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(27,27.5) size=(54,55) anchor=(0.5,0.5) scale=(1,1) rot=98.2411 z=-1 vis=1 rect=(1,895,54,55) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=88 uid=294
+  self pos=(2429,269) size=(84,82) anchor=(0.5,0.5) scale=(1,1) rot=0 z=1 vis=1 rect=(1,176,42,82) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  child pos=(42,41) size=(84,82) anchor=(0.5,0.5) scale=(1,1) rot=-294.75 z=-1 vis=1 rect=(1,176,42,82) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  child pos=(42,41) size=(84,82) anchor=(0.5,0.5) scale=(1,1) rot=-294.75 z=-1 vis=1 rect=(1,176,42,82) offset=(42,0) flip=(1,1) color=(0,0,0) op=255
+OBJECT id=86 uid=295
+  self pos=(2429,269) size=(54,55) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(1,895,54,55) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(27,27.5) size=(54,55) anchor=(0.5,0.5) scale=(1,1) rot=-131.785 z=-1 vis=1 rect=(1,895,54,55) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=139 uid=311
+  self pos=(2445,115) size=(28,27) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(756,632,28,27) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(14,13.5) size=(28,27) anchor=(0.5,0.5) scale=(1,1) rot=93.7183 z=-1 vis=1 rect=(756,632,28,27) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=138 uid=312
+  self pos=(2445,113) size=(51,51) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(44,373,51,51) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(25.5,25.5) size=(51,51) anchor=(0.5,0.5) scale=(1,1) rot=-110.012 z=-1 vis=1 rect=(44,373,51,51) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=50 uid=313
+  self pos=(2445,115) size=(30,30) anchor=(0.5,0.5) scale=(0.1,0.1) rot=0 z=9 vis=1 rect=(521,302,30,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=92 uid=320
+  self pos=(2535,225) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=180 z=2 vis=1 rect=(611,157,30,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  glowSprite pos=(2535,225) size=(40,40) anchor=(0.5,0.5) scale=(1,1) rot=180 z=-1000 vis=1 rect=(278,464,38,38) offset=(0,2) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=93 uid=322
+  self pos=(2535,285) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=-180 z=2 vis=1 rect=(795,498,2,2) offset=(0,28) flip=(0,0) color=(255,255,255) op=255
+  child pos=(15,15) size=(30,30) anchor=(0.5,0.5) scale=(1,1) rot=0 z=-1 vis=1 rect=(200,746,30,30) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+OBJECT id=88 uid=325
+  self pos=(2551,271) size=(84,82) anchor=(0.5,0.5) scale=(1,1) rot=0 z=1 vis=1 rect=(1,176,42,82) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  child pos=(42,41) size=(84,82) anchor=(0.5,0.5) scale=(1,1) rot=175.25 z=-1 vis=1 rect=(1,176,42,82) offset=(0,0) flip=(0,0) color=(0,0,0) op=255
+  child pos=(42,41) size=(84,82) anchor=(0.5,0.5) scale=(1,1) rot=175.25 z=-1 vis=1 rect=(1,176,42,82) offset=(42,0) flip=(1,1) color=(0,0,0) op=255
+OBJECT id=86 uid=326
+  self pos=(2551,271) size=(54,55) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(1,895,54,55) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(27,27.5) size=(54,55) anchor=(0.5,0.5) scale=(1,1) rot=-69.4429 z=-1 vis=1 rect=(1,895,54,55) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=139 uid=342
+  self pos=(2565,115) size=(28,27) anchor=(0.5,0.5) scale=(1,1) rot=0 z=9 vis=1 rect=(756,632,28,27) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+  child pos=(14,13.5) size=(28,27) anchor=(0.5,0.5) scale=(1,1) rot=-75.1319 z=-1 vis=1 rect=(756,632,28,27) offset=(0,0) flip=(0,0) color=(255,255,255) op=255
+OBJECT id=50 uid=346
+  self pos=(2565,115) size=(30,30) anchor=(0.5,0.5) scale=(0.1,0.1) rot=0 z=9 vis=1 rect=(521,302,30,30) offset=(0,0) flip=(0,0) color=(255,255,255) op=255

@@ -1,0 +1,869 @@
+N7cocos2d7CCSceneE pos=(0,0) world=(0,0) size=(571,320) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1
+  9PlayLayer pos=(0,0) world=(0,0) size=(571,320) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=22
+    10HardStreak pos=(0,105) world=(0,105) size=(0,0) scale=(1,1) rot=0 z=-3 vis=1 tag=-1 kids=0
+    10HardStreak pos=(0,105) world=(0,105) size=(0,0) scale=(1,1) rot=0 z=-3 vis=1 tag=-1 kids=0
+    N7cocos2d14CCMotionStreakE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=-2 vis=1 tag=-1 kids=0
+    N7cocos2d14CCMotionStreakE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=-2 vis=1 tag=-1 kids=0
+    N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=-1 vis=1 tag=-1 kids=6
+      N7cocos2d8CCSpriteE pos=(-95.7069,-17) world=(-95.7069,-17) size=(512,512) scale=(1.18958,1.18958) rot=0 z=-60 vis=1 tag=7 kids=0 rect=(0,0,512,512) color=(254,71,0) op=255 blend=1/0
+      N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=0 tag=-1 kids=0
+      N7cocos2d7CCLayerE pos=(-7062.66,-170) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1 vis=1 tag=-1 kids=292
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1480 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1432 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1430 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1420 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1400 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1380 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1360 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1340 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1320 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1300 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1280 vis=1 tag=-1 kids=0
+        15CCNodeContainer pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1260 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1240 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1220 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1180 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1132 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1130 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1120 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1100 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1080 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1060 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1040 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1020 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-980 vis=1 tag=-1 kids=0
+        15CCNodeContainer pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-960 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-940 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-920 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-880 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-832 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-830 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-820 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-800 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-780 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-760 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-740 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-720 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-700 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-680 vis=1 tag=-1 kids=0
+        15CCNodeContainer pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-660 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-640 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-620 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-580 vis=1 tag=1013 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-532 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-530 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-520 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-500 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-480 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-460 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-440 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-420 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-400 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-380 vis=1 tag=-1 kids=0
+        15CCNodeContainer pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-360 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-340 vis=1 tag=1009 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-320 vis=1 tag=1007 kids=34
+          (34 game objects)
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-280 vis=1 tag=1012 kids=1
+          N7cocos2d8CCSpriteE pos=(7135.84,342.246) world=(73.1821,172.246) size=(41,66) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(185,268,41,66) color=(255,255,255) op=204 blend=1/771
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-226 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-224 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-220 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-200 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-190 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-180 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-160 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-150 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-140 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-120 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-110 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-100 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-80 vis=1 tag=-1 kids=0
+        15CCNodeContainer pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-60 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-40 vis=1 tag=1006 kids=25
+          (25 game objects)
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-20 vis=1 tag=1005 kids=2
+          (2 game objects)
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-10 vis=1 tag=1009 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-6 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-6 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-6 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-6 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-5 vis=1 tag=-1 kids=6
+          (6 game objects)
+        12CCSpritePlus pos=(3381,445) world=(-3681.66,275) size=(48,54) scale=(1,1) rot=0 z=-4 vis=1 tag=-1 kids=0 rect=(525,522,48,54) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4801,253) world=(-2261.66,83) size=(32,41) scale=(1,1) rot=0 z=-4 vis=1 tag=-1 kids=0 rect=(336,467,32,41) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5845,345) world=(-1217.66,175) size=(48,54) scale=(1,1) rot=0 z=-4 vis=1 tag=-1 kids=0 rect=(525,522,48,54) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(7135.84,342.246) world=(73.1821,172.246) size=(31,54) scale=(1,1) rot=0 z=-4 vis=1 tag=-1 kids=0 rect=(1,370,31,54) color=(255,255,255) op=133 blend=770/1
+        10HardStreak pos=(7273.16,386.74) world=(210.5,216.74) size=(0,0) scale=(1,1) rot=0 z=-3 vis=1 tag=-1 kids=0
+        10HardStreak pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-3 vis=1 tag=-1 kids=0
+        N7cocos2d14CCMotionStreakE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-2 vis=1 tag=-1 kids=0
+        N7cocos2d14CCMotionStreakE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=-2 vis=1 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7135.84,342.246) world=(73.1821,172.246) size=(0,0) scale=(1,1) rot=0 z=-2 vis=1 tag=-2 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7348.16,330) world=(285.5,160) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        N7cocos2d11CCLightningE pos=(3476,510.504) world=(-3586.66,340.504) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        N7cocos2d11CCLightningE pos=(4809.26,540) world=(-2253.4,370) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        12CCCircleWave pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        17AudioEffectsLayer pos=(0,0) world=(-7062.66,-170) size=(571,320) scale=(1,1) rot=0 z=1 vis=0 tag=-1 kids=1 lcolor=(0,0,0) op=0
+          N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7120.55,345) world=(57.8892,175) size=(0,0) scale=(0.890604,0.890604) rot=0 z=4 vis=1 tag=4 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7120.55,345) world=(57.8892,175) size=(0,0) scale=(0.890604,0.890604) rot=0 z=4 vis=1 tag=4 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7370.08,411) world=(307.422,241) size=(0,0) scale=(1,1) rot=0 z=4 vis=1 tag=4 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7651,271) world=(588.342,101) size=(0,0) scale=(0,0) rot=0 z=4 vis=0 tag=4 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7651,271) world=(588.342,101) size=(0,0) scale=(0,0) rot=0 z=4 vis=0 tag=4 kids=0
+        12CCSpritePlus pos=(2295,225) world=(-4767.66,55) size=(37,72) scale=(1,1) rot=90 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(2415,345) world=(-4647.66,175) size=(37,72) scale=(1,1) rot=-90 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(2535,195) world=(-4527.66,25) size=(37,72) scale=(1,1) rot=90 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(3381,445) world=(-3681.66,275) size=(43,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(477,379,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(3385,445) world=(-3677.66,275) size=(37,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(3387,445) world=(-3675.66,275) size=(45,75) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(56,376,25,75) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(3897,411) world=(-3165.66,241) size=(37,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4169,455) world=(-2893.66,285) size=(37,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4439,477) world=(-2623.66,307) size=(37,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4783,253) world=(-2279.66,83) size=(43,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(477,379,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4793,253) world=(-2269.66,83) size=(45,75) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(56,376,25,75) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4789,253) world=(-2273.66,83) size=(37,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5014.11,474.705) world=(-2048.55,304.705) size=(37,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5235,385) world=(-1827.66,215) size=(37,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5488.03,462.413) world=(-1574.63,292.413) size=(37,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5707,271) world=(-1355.66,101) size=(37,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5845,345) world=(-1217.66,175) size=(43,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(477,379,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(7125,345) world=(62.3423,175) size=(43,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(477,379,17,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(7125,345) world=(62.3423,175) size=(37,72) scale=(1,1) rot=0 z=5 vis=1 tag=-1 kids=0 rect=(478,306,17,72) color=(255,255,255) op=133 blend=770/1
+        N7cocos2d20CCParticleSystemQuadE pos=(7151.5,293.583) world=(88.8428,123.583) size=(0,0) scale=(1,1) rot=0 z=39 vis=0 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7271.43,376.89) world=(208.773,206.89) size=(0,0) scale=(1,1) rot=0 z=39 vis=1 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7271.43,376.89) world=(208.773,206.89) size=(0,0) scale=(1,1) rot=0 z=39 vis=0 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7063.63,157.1) world=(0.976562,-12.9) size=(0,0) scale=(1,1) rot=0 z=39 vis=0 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7271.43,376.89) world=(208.773,206.89) size=(0,0) scale=(1,1) rot=0 z=39 vis=1 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7271.43,376.89) world=(208.773,206.89) size=(0,0) scale=(1,1) rot=0 z=39 vis=0 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7262.07,378.531) world=(199.416,208.531) size=(0,0) scale=(1,1) rot=0 z=39 vis=0 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7265.53,398.231) world=(202.87,228.231) size=(0,0) scale=(1,1) rot=0 z=39 vis=0 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7274.16,371.74) world=(211.5,201.74) size=(0,0) scale=(1,1) rot=0 z=61 vis=0 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7093.07,300) world=(30.416,130) size=(0,0) scale=(1,1) rot=0 z=61 vis=0 tag=-1 kids=0
+        N7cocos2d20CCParticleSystemQuadE pos=(7023.66,300) world=(-38.9971,130) size=(0,0) scale=(1,1) rot=0 z=61 vis=0 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=120 vis=1 tag=1010 kids=57
+          N7cocos2d8CCSpriteE pos=(7065,285) world=(2.34229,115) size=(30,40) scale=(0.0334612,0.0334612) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(107,557,30,12) color=(255,254,250) op=8 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7065,375) world=(2.34229,205) size=(30,40) scale=(0.0334612,0.0334612) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(107,557,30,12) color=(255,254,250) op=8 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7061,354.5) world=(-1.65771,184.5) size=(19,22) scale=(0,0) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(248,553,19,20) color=(255,254,250) op=0 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7075,354.5) world=(12.3423,184.5) size=(19,22) scale=(0.176318,0.176318) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(248,553,19,20) color=(255,254,250) op=44 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7095,285) world=(32.3423,115) size=(40,40) scale=(-0.462033,0.462033) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(278,464,38,38) color=(255,254,250) op=117 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7095,375) world=(32.3423,205) size=(38,39) scale=(0.462033,0.462033) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=117 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7095,405) world=(32.3423,235) size=(37,38) scale=(0.462033,0.462033) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=117 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7125,225) world=(62.3423,55) size=(37,38) scale=(-0.890604,0.890604) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=227 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7125,255) world=(62.3423,85) size=(38,39) scale=(0.890604,0.890604) rot=90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=227 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7125,405) world=(62.3423,235) size=(30,40) scale=(0.890604,0.890604) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(107,557,30,12) color=(255,254,250) op=227 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7155,195) world=(92.3423,25) size=(37,38) scale=(-1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7155,225) world=(92.3423,55) size=(38,39) scale=(1,1) rot=90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7155,405) world=(92.3423,235) size=(30,40) scale=(1,1) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(107,557,30,12) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7185,195) world=(122.342,25) size=(37,38) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7185,435) world=(122.342,265) size=(37,38) scale=(-1,1) rot=-270 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7185,225) world=(122.342,55) size=(38,39) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7185,405) world=(122.342,235) size=(38,39) scale=(1,1) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7215,225) world=(152.342,55) size=(37,38) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7215,465) world=(152.342,295) size=(37,38) scale=(-1,1) rot=-270 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7215,255) world=(152.342,85) size=(38,39) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7215,435) world=(152.342,265) size=(38,39) scale=(1,1) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7245,255) world=(182.342,85) size=(37,38) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7245,285) world=(182.342,115) size=(38,39) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7245,465) world=(182.342,295) size=(38,39) scale=(1,1) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7275,285) world=(212.342,115) size=(37,38) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7275,315) world=(212.342,145) size=(38,39) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7305,315) world=(242.342,145) size=(37,38) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7305,345) world=(242.342,175) size=(38,39) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7335,345) world=(272.342,175) size=(30,40) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(107,557,30,12) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7365,315) world=(302.342,145) size=(37,38) scale=(-1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7365,345) world=(302.342,175) size=(38,39) scale=(1,1) rot=90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7395,285) world=(332.342,115) size=(37,38) scale=(-1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7395,315) world=(332.342,145) size=(38,39) scale=(1,1) rot=90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7425,255) world=(362.342,85) size=(37,38) scale=(-1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7425,285) world=(362.342,115) size=(38,39) scale=(1,1) rot=90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7441,465) world=(378.342,295) size=(38,39) scale=(1,1) rot=-90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7455,225) world=(392.342,55) size=(37,38) scale=(-1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7455,255) world=(392.342,85) size=(38,39) scale=(1,1) rot=90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7471,465) world=(408.342,295) size=(37,38) scale=(-1,-1) rot=-270 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7471,435) world=(408.342,265) size=(38,39) scale=(1,1) rot=-90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7485,195) world=(422.342,25) size=(37,38) scale=(-1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7485,225) world=(422.342,55) size=(38,39) scale=(1,1) rot=90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7501,435) world=(438.342,265) size=(37,38) scale=(-1,-1) rot=-270 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7501,405) world=(438.342,235) size=(38,39) scale=(1,1) rot=-90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7515,209.25) world=(452.342,39.25) size=(30,11) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(221,436,30,11) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7531,405) world=(468.342,235) size=(37,38) scale=(-1,-1) rot=-270 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7531,375) world=(468.342,205) size=(38,39) scale=(1,1) rot=-90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7545,209.25) world=(482.342,39.25) size=(30,11) scale=(1,1) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(221,436,30,11) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7561,375) world=(498.342,205) size=(37,38) scale=(-1,-1) rot=-270 z=-1000 vis=1 tag=-1 kids=0 rect=(296,111,9,10) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7561,345) world=(498.342,175) size=(38,39) scale=(1,1) rot=-90 z=-1000 vis=1 tag=-1 kids=0 rect=(88,464,38,39) color=(255,254,250) op=255 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7575,209.25) world=(512.342,39.25) size=(30,11) scale=(0.837967,0.837967) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(221,436,30,11) color=(255,254,250) op=213 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7591,330.75) world=(528.342,160.75) size=(30,11) scale=(0.609396,0.609396) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(221,436,30,11) color=(255,254,250) op=155 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7605,209.25) world=(542.342,39.25) size=(30,11) scale=(0.409396,0.409396) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(221,436,30,11) color=(255,254,250) op=104 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7605,330.75) world=(542.342,160.75) size=(30,11) scale=(0.409396,0.409396) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(221,436,30,11) color=(255,254,250) op=104 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7635,209.25) world=(572.342,39.25) size=(30,11) scale=(0,0) rot=0 z=-1000 vis=1 tag=-1 kids=0 rect=(221,436,30,11) color=(255,254,250) op=0 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7635,330.75) world=(572.342,160.75) size=(30,11) scale=(0,0) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(221,436,30,11) color=(255,254,250) op=0 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7647,330.75) world=(584.342,160.75) size=(30,11) scale=(0,0) rot=-180 z=-1000 vis=1 tag=-1 kids=0 rect=(221,436,30,11) color=(255,254,250) op=0 blend=1/771
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=150 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=154 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=160 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=180 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=200 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=220 vis=1 tag=-1 kids=5
+          (5 game objects)
+        12CCSpritePlus pos=(2295,225) world=(-4767.66,55) size=(16,72) scale=(1,1) rot=90 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(2415,345) world=(-4647.66,175) size=(16,72) scale=(1,1) rot=-90 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(2535,195) world=(-4527.66,25) size=(16,72) scale=(1,1) rot=90 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(3381,445) world=(-3681.66,275) size=(36,83) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(496,309,30,83) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(3385,445) world=(-3677.66,275) size=(16,72) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(3387,445) world=(-3675.66,275) size=(25,87) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(499,126,21,87) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(3897,411) world=(-3165.66,241) size=(16,72) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4169,455) world=(-2893.66,285) size=(16,72) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4439,477) world=(-2623.66,307) size=(16,72) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4783,253) world=(-2279.66,83) size=(36,83) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(496,309,30,83) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4793,253) world=(-2269.66,83) size=(25,87) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(499,126,21,87) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(4789,253) world=(-2273.66,83) size=(16,72) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5014.11,474.705) world=(-2048.55,304.705) size=(16,72) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5235,385) world=(-1827.66,215) size=(16,72) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5488.03,462.413) world=(-1574.63,292.413) size=(16,72) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5707,271) world=(-1355.66,101) size=(16,72) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(5845,345) world=(-1217.66,175) size=(36,83) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(496,309,30,83) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(7125,345) world=(62.3423,175) size=(36,83) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(496,309,30,83) color=(255,255,255) op=133 blend=770/1
+        12CCSpritePlus pos=(7125,345) world=(62.3423,175) size=(16,72) scale=(1,1) rot=0 z=221 vis=1 tag=-1 kids=0 rect=(19,515,16,72) color=(255,255,255) op=133 blend=770/1
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=240 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=260 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=280 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=300 vis=1 tag=-1 kids=0
+        15CCNodeContainer pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=320 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=340 vis=1 tag=1004 kids=3
+          N7cocos2d8CCSpriteE pos=(29062.2,225) world=(21999.5,55) size=(32,32) scale=(1,15) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(87,646,32,32) color=(255,255,255) op=255 blend=770/1
+          N7cocos2d8CCSpriteE pos=(7061,354.5) world=(-1.65771,184.5) size=(10,11) scale=(0,0) rot=-180 z=2 vis=1 tag=-1 kids=0 rect=(1012,813,10,11) color=(255,255,255) op=0 blend=1/771
+          N7cocos2d8CCSpriteE pos=(7075,354.5) world=(12.3423,184.5) size=(10,11) scale=(0.176318,0.176318) rot=-180 z=2 vis=1 tag=-1 kids=0 rect=(1012,813,10,11) color=(255,255,255) op=44 blend=1/771
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=360 vis=1 tag=1002 kids=190
+          (190 game objects)
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=410 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=450 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=454 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=460 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=480 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=500 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=520 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=540 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=560 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=580 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=600 vis=1 tag=-1 kids=0
+        15CCNodeContainer pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=620 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=640 vis=1 tag=1001 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=660 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=710 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=750 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=754 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=760 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=780 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=800 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=820 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=840 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=860 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=880 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=900 vis=1 tag=-1 kids=0
+        15CCNodeContainer pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=920 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=940 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=960 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1010 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1066 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1070 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1074 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1080 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1100 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1120 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1140 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1140 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1160 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1180 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1180 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1200 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1200 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1220 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1240 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1260 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1280 vis=1 tag=-1 kids=0
+        15CCNodeContainer pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1300 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1320 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1340 vis=1 tag=-1 kids=0
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1360 vis=1 tag=-1 kids=0
+        N7cocos2d13CCLabelBMFontE pos=(300.5,245) world=(-6762.16,75) size=(175,35) scale=(1,1) rot=0 z=1400 vis=1 tag=-1 kids=9
+          N7cocos2d12CCFontSpriteE pos=(15,16.5) world=(-6834.66,74) size=(30,29) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(343,2,30,29) color=(255,255,255) op=255 blend=1/771
+          N7cocos2d12CCFontSpriteE pos=(33.5,15) world=(-6816.16,72.5) size=(25,26) scale=(1,1) rot=0 z=1 vis=1 tag=1 kids=0 rect=(484,100,25,26) color=(255,255,255) op=255 blend=1/771
+          N7cocos2d12CCFontSpriteE pos=(52.5,15) world=(-6797.16,72.5) size=(25,26) scale=(1,1) rot=0 z=2 vis=1 tag=2 kids=0 rect=(484,100,25,26) color=(255,255,255) op=255 blend=1/771
+          N7cocos2d12CCFontSpriteE pos=(71,15) world=(-6778.66,72.5) size=(24,26) scale=(1,1) rot=0 z=3 vis=1 tag=3 kids=0 rect=(2,128,24,26) color=(255,255,255) op=255 blend=1/771
+          N7cocos2d12CCFontSpriteE pos=(91,15) world=(-6758.66,72.5) size=(28,26) scale=(1,1) rot=0 z=4 vis=1 tag=4 kids=0 rect=(2,100,28,26) color=(255,255,255) op=255 blend=1/771
+          N7cocos2d12CCFontSpriteE pos=(112,15) world=(-6737.66,72.5) size=(26,26) scale=(1,1) rot=0 z=5 vis=1 tag=5 kids=0 rect=(291,100,26,26) color=(255,255,255) op=255 blend=1/771
+          N7cocos2d12CCFontSpriteE pos=(130.5,15) world=(-6719.16,72.5) size=(25,26) scale=(1,1) rot=0 z=6 vis=1 tag=6 kids=0 rect=(484,100,25,26) color=(255,255,255) op=255 blend=1/771
+          N7cocos2d12CCFontSpriteE pos=(137,2) world=(-6712.66,59.5) size=(0,0) scale=(1,1) rot=0 z=7 vis=1 tag=7 kids=0 rect=(498,128,0,0) color=(255,255,255) op=255 blend=1/771
+          N7cocos2d12CCFontSpriteE pos=(163.5,16) world=(-6686.16,73.5) size=(23,28) scale=(1,1) rot=0 z=8 vis=1 tag=8 kids=0 rect=(413,70,23,28) color=(255,255,255) op=255 blend=1/771
+        (3 game objects)
+      13GJGroundLayer pos=(0,11) world=(0,11) size=(0,0) scale=(1,1) rot=0 z=40 vis=1 tag=4 kids=4
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(0,11) size=(0,0) scale=(1,1) rot=0 z=2 vis=1 tag=-1 kids=1
+          N7cocos2d8CCSpriteE pos=(-7.65771,0) world=(-7.65771,11) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=6 rect=(0,0,0,0) color=(0,102,255) op=100 blend=1/771
+            N7cocos2d8CCSpriteE pos=(0,0) world=(-7.65771,11) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(128,-0) world=(120.342,11) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(256,-0) world=(248.342,11) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(384,-0) world=(376.342,11) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(512,-0) world=(504.342,11) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(640,-0) world=(632.342,11) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+        N7cocos2d8CCSpriteE pos=(285.5,0.5) world=(285.5,11.5) size=(444,2) scale=(1,1) rot=0 z=5 vis=1 tag=2 kids=0 rect=(2,7,444,2) color=(0,0,0) op=255 blend=770/1
+        N7cocos2d8CCSpriteE pos=(-1,0) world=(-1,11) size=(128,128) scale=(0.7,1) rot=0 z=6 vis=1 tag=0 kids=0 rect=(0,512,128,128) color=(255,255,255) op=100 blend=774/771
+        N7cocos2d8CCSpriteE pos=(572,0) world=(572,11) size=(128,128) scale=(0.7,1) rot=0 z=6 vis=1 tag=1 kids=0 rect=(0,512,128,128) color=(255,255,255) op=100 blend=774/771
+      13GJGroundLayer pos=(0,309) world=(0,309) size=(0,0) scale=(1,-1) rot=0 z=40 vis=1 tag=-1 kids=4
+        N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(0,309) size=(0,0) scale=(1,1) rot=0 z=2 vis=1 tag=-1 kids=1
+          N7cocos2d8CCSpriteE pos=(-7.65771,0) world=(-7.65771,309) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=6 rect=(0,0,0,0) color=(0,102,255) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(0,0) world=(-7.65771,309) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(128,-0) world=(120.342,309) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(256,-0) world=(248.342,309) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(384,-0) world=(376.342,309) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(512,-0) world=(504.342,309) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+            N7cocos2d8CCSpriteE pos=(640,-0) world=(632.342,309) size=(128,128) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,128,128) color=(0,0,0) op=255 blend=1/771
+        N7cocos2d8CCSpriteE pos=(285.5,0.5) world=(285.5,308.5) size=(444,2) scale=(1,1) rot=0 z=5 vis=1 tag=2 kids=0 rect=(2,7,444,2) color=(0,0,0) op=255 blend=770/1
+        N7cocos2d8CCSpriteE pos=(-1,0) world=(-1,309) size=(128,128) scale=(0.7,1) rot=0 z=6 vis=1 tag=0 kids=0 rect=(0,512,128,128) color=(255,255,255) op=100 blend=774/771
+        N7cocos2d8CCSpriteE pos=(572,0) world=(572,309) size=(128,128) scale=(0.7,1) rot=0 z=6 vis=1 tag=1 kids=0 rect=(0,512,128,128) color=(255,255,255) op=100 blend=774/771
+      N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=50 vis=1 tag=-1 kids=0
+    N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=2
+      N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1
+        N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1
+          N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+    15GJEffectManager pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=0 tag=-1 kids=16
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+      17ColorActionSprite pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+    N7cocos2d6CCNodeE pos=(0,-1.86458) world=(0,-1.86458) size=(0,0) scale=(1,1) rot=0 z=0 vis=0 tag=-1 kids=0
+    19GravityEffectSprite pos=(285.5,211.93) world=(285.5,211.93) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1 rect=(0,0,0,0) color=(255,255,255) op=255 blend=770/771
+      N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(285.5,211.93) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=1 kids=22
+        N7cocos2d8CCSpriteE pos=(-246.926,-9.4897) world=(38.574,202.44) size=(1,76) scale=(4.47839,2.99098) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=91 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-215.973,-0.863827) world=(69.5272,211.066) size=(1,76) scale=(3.64197,2.30039) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=127 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-203.918,-0.813411) world=(81.5824,211.116) size=(1,76) scale=(4.87508,2.75508) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=122 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-168.644,-3.4274) world=(116.856,208.502) size=(1,76) scale=(2.62933,2.78737) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=88 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-154.414,-1.53974) world=(131.086,210.39) size=(1,76) scale=(3.64192,2.01677) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=171 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-125.541,7.91698) world=(159.959,219.846) size=(1,76) scale=(3.46568,2.11208) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=148 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-115.212,9.7095) world=(170.288,221.639) size=(1,76) scale=(4.64294,2.43908) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=139 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-73.6349,1.97744) world=(211.865,213.907) size=(1,76) scale=(2.48948,2.74117) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=156 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-55.0897,3.58994) world=(230.41,215.519) size=(1,76) scale=(2.69565,2.25534) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=113 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-30.0974,6.55558) world=(255.403,218.485) size=(1,76) scale=(3.31212,2.59404) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=57 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-20.5688,2.28357) world=(264.931,214.213) size=(1,76) scale=(3.34772,2.53491) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=87 blend=1/771
+        N7cocos2d8CCSpriteE pos=(19.8976,3.20898) world=(305.398,215.138) size=(1,76) scale=(2.24059,2.70345) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=170 blend=1/771
+        N7cocos2d8CCSpriteE pos=(44.1557,2.30004) world=(329.656,214.23) size=(1,76) scale=(2.83212,2.39891) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=102 blend=1/771
+        N7cocos2d8CCSpriteE pos=(54.5109,0.108604) world=(340.011,212.038) size=(1,76) scale=(4.25523,2.54389) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=64 blend=1/771
+        N7cocos2d8CCSpriteE pos=(89.1862,-6.06653) world=(374.686,205.863) size=(1,76) scale=(3.3283,2.46569) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=165 blend=1/771
+        N7cocos2d8CCSpriteE pos=(102.922,0.818466) world=(388.422,212.748) size=(1,76) scale=(2.6831,2.51098) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=178 blend=1/771
+        N7cocos2d8CCSpriteE pos=(117.956,2.44486) world=(403.456,214.374) size=(1,76) scale=(1.80025,2.72513) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=77 blend=1/771
+        N7cocos2d8CCSpriteE pos=(149.852,-8.38097) world=(435.352,203.549) size=(1,76) scale=(3.54063,2.73858) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=94 blend=1/771
+        N7cocos2d8CCSpriteE pos=(173.1,-0.799335) world=(458.6,211.13) size=(1,76) scale=(4.30051,2.88728) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=107 blend=1/771
+        N7cocos2d8CCSpriteE pos=(190.186,4.11561) world=(475.686,216.045) size=(1,76) scale=(1.84714,2.13732) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=177 blend=1/771
+        N7cocos2d8CCSpriteE pos=(220.848,-3.45763) world=(506.348,208.472) size=(1,76) scale=(4.64231,2.29525) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=95 blend=1/771
+        N7cocos2d8CCSpriteE pos=(242.462,-5.66343) world=(527.963,206.266) size=(1,76) scale=(2.48623,2.4929) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=68 blend=1/771
+    19GravityEffectSprite pos=(285.5,108.07) world=(285.5,108.07) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1 rect=(0,0,0,0) color=(255,255,255) op=255 blend=770/771
+      N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(285.5,108.07) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=1 kids=22
+        N7cocos2d8CCSpriteE pos=(-239.054,-2.97677) world=(46.4463,105.094) size=(1,76) scale=(4.94107,2.62132) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=113 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-222.573,-3.70607) world=(62.9266,104.364) size=(1,76) scale=(2.0397,2.61548) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=97 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-191.018,3.95034) world=(94.4823,112.021) size=(1,76) scale=(2.25059,2.67143) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=147 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-169.416,-7.76347) world=(116.084,100.307) size=(1,76) scale=(3.24458,2.99428) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=168 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-148.291,8.42706) world=(137.209,116.498) size=(1,76) scale=(2.30012,2.25226) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=145 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-121.556,-6.94665) world=(163.944,101.124) size=(1,76) scale=(4.64262,2.83995) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=62 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-115.747,-0.959669) world=(169.753,107.111) size=(1,76) scale=(1.82185,2.68646) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=99 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-71.6308,5.24156) world=(213.869,113.312) size=(1,76) scale=(2.49169,2.80985) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=78 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-49.2671,6.93447) world=(236.233,115.005) size=(1,76) scale=(4.65027,2.07234) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=152 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-42.3931,6.55844) world=(243.107,114.629) size=(1,76) scale=(4.66912,2.2957) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=149 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-8.93976,-4.13546) world=(276.56,103.935) size=(1,76) scale=(2.59005,2.45404) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=64 blend=1/771
+        N7cocos2d8CCSpriteE pos=(5.92619,-7.39171) world=(291.426,100.679) size=(1,76) scale=(4.61628,2.18489) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=118 blend=1/771
+        N7cocos2d8CCSpriteE pos=(31.9716,-4.57595) world=(317.472,103.495) size=(1,76) scale=(2.01192,2.7574) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=128 blend=1/771
+        N7cocos2d8CCSpriteE pos=(58.3183,-0.163265) world=(343.818,107.907) size=(1,76) scale=(2.692,2.99835) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=90 blend=1/771
+        N7cocos2d8CCSpriteE pos=(72.5168,-2.86831) world=(358.017,105.202) size=(1,76) scale=(2.06337,2.89526) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=126 blend=1/771
+        N7cocos2d8CCSpriteE pos=(102.423,7.71148) world=(387.923,115.782) size=(1,76) scale=(4.50078,2.91314) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=74 blend=1/771
+        N7cocos2d8CCSpriteE pos=(138.263,-0.682005) world=(423.763,107.388) size=(1,76) scale=(2.94828,2.98835) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=74 blend=1/771
+        N7cocos2d8CCSpriteE pos=(161.059,2.10914) world=(446.559,110.18) size=(1,76) scale=(4.74843,2.73953) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=88 blend=1/771
+        N7cocos2d8CCSpriteE pos=(169.938,9.62089) world=(455.438,117.691) size=(1,76) scale=(3.0705,2.85719) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=145 blend=1/771
+        N7cocos2d8CCSpriteE pos=(195.543,-1.02038) world=(481.043,107.05) size=(1,76) scale=(1.77225,2.8174) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=65 blend=1/771
+        N7cocos2d8CCSpriteE pos=(218.865,1.08356) world=(504.365,109.154) size=(1,76) scale=(1.92817,2.13527) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=111 blend=1/771
+        N7cocos2d8CCSpriteE pos=(238.033,-6.23948) world=(523.533,101.831) size=(1,76) scale=(2.20324,2.02363) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=60 blend=1/771
+    19GravityEffectSprite pos=(285.5,211.93) world=(285.5,211.93) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1 rect=(0,0,0,0) color=(255,255,255) op=255 blend=770/771
+      N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(285.5,211.93) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=1 kids=22
+        N7cocos2d8CCSpriteE pos=(-250.073,9.93651) world=(35.4271,221.866) size=(1,76) scale=(3.84389,2.52708) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=122 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-226.602,-0.661316) world=(58.8983,211.268) size=(1,76) scale=(4.2475,2.8947) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=80 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-205.223,8.98684) world=(80.2771,220.916) size=(1,76) scale=(3.66872,2.96603) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=62 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-183.2,-1.99231) world=(102.3,209.937) size=(1,76) scale=(2.56837,2.08015) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=56 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-143.739,-6.67532) world=(141.761,205.254) size=(1,76) scale=(4.68284,2.89907) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=146 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-132.969,-0.924504) world=(152.531,211.005) size=(1,76) scale=(3.67526,2.64382) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=145 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-115.748,8.70921) world=(169.752,220.639) size=(1,76) scale=(2.63863,2.22399) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=122 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-87.9643,-9.64277) world=(197.536,202.287) size=(1,76) scale=(2.36136,2.38081) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=88 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-63.2155,8.8521) world=(222.284,220.782) size=(1,76) scale=(2.90381,2.69756) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=175 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-32.5177,1.11523) world=(252.982,213.045) size=(1,76) scale=(3.99107,2.20001) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=123 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-2.46773,-2.32118) world=(283.032,209.608) size=(1,76) scale=(4.69983,2.81766) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=107 blend=1/771
+        N7cocos2d8CCSpriteE pos=(12.7293,5.54472) world=(298.229,217.474) size=(1,76) scale=(1.70191,2.22555) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=145 blend=1/771
+        N7cocos2d8CCSpriteE pos=(32.3986,-4.48503) world=(317.899,207.444) size=(1,76) scale=(3.37369,2.33491) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=160 blend=1/771
+        N7cocos2d8CCSpriteE pos=(61.1858,-2.47113) world=(346.686,209.458) size=(1,76) scale=(4.67334,2.39346) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=162 blend=1/771
+        N7cocos2d8CCSpriteE pos=(70.5902,-4.07886) world=(356.09,207.851) size=(1,76) scale=(4.47096,2.86349) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=127 blend=1/771
+        N7cocos2d8CCSpriteE pos=(113.363,-0.561452) world=(398.863,211.368) size=(1,76) scale=(3.98072,2.47324) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=152 blend=1/771
+        N7cocos2d8CCSpriteE pos=(137.668,-4.44859) world=(423.168,207.481) size=(1,76) scale=(2.10108,2.40018) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=152 blend=1/771
+        N7cocos2d8CCSpriteE pos=(156.247,5.9443) world=(441.747,217.874) size=(1,76) scale=(4.34387,2.62931) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=146 blend=1/771
+        N7cocos2d8CCSpriteE pos=(184.646,-8.64712) world=(470.146,203.282) size=(1,76) scale=(4.68417,2.555) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=169 blend=1/771
+        N7cocos2d8CCSpriteE pos=(187.351,9.99638) world=(472.851,221.926) size=(1,76) scale=(4.90019,2.26488) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=152 blend=1/771
+        N7cocos2d8CCSpriteE pos=(228.471,7.69016) world=(513.971,219.62) size=(1,76) scale=(4.78613,2.18229) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=139 blend=1/771
+        N7cocos2d8CCSpriteE pos=(252.26,6.69375) world=(537.76,218.623) size=(1,76) scale=(3.68641,2.38053) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(255,255,0) op=130 blend=1/771
+    19GravityEffectSprite pos=(285.5,108.07) world=(285.5,108.07) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1 rect=(0,0,0,0) color=(255,255,255) op=255 blend=770/771
+      N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(285.5,108.07) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=1 kids=22
+        N7cocos2d8CCSpriteE pos=(-251.013,-2.01252) world=(34.4865,106.058) size=(1,76) scale=(2.61482,2.22706) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=66 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-227.698,-3.15467) world=(57.8022,104.916) size=(1,76) scale=(3.27104,2.25198) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=52 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-194.614,2.41951) world=(90.8862,110.49) size=(1,76) scale=(4.16134,2.25763) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=50 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-175.737,8.50908) world=(109.763,116.58) size=(1,76) scale=(2.04712,2.69492) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=124 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-140.845,-9.41523) world=(144.655,98.6553) size=(1,76) scale=(3.06158,2.30813) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=148 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-128.925,-8.141) world=(156.575,99.9295) size=(1,76) scale=(2.3881,2.02993) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=177 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-108.427,-5.70837) world=(177.073,102.362) size=(1,76) scale=(3.27231,2.58084) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=63 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-71.7732,4.38713) world=(213.727,112.458) size=(1,76) scale=(2.44199,2.35533) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=50 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-50.676,-2.0319) world=(234.824,106.039) size=(1,76) scale=(5.03252,2.7179) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=151 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-29.9382,-9.14013) world=(255.562,98.9304) size=(1,76) scale=(3.66304,2.60707) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=59 blend=1/771
+        N7cocos2d8CCSpriteE pos=(-8.14658,-5.47484) world=(277.353,102.596) size=(1,76) scale=(4.10335,2.40306) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=79 blend=1/771
+        N7cocos2d8CCSpriteE pos=(0.138371,-7.4093) world=(285.638,100.661) size=(1,76) scale=(2.01252,2.75226) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=81 blend=1/771
+        N7cocos2d8CCSpriteE pos=(39.7227,8.54538) world=(325.223,116.616) size=(1,76) scale=(3.73226,2.57747) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=121 blend=1/771
+        N7cocos2d8CCSpriteE pos=(58.793,9.14262) world=(344.293,117.213) size=(1,76) scale=(3.36681,2.95074) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=52 blend=1/771
+        N7cocos2d8CCSpriteE pos=(72.0469,-2.93791) world=(357.547,105.133) size=(1,76) scale=(3.79348,2.57822) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=79 blend=1/771
+        N7cocos2d8CCSpriteE pos=(110.646,-1.01871) world=(396.146,107.052) size=(1,76) scale=(3.12023,2.42379) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=140 blend=1/771
+        N7cocos2d8CCSpriteE pos=(127.823,-5.48322) world=(413.323,102.587) size=(1,76) scale=(3.94419,2.88635) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=161 blend=1/771
+        N7cocos2d8CCSpriteE pos=(160.458,0.858701) world=(445.958,108.929) size=(1,76) scale=(2.04978,2.95714) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=143 blend=1/771
+        N7cocos2d8CCSpriteE pos=(173.475,-2.7562) world=(458.975,105.314) size=(1,76) scale=(2.78841,2.91108) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=114 blend=1/771
+        N7cocos2d8CCSpriteE pos=(202.741,7.86478) world=(488.241,115.935) size=(1,76) scale=(3.91796,2.77635) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=64 blend=1/771
+        N7cocos2d8CCSpriteE pos=(224.026,1.83817) world=(509.526,109.909) size=(1,76) scale=(2.37934,2.22165) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=91 blend=1/771
+        N7cocos2d8CCSpriteE pos=(253.586,-9.78326) world=(539.086,98.2872) size=(1,76) scale=(2.15496,2.71826) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(0,0,1,76) color=(0,255,255) op=157 blend=1/771
+    N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=1 vis=0 tag=-1 kids=1
+      N7cocos2d7CCLayerE pos=(-7062.66,-170) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1 vis=1 tag=-1 kids=0
+    N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=2 vis=1 tag=-1 kids=1
+      N7cocos2d7CCLayerE pos=(-7062.66,-170) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1 vis=1 tag=-1 kids=3
+        N7cocos2d10CCDrawNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1401 vis=0 tag=-9999 kids=0
+        ZNK7eclipse5hacks6Player20TrajectorySimulation11getDrawNodeEvE18TrajectoryDrawNode pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=1401 vis=1 tag=-1 kids=0
+        N7cocos2d10CCDrawNodeE pos=(0,0) world=(-7062.66,-170) size=(0,0) scale=(1,1) rot=0 z=1402 vis=1 tag=-1 kids=0
+    N7cocos2d8CCSpriteE pos=(285.5,312) world=(285.5,312) size=(210,16) scale=(1,1) rot=0 z=10 vis=0 tag=-1 kids=1 rect=(0,0,210,16) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d8CCSpriteE pos=(2,4) world=(182.5,308) size=(51.5025,8) scale=(1,1) rot=0 z=-1 vis=1 tag=-1 kids=0 rect=(0,0,51.5025,8) color=(255,255,255) op=255 blend=1/771
+    N7cocos2d13CCLabelBMFontE pos=(285.5,312) world=(285.5,312) size=(161,35) scale=(0.5,0.5) rot=0 z=15 vis=1 tag=-1 kids=8
+      N7cocos2d12CCFontSpriteE pos=(13.5,16.5) world=(252,311.5) size=(27,29) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(93,39,27,29) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(34,16.5) world=(262.25,311.5) size=(26,29) scale=(1,1) rot=0 z=1 vis=1 tag=1 kids=0 rect=(238,39,26,29) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(47.5,7.5) world=(269,307) size=(13,13) scale=(1,1) rot=0 z=2 vis=1 tag=2 kids=0 rect=(467,128,13,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(61.5,16.5) world=(276,311.5) size=(27,29) scale=(1,1) rot=0 z=3 vis=1 tag=3 kids=0 rect=(209,39,27,29) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(82.5,16.5) world=(286.5,311.5) size=(27,29) scale=(1,1) rot=0 z=4 vis=1 tag=4 kids=0 rect=(209,39,27,29) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(101.5,16) world=(296,311.25) size=(23,28) scale=(1,1) rot=0 z=5 vis=1 tag=5 kids=0 rect=(413,70,23,28) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(120.5,16.5) world=(305.5,311.5) size=(27,29) scale=(1,1) rot=0 z=6 vis=1 tag=6 kids=0 rect=(93,39,27,29) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(144.5,16) world=(317.5,311.25) size=(33,30) scale=(1,1) rot=0 z=7 vis=1 tag=7 kids=0 rect=(194,2,33,30) color=(255,255,255) op=255 blend=1/771
+    N7cocos2d20CCParticleSystemQuadE pos=(581,160) world=(581,160) size=(0,0) scale=(1,1) rot=0 z=100 vis=1 tag=-1 kids=0
+    N7cocos2d20CCParticleSystemQuadE pos=(581,160) world=(581,160) size=(0,0) scale=(1,1) rot=0 z=100 vis=1 tag=-1 kids=0
+    N7cocos2d20CCParticleSystemQuadE pos=(581,160) world=(581,160) size=(0,0) scale=(1,1) rot=0 z=100 vis=1 tag=-1 kids=0
+    N7cocos2d20CCParticleSystemQuadE pos=(581,160) world=(581,160) size=(0,0) scale=(1,1) rot=0 z=100 vis=1 tag=-1 kids=0
+    7UILayer pos=(0,0) world=(0,0) size=(571,320) scale=(1,1) rot=0 z=101 vis=1 tag=-1 kids=7 lcolor=(0,0,0) op=0
+      N7cocos2d6CCMenuE pos=(556,305) world=(556,305) size=(571,320) scale=(1,1) rot=0 z=16 vis=1 tag=-1 kids=1
+        21CCMenuItemSpriteExtra pos=(0,0) world=(556,305) size=(24,24) scale=(1,1) rot=0 z=0 vis=0 tag=-1 kids=1
+          N7cocos2d8CCSpriteE pos=(12,12) world=(556,305) size=(24,24) scale=(1,1) rot=0 z=0 vis=1 tag=1 kids=0 rect=(833,955,24,24) color=(255,255,255) op=75 blend=1/771
+      N7cocos2d6CCMenuE pos=(285.5,40) world=(285.5,40) size=(571,320) scale=(1,1) rot=0 z=16 vis=0 tag=-1 kids=2
+        21CCMenuItemSpriteExtra pos=(-28.5,0) world=(257,40) size=(73,48) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1
+          N7cocos2d8CCSpriteE pos=(36.5,24) world=(257,40) size=(73,48) scale=(1,1) rot=0 z=0 vis=1 tag=1 kids=1 rect=(453,342,73,48) color=(255,255,255) op=255 blend=1/771
+            N7cocos2d6CCNodeE pos=(36.5,-1) world=(257,15) size=(73,40) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=3
+              N7cocos2d13CCLabelBMFontE pos=(18.5,20) world=(239,15) size=(26,35) scale=(0.8,0.8) rot=0 z=0 vis=1 tag=-1 kids=1
+                N7cocos2d12CCFontSpriteE pos=(13,16) world=(239,13.8) size=(26,28) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(358,70,26,28) color=(255,255,255) op=255 blend=1/771
+              N7cocos2d13CCLabelBMFontE pos=(36.5,20) world=(257,15) size=(19,35) scale=(0.8,0.8) rot=0 z=0 vis=1 tag=-1 kids=1
+                N7cocos2d12CCFontSpriteE pos=(9.5,16) world=(257,13.8) size=(19,30) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(289,2,19,30) color=(255,255,255) op=255 blend=1/771
+              N7cocos2d8CCSpriteE pos=(54.5,20) world=(275,15) size=(26,28) scale=(0.8,0.8) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(976,461,26,28) color=(255,255,255) op=255 blend=1/771
+        21CCMenuItemSpriteExtra pos=(41.5,0) world=(327,40) size=(47,48) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1
+          N7cocos2d8CCSpriteE pos=(23.5,24) world=(327,40) size=(47,48) scale=(1,1) rot=0 z=0 vis=1 tag=1 kids=1 rect=(609,754,47,48) color=(255,255,255) op=255 blend=1/771
+            N7cocos2d6CCNodeE pos=(23.5,-1) world=(327,15) size=(47,40) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=3
+              N7cocos2d13CCLabelBMFontE pos=(9.20946,20) world=(312.709,15) size=(29,35) scale=(0.635135,0.635135) rot=0 z=0 vis=1 tag=-1 kids=1
+                N7cocos2d12CCFontSpriteE pos=(14.5,16.5) world=(312.709,14.3649) size=(29,29) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(2,39,29,29) color=(255,255,255) op=255 blend=1/771
+              N7cocos2d13CCLabelBMFontE pos=(24.4527,20) world=(327.953,15) size=(19,35) scale=(0.635135,0.635135) rot=0 z=0 vis=1 tag=-1 kids=1
+                N7cocos2d12CCFontSpriteE pos=(9.5,16) world=(327.953,14.0473) size=(19,30) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(289,2,19,30) color=(255,255,255) op=255 blend=1/771
+              N7cocos2d8CCSpriteE pos=(38.7432,20) world=(342.243,15) size=(26,28) scale=(0.635135,0.635135) rot=0 z=0 vis=1 tag=-1 kids=0 rect=(587,960,26,28) color=(255,255,255) op=255 blend=1/771
+      8GJUINode pos=(95,36) world=(95,36) size=(0,0) scale=(1,1) rot=0 z=100 vis=0 tag=-1 kids=2
+        N7cocos2d8CCSpriteE pos=(-41,0) world=(54,36) size=(62,55) scale=(1,1) rot=0 z=1 vis=1 tag=-1 kids=0 rect=(353,371,62,55) color=(255,255,255) op=255 blend=1/771
+        N7cocos2d8CCSpriteE pos=(41,0) world=(136,36) size=(62,55) scale=(1,1) rot=0 z=1 vis=1 tag=-1 kids=0 rect=(353,371,62,55) color=(255,255,255) op=255 blend=1/771
+      8GJUINode pos=(95,36) world=(95,36) size=(0,0) scale=(1,1) rot=0 z=100 vis=0 tag=-1 kids=2
+        N7cocos2d8CCSpriteE pos=(-41,0) world=(54,36) size=(62,55) scale=(1,1) rot=0 z=1 vis=1 tag=-1 kids=0 rect=(353,371,62,55) color=(255,255,255) op=255 blend=1/771
+        N7cocos2d8CCSpriteE pos=(41,0) world=(136,36) size=(62,55) scale=(1,1) rot=0 z=1 vis=1 tag=-1 kids=0 rect=(353,371,62,55) color=(255,255,255) op=255 blend=1/771
+      8GJUINode pos=(95,196) world=(95,196) size=(0,0) scale=(1,1) rot=0 z=100 vis=0 tag=-1 kids=1
+        N7cocos2d8CCSpriteE pos=(0,0) world=(95,196) size=(53,55) scale=(1,1) rot=0 z=1 vis=1 tag=-1 kids=0 rect=(234,490,53,55) color=(255,255,255) op=255 blend=1/771
+      8GJUINode pos=(95,196) world=(95,196) size=(0,0) scale=(1,1) rot=0 z=100 vis=0 tag=-1 kids=1
+        N7cocos2d8CCSpriteE pos=(0,0) world=(95,196) size=(53,55) scale=(1,1) rot=0 z=1 vis=1 tag=-1 kids=0 rect=(234,490,53,55) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d6CCNodeE pos=(0,0) world=(0,0) size=(0,0) scale=(1,1) rot=0 z=1000 vis=1 tag=-1 kids=9
+        N7eclipse5hacks6Labels15LabelsContainerE pos=(3,317) world=(3,317) size=(126.7,314) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=5
+          N7eclipse5hacks6Labels10SmartLabelE pos=(0,314) world=(3,317) size=(147,35) scale=(0.35,0.35) rot=0 z=0 vis=1 tag=-1 kids=2
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(3,304.75) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(3,304.75) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=8
+              N7cocos2d8CCSpriteE pos=(13,16) world=(7.55,310.35) size=(26,28) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(330,70,26,28) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(34.5,16) world=(15.075,310.35) size=(29,28) scale=(1,1) rot=0 z=1 vis=1 tag=1 kids=0 rect=(471,39,29,28) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(56,15.5) world=(22.6,310.175) size=(28,29) scale=(1,1) rot=0 z=2 vis=1 tag=2 kids=0 rect=(33,39,28,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(70,14) world=(27.5,309.65) size=(14,26) scale=(1,1) rot=0 z=3 vis=1 tag=3 kids=0 rect=(146,128,14,26) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(71,2) world=(27.85,305.45) size=(0,0) scale=(1,1) rot=0 z=4 vis=1 tag=4 kids=0 rect=(498,128,0,0) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(97.5,16) world=(37.125,310.35) size=(23,28) scale=(1,1) rot=0 z=5 vis=1 tag=5 kids=0 rect=(413,70,23,28) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(114.5,16) world=(43.075,310.35) size=(23,28) scale=(1,1) rot=0 z=6 vis=1 tag=6 kids=0 rect=(413,70,23,28) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(133.5,15.5) world=(49.725,310.175) size=(27,29) scale=(1,1) rot=0 z=7 vis=1 tag=7 kids=0 rect=(180,39,27,29) color=(255,255,255) op=76 blend=1/771
+          N7eclipse5hacks6Labels10SmartLabelE pos=(0,301.75) world=(3,304.75) size=(123,35) scale=(0.35,0.35) rot=0 z=0 vis=1 tag=-1 kids=2
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(3,292.5) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(3,292.5) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=6
+              N7cocos2d8CCSpriteE pos=(13.5,16.5) world=(7.725,298.275) size=(27,29) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(93,39,27,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(34,16.5) world=(14.9,298.275) size=(26,29) scale=(1,1) rot=0 z=1 vis=1 tag=1 kids=0 rect=(238,39,26,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(47.5,7.5) world=(19.625,295.125) size=(13,13) scale=(1,1) rot=0 z=2 vis=1 tag=2 kids=0 rect=(467,128,13,13) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(61.5,16.5) world=(24.525,298.275) size=(27,29) scale=(1,1) rot=0 z=3 vis=1 tag=3 kids=0 rect=(209,39,27,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(82.5,16.5) world=(31.875,298.275) size=(27,29) scale=(1,1) rot=0 z=4 vis=1 tag=4 kids=0 rect=(209,39,27,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(106.5,16) world=(40.275,298.1) size=(33,30) scale=(1,1) rot=0 z=5 vis=1 tag=5 kids=0 rect=(194,2,33,30) color=(255,255,255) op=76 blend=1/771
+          N7eclipse5hacks6Labels10SmartLabelE pos=(0,289.5) world=(3,292.5) size=(362,35) scale=(0.35,0.35) rot=0 z=0 vis=1 tag=-1 kids=2
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(3,280.25) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(3,280.25) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=20
+              N7cocos2d8CCSpriteE pos=(14,16) world=(7.9,285.85) size=(28,28) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(95,70,28,28) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(34,15) world=(14.9,285.5) size=(24,26) scale=(1,1) rot=0 z=1 vis=1 tag=1 kids=0 rect=(2,128,24,26) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(52.5,14.5) world=(21.375,285.325) size=(25,27) scale=(1,1) rot=0 z=2 vis=1 tag=2 kids=0 rect=(458,70,25,27) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(71.5,15) world=(28.025,285.5) size=(25,26) scale=(1,1) rot=0 z=3 vis=1 tag=3 kids=0 rect=(484,100,25,26) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(78,2) world=(30.3,280.95) size=(0,0) scale=(1,1) rot=0 z=4 vis=1 tag=4 kids=0 rect=(498,128,0,0) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(106,15) world=(40.1,285.5) size=(26,26) scale=(1,1) rot=0 z=5 vis=1 tag=5 kids=0 rect=(319,100,26,26) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(126,15) world=(47.1,285.5) size=(26,26) scale=(1,1) rot=0 z=6 vis=1 tag=6 kids=0 rect=(347,100,26,26) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(146.5,15) world=(54.275,285.5) size=(25,26) scale=(1,1) rot=0 z=7 vis=1 tag=7 kids=0 rect=(457,100,25,26) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(160,14) world=(59,285.15) size=(14,26) scale=(1,1) rot=0 z=8 vis=1 tag=8 kids=0 rect=(146,128,14,26) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(161,2) world=(59.35,280.95) size=(0,0) scale=(1,1) rot=0 z=9 vis=1 tag=9 kids=0 rect=(498,128,0,0) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(189.5,16.5) world=(69.325,286.025) size=(27,29) scale=(1,1) rot=0 z=10 vis=1 tag=10 kids=0 rect=(209,39,27,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(203.5,7.5) world=(74.225,282.875) size=(13,13) scale=(1,1) rot=0 z=11 vis=1 tag=11 kids=0 rect=(467,128,13,13) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(217.5,16.5) world=(79.125,286.025) size=(27,29) scale=(1,1) rot=0 z=12 vis=1 tag=12 kids=0 rect=(209,39,27,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(238.5,16.5) world=(86.475,286.025) size=(27,29) scale=(1,1) rot=0 z=13 vis=1 tag=13 kids=0 rect=(209,39,27,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(255.5,14.5) world=(92.425,285.325) size=(19,13) scale=(1,1) rot=0 z=14 vis=1 tag=14 kids=0 rect=(446,128,19,13) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(272.5,16.5) world=(98.375,286.025) size=(27,29) scale=(1,1) rot=0 z=15 vis=1 tag=15 kids=0 rect=(209,39,27,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(286.5,7.5) world=(103.275,282.875) size=(13,13) scale=(1,1) rot=0 z=16 vis=1 tag=16 kids=0 rect=(467,128,13,13) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(300.5,16.5) world=(108.175,286.025) size=(27,29) scale=(1,1) rot=0 z=17 vis=1 tag=17 kids=0 rect=(209,39,27,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(321.5,16.5) world=(115.525,286.025) size=(27,29) scale=(1,1) rot=0 z=18 vis=1 tag=18 kids=0 rect=(209,39,27,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(345.5,16) world=(123.925,285.85) size=(33,30) scale=(1,1) rot=0 z=19 vis=1 tag=19 kids=0 rect=(194,2,33,30) color=(255,255,255) op=76 blend=1/771
+          N7eclipse5hacks6Labels10SmartLabelE pos=(0,277.25) world=(3,280.25) size=(231,35) scale=(0.35,0.35) rot=0 z=0 vis=1 tag=-1 kids=2
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(3,268) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(3,268) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=13
+              N7cocos2d8CCSpriteE pos=(13,16.5) world=(7.55,273.775) size=(26,29) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(238,39,26,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(33,16.5) world=(14.55,273.775) size=(26,29) scale=(1,1) rot=0 z=1 vis=1 tag=1 kids=0 rect=(266,39,26,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(48.5,16) world=(19.975,273.6) size=(19,30) scale=(1,1) rot=0 z=2 vis=1 tag=2 kids=0 rect=(289,2,19,30) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(65,16.5) world=(25.75,273.775) size=(26,29) scale=(1,1) rot=0 z=3 vis=1 tag=3 kids=0 rect=(238,39,26,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(85,16.5) world=(32.75,273.775) size=(26,29) scale=(1,1) rot=0 z=4 vis=1 tag=4 kids=0 rect=(266,39,26,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(100.5,16) world=(38.175,273.6) size=(19,30) scale=(1,1) rot=0 z=5 vis=1 tag=5 kids=0 rect=(289,2,19,30) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(117,16.5) world=(43.95,273.775) size=(26,29) scale=(1,1) rot=0 z=6 vis=1 tag=6 kids=0 rect=(238,39,26,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(137,16.5) world=(50.95,273.775) size=(26,29) scale=(1,1) rot=0 z=7 vis=1 tag=7 kids=0 rect=(266,39,26,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(143,2) world=(53.05,268.7) size=(0,0) scale=(1,1) rot=0 z=8 vis=1 tag=8 kids=0 rect=(498,128,0,0) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(172.5,15.5) world=(63.375,273.425) size=(29,29) scale=(1,1) rot=0 z=9 vis=1 tag=9 kids=0 rect=(439,2,29,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(195.5,16) world=(71.425,273.6) size=(29,28) scale=(1,1) rot=0 z=10 vis=1 tag=10 kids=0 rect=(471,39,29,28) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(217,15.5) world=(78.95,273.425) size=(28,29) scale=(1,1) rot=0 z=11 vis=1 tag=11 kids=0 rect=(33,39,28,29) color=(255,255,255) op=76 blend=1/771
+              N7cocos2d8CCSpriteE pos=(239,15.5) world=(86.65,273.425) size=(28,29) scale=(1,1) rot=0 z=12 vis=0 tag=12 kids=0 rect=(33,39,28,29) color=(255,255,255) op=76 blend=1/771
+          N7eclipse5hacks6Labels10SmartLabelE pos=(0,265) world=(3,268) size=(0,0) scale=(0.35,0.35) rot=0 z=0 vis=1 tag=-1 kids=2
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(3,268) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(3,268) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0
+        N7eclipse5hacks6Labels15LabelsContainerE pos=(285.5,317) world=(285.5,317) size=(565,314) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        N7eclipse5hacks6Labels15LabelsContainerE pos=(568,317) world=(568,317) size=(6.5,314) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1
+          N7eclipse5hacks6Labels10SmartLabelE pos=(6.5,314) world=(568,317) size=(13,12.95) scale=(0.5,0.5) rot=0 z=0 vis=1 tag=-1 kids=2
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(561.5,310.525) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(561.5,310.525) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=1
+              N7cocos2d8CCSpriteE pos=(6.5,7.5) world=(564.75,314.275) size=(13,13) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(467,128,13,13) color=(0,255,0) op=89 blend=1/771
+        N7eclipse5hacks6Labels15LabelsContainerE pos=(3,160) world=(3,160) size=(565,314) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        N7eclipse5hacks6Labels15LabelsContainerE pos=(285.5,160) world=(285.5,160) size=(565,314) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        N7eclipse5hacks6Labels15LabelsContainerE pos=(568,160) world=(568,160) size=(565,314) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        N7eclipse5hacks6Labels15LabelsContainerE pos=(3,3) world=(3,3) size=(565,314) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        N7eclipse5hacks6Labels15LabelsContainerE pos=(285.5,3) world=(285.5,3) size=(565,314) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+        N7eclipse5hacks6Labels15LabelsContainerE pos=(568,3) world=(568,3) size=(0,314) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=1
+          N7eclipse5hacks6Labels10SmartLabelE pos=(0,0) world=(568,3) size=(0,0) scale=(0.35,0.35) rot=0 z=0 vis=1 tag=-1 kids=2
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(568,3) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=-1 kids=0
+            N7cocos2d17CCSpriteBatchNodeE pos=(0,0) world=(568,3) size=(0,0) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0
+    N7cocos2d13CCLabelBMFontE pos=(5,310) world=(5,310) size=(92,396) scale=(0.5,0.5) rot=0 z=1000 vis=0 tag=-1 kids=215
+      N7cocos2d12CCFontSpriteE pos=(5,387.5) world=(7.5,305.75) size=(8,13) scale=(1,1) rot=0 z=0 vis=1 tag=0 kids=0 rect=(64,52,8,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(13.5,386) world=(11.75,305) size=(9,10) scale=(1,1) rot=0 z=1 vis=1 tag=1 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(21.5,386) world=(15.75,305) size=(9,10) scale=(1,1) rot=0 z=2 vis=1 tag=2 kids=0 rect=(13,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(30.5,386) world=(20.25,305) size=(9,10) scale=(1,1) rot=0 z=3 vis=1 tag=3 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(37.5,387) world=(23.75,305.5) size=(5,12) scale=(1,1) rot=0 z=4 vis=1 tag=4 kids=0 rect=(81,81,5,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(41.5,387.5) world=(25.75,305.75) size=(3,13) scale=(1,1) rot=0 z=5 vis=1 tag=5 kids=0 rect=(112,52,3,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(49,387) world=(29.5,305.5) size=(10,12) scale=(1,1) rot=0 z=6 vis=1 tag=6 kids=0 rect=(30,67,10,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(56,386) world=(33,305) size=(2,10) scale=(1,1) rot=0 z=7 vis=1 tag=7 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(62,361) world=(36,292.5) size=(0,0) scale=(1,1) rot=0 z=8 vis=1 tag=8 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(68,387) world=(39,305.5) size=(8,12) scale=(1,1) rot=0 z=9 vis=1 tag=9 kids=0 rect=(44,81,8,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(77.5,387.5) world=(43.75,305.75) size=(9,13) scale=(1,1) rot=0 z=10 vis=1 tag=10 kids=0 rect=(74,37,9,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(4.5,369.5) world=(7.25,296.75) size=(9,13) scale=(1,1) rot=0 z=12 vis=1 tag=12 kids=0 rect=(107,37,9,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(10.5,369.5) world=(10.25,296.75) size=(3,13) scale=(1,1) rot=0 z=13 vis=1 tag=13 kids=0 rect=(107,52,3,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(20.5,368) world=(15.25,296) size=(13,10) scale=(1,1) rot=0 z=14 vis=1 tag=14 kids=0 rect=(109,81,13,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(32.5,368) world=(21.25,296) size=(9,10) scale=(1,1) rot=0 z=15 vis=1 tag=15 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(38,368) world=(24,296) size=(2,10) scale=(1,1) rot=0 z=16 vis=1 tag=16 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(44,343) world=(27,283.5) size=(0,0) scale=(1,1) rot=0 z=17 vis=1 tag=17 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(49.5,369) world=(29.75,296.5) size=(9,12) scale=(1,1) rot=0 z=18 vis=1 tag=18 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5.5,351.5) world=(7.75,287.75) size=(11,13) scale=(1,1) rot=0 z=20 vis=1 tag=20 kids=0 rect=(73,21,11,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(13.5,351) world=(11.75,287.5) size=(7,12) scale=(1,1) rot=0 z=21 vis=1 tag=21 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(19.5,351) world=(14.75,287.5) size=(7,12) scale=(1,1) rot=0 z=22 vis=1 tag=22 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(27.5,350) world=(18.75,287) size=(9,10) scale=(1,1) rot=0 z=23 vis=1 tag=23 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(38.5,350) world=(24.25,287) size=(13,10) scale=(1,1) rot=0 z=24 vis=1 tag=24 kids=0 rect=(109,81,13,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(50.5,348) world=(30.25,286) size=(9,14) scale=(1,1) rot=0 z=25 vis=1 tag=25 kids=0 rect=(2,21,9,14) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(57.5,351) world=(33.75,287.5) size=(7,12) scale=(1,1) rot=0 z=26 vis=1 tag=26 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(62,350) world=(36,287) size=(2,10) scale=(1,1) rot=0 z=27 vis=1 tag=27 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(68,325) world=(39,274.5) size=(0,0) scale=(1,1) rot=0 z=28 vis=1 tag=28 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(73.5,351) world=(41.75,287.5) size=(9,12) scale=(1,1) rot=0 z=29 vis=1 tag=29 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(4.5,333.5) world=(7.25,278.75) size=(9,13) scale=(1,1) rot=0 z=31 vis=1 tag=31 kids=0 rect=(107,37,9,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(12,332) world=(11,278) size=(8,10) scale=(1,1) rot=0 z=32 vis=1 tag=32 kids=0 rect=(55,95,8,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(20.5,330) world=(15.25,277) size=(9,14) scale=(1,1) rot=0 z=33 vis=1 tag=33 kids=0 rect=(2,21,9,14) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(28.5,332) world=(19.25,278) size=(7,10) scale=(1,1) rot=0 z=34 vis=1 tag=34 kids=0 rect=(75,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(33,332) world=(21.5,278) size=(2,10) scale=(1,1) rot=0 z=35 vis=1 tag=35 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(39,307) world=(24.5,265.5) size=(0,0) scale=(1,1) rot=0 z=36 vis=1 tag=36 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(44.5,333) world=(27.25,278.5) size=(9,12) scale=(1,1) rot=0 z=37 vis=1 tag=37 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(4.5,315.5) world=(7.25,269.75) size=(9,13) scale=(1,1) rot=0 z=39 vis=1 tag=39 kids=0 rect=(107,37,9,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(10.5,315.5) world=(10.25,269.75) size=(3,13) scale=(1,1) rot=0 z=40 vis=1 tag=40 kids=0 rect=(107,52,3,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(20.5,314) world=(15.25,269) size=(13,10) scale=(1,1) rot=0 z=41 vis=1 tag=41 kids=0 rect=(109,81,13,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(32.5,314) world=(21.25,269) size=(9,10) scale=(1,1) rot=0 z=42 vis=1 tag=42 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(43.5,315.5) world=(26.75,269.75) size=(15,13) scale=(1,1) rot=0 z=43 vis=1 tag=43 kids=0 rect=(43,21,15,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(56,314) world=(33,269) size=(8,10) scale=(1,1) rot=0 z=44 vis=1 tag=44 kids=0 rect=(55,95,8,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(63,314) world=(36.5,269) size=(6,10) scale=(1,1) rot=0 z=45 vis=1 tag=45 kids=0 rect=(111,95,6,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(70.5,312) world=(40.25,268) size=(9,14) scale=(1,1) rot=0 z=46 vis=1 tag=46 kids=0 rect=(2,21,9,14) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(76,314) world=(43,269) size=(2,10) scale=(1,1) rot=0 z=47 vis=1 tag=47 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(82,289) world=(46,256.5) size=(0,0) scale=(1,1) rot=0 z=48 vis=1 tag=48 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(88,315) world=(49,269.5) size=(8,12) scale=(1,1) rot=0 z=49 vis=1 tag=49 kids=0 rect=(44,81,8,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5.5,297) world=(7.75,260.5) size=(9,12) scale=(1,1) rot=0 z=51 vis=1 tag=51 kids=0 rect=(42,67,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(15,296) world=(12.5,260) size=(6,10) scale=(1,1) rot=0 z=52 vis=1 tag=52 kids=0 rect=(111,95,6,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(22,296) world=(16,260) size=(8,10) scale=(1,1) rot=0 z=53 vis=1 tag=53 kids=0 rect=(55,95,8,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(29.5,296) world=(19.75,260) size=(9,10) scale=(1,1) rot=0 z=54 vis=1 tag=54 kids=0 rect=(13,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(35.5,297.5) world=(22.75,260.75) size=(3,13) scale=(1,1) rot=0 z=55 vis=1 tag=55 kids=0 rect=(107,52,3,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(41.5,297) world=(25.75,260.5) size=(7,12) scale=(1,1) rot=0 z=56 vis=1 tag=56 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(48.5,294) world=(29.25,259) size=(9,14) scale=(1,1) rot=0 z=57 vis=1 tag=57 kids=0 rect=(110,2,9,14) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(54,296) world=(32,260) size=(2,10) scale=(1,1) rot=0 z=58 vis=1 tag=58 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(60,271) world=(35,247.5) size=(0,0) scale=(1,1) rot=0 z=59 vis=1 tag=59 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(66,297) world=(38,260.5) size=(8,12) scale=(1,1) rot=0 z=60 vis=1 tag=60 kids=0 rect=(44,81,8,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5.5,279.5) world=(7.75,251.75) size=(11,13) scale=(1,1) rot=0 z=62 vis=1 tag=62 kids=0 rect=(73,21,11,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(14.5,278) world=(12.25,251) size=(7,10) scale=(1,1) rot=0 z=63 vis=1 tag=63 kids=0 rect=(84,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(21.5,279) world=(15.75,251.5) size=(7,12) scale=(1,1) rot=0 z=64 vis=1 tag=64 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(26.5,279.5) world=(18.25,251.75) size=(3,13) scale=(1,1) rot=0 z=65 vis=1 tag=65 kids=0 rect=(107,52,3,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(33.5,278) world=(21.75,251) size=(9,10) scale=(1,1) rot=0 z=66 vis=1 tag=66 kids=0 rect=(13,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(42.5,278) world=(26.25,251) size=(9,10) scale=(1,1) rot=0 z=67 vis=1 tag=67 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(48,278) world=(29,251) size=(2,10) scale=(1,1) rot=0 z=68 vis=1 tag=68 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(54,253) world=(32,238.5) size=(0,0) scale=(1,1) rot=0 z=69 vis=1 tag=69 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(59.5,279) world=(34.75,251.5) size=(9,12) scale=(1,1) rot=0 z=70 vis=1 tag=70 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5.5,261) world=(7.75,242.5) size=(9,12) scale=(1,1) rot=0 z=72 vis=1 tag=72 kids=0 rect=(42,67,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(15,260) world=(12.5,242) size=(6,10) scale=(1,1) rot=0 z=73 vis=1 tag=73 kids=0 rect=(111,95,6,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(22,260) world=(16,242) size=(8,10) scale=(1,1) rot=0 z=74 vis=1 tag=74 kids=0 rect=(55,95,8,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(30.5,261) world=(20.25,242.5) size=(9,12) scale=(1,1) rot=0 z=75 vis=1 tag=75 kids=0 rect=(108,67,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(36.5,261.5) world=(23.25,242.75) size=(3,13) scale=(1,1) rot=0 z=76 vis=1 tag=76 kids=0 rect=(107,52,3,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(44.5,260) world=(27.25,242) size=(9,10) scale=(1,1) rot=0 z=77 vis=1 tag=77 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(52.5,260) world=(31.25,242) size=(7,10) scale=(1,1) rot=0 z=78 vis=1 tag=78 kids=0 rect=(93,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(60.5,261) world=(35.25,242.5) size=(7,12) scale=(1,1) rot=0 z=79 vis=1 tag=79 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(67.5,260) world=(38.75,242) size=(7,10) scale=(1,1) rot=0 z=80 vis=1 tag=80 kids=0 rect=(75,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(72,260) world=(41,242) size=(2,10) scale=(1,1) rot=0 z=81 vis=1 tag=81 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(78,235) world=(44,229.5) size=(0,0) scale=(1,1) rot=0 z=82 vis=1 tag=82 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(83.5,261) world=(46.75,242.5) size=(9,12) scale=(1,1) rot=0 z=83 vis=1 tag=83 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5,243.5) world=(7.5,233.75) size=(8,13) scale=(1,1) rot=0 z=85 vis=1 tag=85 kids=0 rect=(34,52,8,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(14,242) world=(12,233) size=(8,10) scale=(1,1) rot=0 z=86 vis=1 tag=86 kids=0 rect=(55,95,8,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(21,242) world=(15.5,233) size=(6,10) scale=(1,1) rot=0 z=87 vis=1 tag=87 kids=0 rect=(111,95,6,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(26.5,243) world=(18.25,233.5) size=(7,12) scale=(1,1) rot=0 z=88 vis=1 tag=88 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(31.5,243.5) world=(20.75,233.75) size=(3,13) scale=(1,1) rot=0 z=89 vis=1 tag=89 kids=0 rect=(107,52,3,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(38.5,242) world=(24.25,233) size=(7,10) scale=(1,1) rot=0 z=90 vis=1 tag=90 kids=0 rect=(84,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(45.5,243) world=(27.75,233.5) size=(5,12) scale=(1,1) rot=0 z=91 vis=1 tag=91 kids=0 rect=(81,81,5,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(52.5,242) world=(31.25,233) size=(9,10) scale=(1,1) rot=0 z=92 vis=1 tag=92 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(60.5,242) world=(35.25,233) size=(7,10) scale=(1,1) rot=0 z=93 vis=1 tag=93 kids=0 rect=(75,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(65,242) world=(37.5,233) size=(2,10) scale=(1,1) rot=0 z=94 vis=1 tag=94 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(71,217) world=(40.5,220.5) size=(0,0) scale=(1,1) rot=0 z=95 vis=1 tag=95 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(76.5,243) world=(43.25,233.5) size=(9,12) scale=(1,1) rot=0 z=96 vis=1 tag=96 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(4,224) world=(7,224) size=(6,4) scale=(1,1) rot=0 z=98 vis=1 tag=98 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(10,224) world=(10,224) size=(6,4) scale=(1,1) rot=0 z=99 vis=1 tag=99 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(16,199) world=(13,211.5) size=(0,0) scale=(1,1) rot=0 z=100 vis=1 tag=100 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(21.5,225.5) world=(15.75,224.75) size=(11,13) scale=(1,1) rot=0 z=101 vis=1 tag=101 kids=0 rect=(73,21,11,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(30.5,224) world=(20.25,224) size=(7,10) scale=(1,1) rot=0 z=102 vis=1 tag=102 kids=0 rect=(102,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(40.5,225) world=(25.25,224.5) size=(9,12) scale=(1,1) rot=0 z=103 vis=1 tag=103 kids=0 rect=(108,67,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(46.5,225.5) world=(28.25,224.75) size=(3,13) scale=(1,1) rot=0 z=104 vis=1 tag=104 kids=0 rect=(107,52,3,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(54.5,224) world=(32.25,224) size=(9,10) scale=(1,1) rot=0 z=105 vis=1 tag=105 kids=0 rect=(2,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(62,199) world=(36,211.5) size=(0,0) scale=(1,1) rot=0 z=106 vis=1 tag=106 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(66,224) world=(38,224) size=(6,4) scale=(1,1) rot=0 z=107 vis=1 tag=107 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(72,224) world=(41,224) size=(6,4) scale=(1,1) rot=0 z=108 vis=1 tag=108 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5,207) world=(7.5,215.5) size=(8,12) scale=(1,1) rot=0 z=110 vis=1 tag=110 kids=0 rect=(34,81,8,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(14.5,206) world=(12.25,215) size=(9,10) scale=(1,1) rot=0 z=111 vis=1 tag=111 kids=0 rect=(2,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(22.5,206) world=(16.25,215) size=(7,10) scale=(1,1) rot=0 z=112 vis=1 tag=112 kids=0 rect=(93,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(33,204) world=(21.5,214) size=(10,14) scale=(1,1) rot=0 z=113 vis=1 tag=113 kids=0 rect=(98,2,10,14) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(40.5,206) world=(25.25,215) size=(7,10) scale=(1,1) rot=0 z=114 vis=1 tag=114 kids=0 rect=(75,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(45,206) world=(27.5,215) size=(2,10) scale=(1,1) rot=0 z=115 vis=1 tag=115 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(51,181) world=(30.5,202.5) size=(0,0) scale=(1,1) rot=0 z=116 vis=1 tag=116 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(57,207) world=(33.5,215.5) size=(8,12) scale=(1,1) rot=0 z=117 vis=1 tag=117 kids=0 rect=(44,81,8,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5,189) world=(7.5,206.5) size=(8,12) scale=(1,1) rot=0 z=119 vis=1 tag=119 kids=0 rect=(34,81,8,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(13.5,189.5) world=(11.75,206.75) size=(7,13) scale=(1,1) rot=0 z=120 vis=1 tag=120 kids=0 rect=(74,52,7,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(22,189.5) world=(16,206.75) size=(10,13) scale=(1,1) rot=0 z=121 vis=1 tag=121 kids=0 rect=(112,21,10,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(29,188) world=(19.5,206) size=(2,10) scale=(1,1) rot=0 z=122 vis=1 tag=122 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(35,163) world=(22.5,193.5) size=(0,0) scale=(1,1) rot=0 z=123 vis=1 tag=123 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(40.5,189) world=(25.25,206.5) size=(9,12) scale=(1,1) rot=0 z=124 vis=1 tag=124 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(4,170) world=(7,197) size=(6,4) scale=(1,1) rot=0 z=126 vis=1 tag=126 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(10,170) world=(10,197) size=(6,4) scale=(1,1) rot=0 z=127 vis=1 tag=127 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(16,145) world=(13,184.5) size=(0,0) scale=(1,1) rot=0 z=128 vis=1 tag=128 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(21,171.5) world=(15.5,197.75) size=(8,13) scale=(1,1) rot=0 z=129 vis=1 tag=129 kids=0 rect=(34,52,8,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(30.5,170) world=(20.25,197) size=(9,10) scale=(1,1) rot=0 z=130 vis=1 tag=130 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(38,170) world=(24,197) size=(6,10) scale=(1,1) rot=0 z=131 vis=1 tag=131 kids=0 rect=(111,95,6,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(43.5,171) world=(26.75,197.5) size=(7,12) scale=(1,1) rot=0 z=132 vis=1 tag=132 kids=0 rect=(63,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(50,145) world=(30,184.5) size=(0,0) scale=(1,1) rot=0 z=133 vis=1 tag=133 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(54,170) world=(32,197) size=(6,4) scale=(1,1) rot=0 z=134 vis=1 tag=134 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(60,170) world=(35,197) size=(6,4) scale=(1,1) rot=0 z=135 vis=1 tag=135 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(6.5,153.5) world=(8.25,188.75) size=(11,13) scale=(1,1) rot=0 z=137 vis=1 tag=137 kids=0 rect=(60,21,11,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(18.5,152) world=(14.25,188) size=(9,10) scale=(1,1) rot=0 z=138 vis=1 tag=138 kids=0 rect=(2,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(26.5,152) world=(18.25,188) size=(9,10) scale=(1,1) rot=0 z=139 vis=1 tag=139 kids=0 rect=(13,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(35.5,152) world=(22.75,188) size=(9,10) scale=(1,1) rot=0 z=140 vis=1 tag=140 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(41,152) world=(25.5,188) size=(2,10) scale=(1,1) rot=0 z=141 vis=1 tag=141 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(47,127) world=(28.5,175.5) size=(0,0) scale=(1,1) rot=0 z=142 vis=1 tag=142 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(52.5,153) world=(31.25,188.5) size=(9,12) scale=(1,1) rot=0 z=143 vis=1 tag=143 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5.5,135.5) world=(7.75,179.75) size=(9,13) scale=(1,1) rot=0 z=145 vis=1 tag=145 kids=0 rect=(85,37,9,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(15.5,134) world=(12.75,179) size=(9,10) scale=(1,1) rot=0 z=146 vis=1 tag=146 kids=0 rect=(2,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(22.5,135) world=(16.25,179.5) size=(7,12) scale=(1,1) rot=0 z=147 vis=1 tag=147 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(30,134) world=(20,179) size=(8,10) scale=(1,1) rot=0 z=148 vis=1 tag=148 kids=0 rect=(55,95,8,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(36.5,135) world=(23.25,179.5) size=(7,12) scale=(1,1) rot=0 z=149 vis=1 tag=149 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(44.5,134) world=(27.25,179) size=(9,10) scale=(1,1) rot=0 z=150 vis=1 tag=150 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(50,134) world=(30,179) size=(2,10) scale=(1,1) rot=0 z=151 vis=1 tag=151 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(56,109) world=(33,166.5) size=(0,0) scale=(1,1) rot=0 z=152 vis=1 tag=152 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(61.5,135) world=(35.75,179.5) size=(9,12) scale=(1,1) rot=0 z=153 vis=1 tag=153 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5,117) world=(7.5,170.5) size=(8,12) scale=(1,1) rot=0 z=155 vis=1 tag=155 kids=0 rect=(34,81,8,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(12.5,116) world=(11.25,170) size=(7,10) scale=(1,1) rot=0 z=156 vis=1 tag=156 kids=0 rect=(84,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(21,116) world=(15.5,170) size=(8,10) scale=(1,1) rot=0 z=157 vis=1 tag=157 kids=0 rect=(55,95,8,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(27.5,117) world=(18.75,170.5) size=(5,12) scale=(1,1) rot=0 z=158 vis=1 tag=158 kids=0 rect=(81,81,5,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(34.5,116) world=(22.25,170) size=(9,10) scale=(1,1) rot=0 z=159 vis=1 tag=159 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(40,116) world=(25,170) size=(2,10) scale=(1,1) rot=0 z=160 vis=1 tag=160 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(46,91) world=(28,157.5) size=(0,0) scale=(1,1) rot=0 z=161 vis=1 tag=161 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(51.5,117) world=(30.75,170.5) size=(9,12) scale=(1,1) rot=0 z=162 vis=1 tag=162 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(4.5,99.5) world=(7.25,161.75) size=(7,13) scale=(1,1) rot=0 z=164 vis=1 tag=164 kids=0 rect=(74,52,7,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(13.5,98) world=(11.75,161) size=(9,10) scale=(1,1) rot=0 z=165 vis=1 tag=165 kids=0 rect=(2,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(20.5,99) world=(15.25,161.5) size=(5,12) scale=(1,1) rot=0 z=166 vis=1 tag=166 kids=0 rect=(81,81,5,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(25.5,99) world=(17.75,161.5) size=(5,12) scale=(1,1) rot=0 z=167 vis=1 tag=167 kids=0 rect=(81,81,5,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(32.5,98) world=(21.25,161) size=(9,10) scale=(1,1) rot=0 z=168 vis=1 tag=168 kids=0 rect=(2,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(42.5,98) world=(26.25,161) size=(13,10) scale=(1,1) rot=0 z=169 vis=1 tag=169 kids=0 rect=(94,81,13,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(50,98) world=(30,161) size=(2,10) scale=(1,1) rot=0 z=170 vis=1 tag=170 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(56,73) world=(33,148.5) size=(0,0) scale=(1,1) rot=0 z=171 vis=1 tag=171 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(61.5,99) world=(35.75,161.5) size=(9,12) scale=(1,1) rot=0 z=172 vis=1 tag=172 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(4,80) world=(7,152) size=(6,4) scale=(1,1) rot=0 z=174 vis=1 tag=174 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(10,80) world=(10,152) size=(6,4) scale=(1,1) rot=0 z=175 vis=1 tag=175 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(16,55) world=(13,139.5) size=(0,0) scale=(1,1) rot=0 z=176 vis=1 tag=176 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(21.5,81.5) world=(15.75,152.75) size=(11,13) scale=(1,1) rot=0 z=177 vis=1 tag=177 kids=0 rect=(73,21,11,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(30,80) world=(20,152) size=(6,10) scale=(1,1) rot=0 z=178 vis=1 tag=178 kids=0 rect=(111,95,6,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(37.5,80) world=(23.75,152) size=(9,10) scale=(1,1) rot=0 z=179 vis=1 tag=179 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(46,80) world=(28,152) size=(8,10) scale=(1,1) rot=0 z=180 vis=1 tag=180 kids=0 rect=(55,95,8,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(53,55) world=(31.5,139.5) size=(0,0) scale=(1,1) rot=0 z=181 vis=1 tag=181 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(57,80) world=(33.5,152) size=(6,4) scale=(1,1) rot=0 z=182 vis=1 tag=182 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(63,80) world=(36.5,152) size=(6,4) scale=(1,1) rot=0 z=183 vis=1 tag=183 kids=0 rect=(80,107,6,4) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(6.5,63.5) world=(8.25,143.75) size=(11,13) scale=(1,1) rot=0 z=185 vis=1 tag=185 kids=0 rect=(60,21,11,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(18.5,62) world=(14.25,143) size=(9,10) scale=(1,1) rot=0 z=186 vis=1 tag=186 kids=0 rect=(2,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(26.5,62) world=(18.25,143) size=(9,10) scale=(1,1) rot=0 z=187 vis=1 tag=187 kids=0 rect=(13,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(35.5,62) world=(22.75,143) size=(9,10) scale=(1,1) rot=0 z=188 vis=1 tag=188 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(41,62) world=(25.5,143) size=(2,10) scale=(1,1) rot=0 z=189 vis=1 tag=189 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(47,37) world=(28.5,130.5) size=(0,0) scale=(1,1) rot=0 z=190 vis=1 tag=190 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(52.5,63) world=(31.25,143.5) size=(9,12) scale=(1,1) rot=0 z=191 vis=1 tag=191 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(61,37) world=(35.5,130.5) size=(0,0) scale=(1,1) rot=0 z=192 vis=1 tag=192 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(65,63.5) world=(37.5,143.75) size=(6,13) scale=(1,1) rot=0 z=193 vis=1 tag=193 kids=0 rect=(92,52,6,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(72,37) world=(41,130.5) size=(0,0) scale=(1,1) rot=0 z=194 vis=1 tag=194 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(77.5,63) world=(43.75,143.5) size=(9,12) scale=(1,1) rot=0 z=195 vis=1 tag=195 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5.5,45.5) world=(7.75,134.75) size=(9,13) scale=(1,1) rot=0 z=197 vis=1 tag=197 kids=0 rect=(85,37,9,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(15.5,44) world=(12.75,134) size=(9,10) scale=(1,1) rot=0 z=198 vis=1 tag=198 kids=0 rect=(2,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(22.5,45) world=(16.25,134.5) size=(7,12) scale=(1,1) rot=0 z=199 vis=1 tag=199 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(30,44) world=(20,134) size=(8,10) scale=(1,1) rot=0 z=200 vis=1 tag=200 kids=0 rect=(55,95,8,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(36.5,45) world=(23.25,134.5) size=(7,12) scale=(1,1) rot=0 z=201 vis=1 tag=201 kids=0 rect=(72,81,7,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(44.5,44) world=(27.25,134) size=(9,10) scale=(1,1) rot=0 z=202 vis=1 tag=202 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(50,44) world=(30,134) size=(2,10) scale=(1,1) rot=0 z=203 vis=1 tag=203 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(56,19) world=(33,121.5) size=(0,0) scale=(1,1) rot=0 z=204 vis=1 tag=204 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(61.5,45) world=(35.75,134.5) size=(9,12) scale=(1,1) rot=0 z=205 vis=1 tag=205 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(70,19) world=(40,121.5) size=(0,0) scale=(1,1) rot=0 z=206 vis=1 tag=206 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(74,45.5) world=(42,134.75) size=(6,13) scale=(1,1) rot=0 z=207 vis=1 tag=207 kids=0 rect=(92,52,6,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(81,19) world=(45.5,121.5) size=(0,0) scale=(1,1) rot=0 z=208 vis=1 tag=208 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(86.5,45) world=(48.25,134.5) size=(9,12) scale=(1,1) rot=0 z=209 vis=1 tag=209 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5,27) world=(7.5,125.5) size=(8,12) scale=(1,1) rot=0 z=211 vis=1 tag=211 kids=0 rect=(34,81,8,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(12.5,26) world=(11.25,125) size=(7,10) scale=(1,1) rot=0 z=212 vis=1 tag=212 kids=0 rect=(84,95,7,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(21,26) world=(15.5,125) size=(8,10) scale=(1,1) rot=0 z=213 vis=1 tag=213 kids=0 rect=(55,95,8,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(27.5,27) world=(18.75,125.5) size=(5,12) scale=(1,1) rot=0 z=214 vis=1 tag=214 kids=0 rect=(81,81,5,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(34.5,26) world=(22.25,125) size=(9,10) scale=(1,1) rot=0 z=215 vis=1 tag=215 kids=0 rect=(24,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(40,26) world=(25,125) size=(2,10) scale=(1,1) rot=0 z=216 vis=1 tag=216 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(46,1) world=(28,112.5) size=(0,0) scale=(1,1) rot=0 z=217 vis=1 tag=217 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(51.5,27) world=(30.75,125.5) size=(9,12) scale=(1,1) rot=0 z=218 vis=1 tag=218 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(60,1) world=(35,112.5) size=(0,0) scale=(1,1) rot=0 z=219 vis=1 tag=219 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(64,27.5) world=(37,125.75) size=(6,13) scale=(1,1) rot=0 z=220 vis=1 tag=220 kids=0 rect=(92,52,6,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(71,1) world=(40.5,112.5) size=(0,0) scale=(1,1) rot=0 z=221 vis=1 tag=221 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(76.5,27) world=(43.25,125.5) size=(9,12) scale=(1,1) rot=0 z=222 vis=1 tag=222 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(5.5,9) world=(7.75,116.5) size=(9,12) scale=(1,1) rot=0 z=224 vis=1 tag=224 kids=0 rect=(53,67,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(15.5,8) world=(12.75,116) size=(9,10) scale=(1,1) rot=0 z=225 vis=1 tag=225 kids=0 rect=(2,95,9,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(22.5,9) world=(16.25,116.5) size=(5,12) scale=(1,1) rot=0 z=226 vis=1 tag=226 kids=0 rect=(81,81,5,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(30.5,9) world=(20.25,116.5) size=(11,12) scale=(1,1) rot=0 z=227 vis=1 tag=227 kids=0 rect=(17,67,11,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(41.5,6) world=(25.75,115) size=(9,14) scale=(1,1) rot=0 z=228 vis=1 tag=228 kids=0 rect=(2,21,9,14) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(47,8) world=(28.5,116) size=(2,10) scale=(1,1) rot=0 z=229 vis=1 tag=229 kids=0 rect=(119,95,2,10) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(53,-17) world=(31.5,103.5) size=(0,0) scale=(1,1) rot=0 z=230 vis=1 tag=230 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(58.5,9) world=(34.25,116.5) size=(9,12) scale=(1,1) rot=0 z=231 vis=1 tag=231 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(67,-17) world=(38.5,103.5) size=(0,0) scale=(1,1) rot=0 z=232 vis=1 tag=232 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(71,9.5) world=(40.5,116.75) size=(6,13) scale=(1,1) rot=0 z=233 vis=1 tag=233 kids=0 rect=(92,52,6,13) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(78,-17) world=(44,103.5) size=(0,0) scale=(1,1) rot=0 z=234 vis=1 tag=234 kids=0 rect=(109,107,0,0) color=(255,255,255) op=255 blend=1/771
+      N7cocos2d12CCFontSpriteE pos=(83.5,9) world=(46.75,116.5) size=(9,12) scale=(1,1) rot=0 z=235 vis=1 tag=235 kids=0 rect=(2,81,9,12) color=(255,255,255) op=255 blend=1/771

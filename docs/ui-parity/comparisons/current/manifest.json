@@ -1,0 +1,1397 @@
+{
+  "capturedAt": "2026-09-11T02:24:10.643Z",
+  "kind": "current-port-before-ui-parity",
+  "viewport": {
+    "width": 1280,
+    "height": 720,
+    "deviceScaleFactor": 1
+  },
+  "storage": "isolated fresh browser context; does not modify user's save",
+  "captures": [
+    {
+      "name": "main-menu",
+      "url": "http://localhost:3222/",
+      "state": {
+        "viewW": 568.8888888888889,
+        "viewH": 320,
+        "navigating": false,
+        "cube": {
+          "x": -109.5971580426551,
+          "y": 15,
+          "icon": 176,
+          "onGround": true
+        },
+        "seenGarage": false,
+        "options": null,
+        "items": [
+          {
+            "menu": "main",
+            "id": "play",
+            "x": 0,
+            "y": 10,
+            "w": 109.5,
+            "h": 109.5,
+            "scale": 1,
+            "acts": true
+          },
+          {
+            "menu": "main",
+            "id": "garage",
+            "x": -110,
+            "y": 10,
+            "w": 70,
+            "h": 70,
+            "scale": 1,
+            "acts": true
+          },
+          {
+            "menu": "main",
+            "id": "creator",
+            "x": 110,
+            "y": 10,
+            "w": 70,
+            "h": 70,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "bottom",
+            "id": "achievements",
+            "x": -83.5,
+            "y": -115,
+            "w": 51,
+            "h": 54,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "bottom",
+            "id": "options",
+            "x": -27.75,
+            "y": -115,
+            "w": 50.5,
+            "h": 54,
+            "scale": 1,
+            "acts": true
+          },
+          {
+            "menu": "bottom",
+            "id": "stats",
+            "x": 27.75,
+            "y": -115,
+            "w": 50.5,
+            "h": 54,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "bottom",
+            "id": "newgrounds",
+            "x": 83.5,
+            "y": -115,
+            "w": 51,
+            "h": 54,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "robtop",
+            "x": -234.44444444444446,
+            "y": -135,
+            "w": 80,
+            "h": 22.400000000000002,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "facebook",
+            "x": -262.44444444444446,
+            "y": -105,
+            "w": 25.200000000000003,
+            "h": 25.200000000000003,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "twitter",
+            "x": -233.44444444444446,
+            "y": -105,
+            "w": 25.6,
+            "h": 24.400000000000002,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "youtube",
+            "x": -204.44444444444446,
+            "y": -105,
+            "w": 25.200000000000003,
+            "h": 25.200000000000003,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "twitch",
+            "x": -175.44444444444446,
+            "y": -105,
+            "w": 25.6,
+            "h": 24.400000000000002,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "discord",
+            "x": -175.44444444444446,
+            "y": -134,
+            "w": 25.6,
+            "h": 24.400000000000002,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "moreGames",
+            "id": "moreGames",
+            "x": 241.44444444444446,
+            "y": -115,
+            "w": 74.25,
+            "h": 63,
+            "scale": 1,
+            "acts": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "level-select",
+      "url": "http://localhost:3222/?levels=1",
+      "state": {
+        "sel": 0,
+        "level": 1,
+        "name": "Stereo Madness",
+        "totalCoins": 0,
+        "viewW": 568.8888888888889,
+        "viewH": 320,
+        "scroll": 0,
+        "pageColor": [
+          0,
+          0,
+          255
+        ],
+        "panel": {
+          "x": 0,
+          "y": 60,
+          "w": 340,
+          "h": 95,
+          "scale": 1
+        },
+        "controls": [
+          {
+            "menu": "page",
+            "id": "levelPanel",
+            "x": 0,
+            "y": 60,
+            "w": 340,
+            "h": 95,
+            "scale": 1
+          },
+          {
+            "menu": "nav",
+            "id": "prev",
+            "x": -259.44444444444446,
+            "y": 0,
+            "w": 26.5,
+            "h": 65.5,
+            "scale": 1
+          },
+          {
+            "menu": "nav",
+            "id": "next",
+            "x": 259.44444444444446,
+            "y": 0,
+            "w": 26.5,
+            "h": 65.5,
+            "scale": 1
+          },
+          {
+            "menu": "back",
+            "id": "back",
+            "x": -259.44444444444446,
+            "y": 138,
+            "w": 32.5,
+            "h": 40.5,
+            "scale": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "icon-kit",
+      "url": "http://localhost:3222/?icons=1",
+      "state": {
+        "viewW": 568.8888888888889,
+        "viewH": 320,
+        "panel": "icons",
+        "mode": "cube",
+        "tab": 0,
+        "page": 0,
+        "pages": 7,
+        "icon": 1,
+        "col1": 0,
+        "col2": 3,
+        "glow": false,
+        "popup": null,
+        "controls": [
+          {
+            "menu": "tabs",
+            "id": "tab-cube",
+            "x": -107.80000000000001,
+            "y": 30,
+            "w": 28.8,
+            "h": 30.150000000000002,
+            "scale": 1
+          },
+          {
+            "menu": "tabs",
+            "id": "tab-ship",
+            "x": -77.00000000000001,
+            "y": 30,
+            "w": 28.8,
+            "h": 30.150000000000002,
+            "scale": 1
+          },
+          {
+            "menu": "tabs",
+            "id": "tab-ball",
+            "x": -46.200000000000024,
+            "y": 30,
+            "w": 28.8,
+            "h": 30.150000000000002,
+            "scale": 1
+          },
+          {
+            "menu": "tabs",
+            "id": "tab-ufo",
+            "x": -15.400000000000022,
+            "y": 30,
+            "w": 28.8,
+            "h": 30.150000000000002,
+            "scale": 1
+          },
+          {
+            "menu": "tabs",
+            "id": "tab-wave",
+            "x": 15.399999999999979,
+            "y": 30,
+            "w": 28.8,
+            "h": 30.150000000000002,
+            "scale": 1
+          },
+          {
+            "menu": "tabs",
+            "id": "tab-robot",
+            "x": 46.19999999999998,
+            "y": 30,
+            "w": 28.8,
+            "h": 30.150000000000002,
+            "scale": 1
+          },
+          {
+            "menu": "tabs",
+            "id": "tab-spider",
+            "x": 76.99999999999999,
+            "y": 30,
+            "w": 28.8,
+            "h": 30.150000000000002,
+            "scale": 1
+          },
+          {
+            "menu": "tabs",
+            "id": "tab-swing",
+            "x": 107.79999999999998,
+            "y": 30,
+            "w": 28.8,
+            "h": 30.150000000000002,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-1",
+            "x": -165,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-2",
+            "x": -135,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-3",
+            "x": -105,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-4",
+            "x": -75,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-5",
+            "x": -45,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-6",
+            "x": -15,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-7",
+            "x": 15,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-8",
+            "x": 45,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-9",
+            "x": 75,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-10",
+            "x": 105,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-11",
+            "x": 135,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-12",
+            "x": 165,
+            "y": -47,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-13",
+            "x": -165,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-14",
+            "x": -135,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-15",
+            "x": -105,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-16",
+            "x": -75,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-17",
+            "x": -45,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-18",
+            "x": -15,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-19",
+            "x": 15,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-20",
+            "x": 45,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-21",
+            "x": 75,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-22",
+            "x": 105,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-23",
+            "x": 135,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-24",
+            "x": 165,
+            "y": -77,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-25",
+            "x": -165,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-26",
+            "x": -135,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-27",
+            "x": -105,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-28",
+            "x": -75,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-29",
+            "x": -45,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-30",
+            "x": -15,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-31",
+            "x": 15,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-32",
+            "x": 45,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-33",
+            "x": 75,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-34",
+            "x": 105,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-35",
+            "x": 135,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "grid",
+            "id": "icon-36",
+            "x": 165,
+            "y": -107,
+            "w": 30,
+            "h": 30,
+            "scale": 1
+          },
+          {
+            "menu": "dots",
+            "id": "dot-0",
+            "x": -67.5,
+            "y": -139,
+            "w": 20.5,
+            "h": 22,
+            "scale": 1
+          },
+          {
+            "menu": "dots",
+            "id": "dot-1",
+            "x": -45,
+            "y": -139,
+            "w": 20.5,
+            "h": 22,
+            "scale": 1
+          },
+          {
+            "menu": "dots",
+            "id": "dot-2",
+            "x": -22.5,
+            "y": -139,
+            "w": 20.5,
+            "h": 22,
+            "scale": 1
+          },
+          {
+            "menu": "dots",
+            "id": "dot-3",
+            "x": 0,
+            "y": -139,
+            "w": 20.5,
+            "h": 22,
+            "scale": 1
+          },
+          {
+            "menu": "dots",
+            "id": "dot-4",
+            "x": 22.5,
+            "y": -139,
+            "w": 20.5,
+            "h": 22,
+            "scale": 1
+          },
+          {
+            "menu": "dots",
+            "id": "dot-5",
+            "x": 45,
+            "y": -139,
+            "w": 20.5,
+            "h": 22,
+            "scale": 1
+          },
+          {
+            "menu": "dots",
+            "id": "dot-6",
+            "x": 67.5,
+            "y": -139,
+            "w": 20.5,
+            "h": 22,
+            "scale": 1
+          },
+          {
+            "menu": "corner",
+            "id": "back",
+            "x": -260.44444444444446,
+            "y": 137,
+            "w": 32.5,
+            "h": 40,
+            "scale": 1
+          },
+          {
+            "menu": "corner",
+            "id": "paint",
+            "x": -254.44444444444446,
+            "y": 40,
+            "w": 40.5,
+            "h": 36.5,
+            "scale": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "settings",
+      "url": "http://localhost:3222/?settings=1",
+      "state": {
+        "viewW": 568.8888888888889,
+        "viewH": 320,
+        "navigating": false,
+        "cube": {
+          "x": -226.18243171273036,
+          "y": 40.689971924458504,
+          "icon": 13,
+          "onGround": false
+        },
+        "seenGarage": false,
+        "options": {
+          "t": 1,
+          "popup": false,
+          "music": 1,
+          "sfx": 1,
+          "controls": [
+            {
+              "id": "account",
+              "x": -79,
+              "y": 80,
+              "w": 130,
+              "h": 31.5
+            },
+            {
+              "id": "howToPlay",
+              "x": 79,
+              "y": 80,
+              "w": 130,
+              "h": 31.5
+            },
+            {
+              "id": "options",
+              "x": -79,
+              "y": 40,
+              "w": 130,
+              "h": 31.5
+            },
+            {
+              "id": "graphics",
+              "x": 79,
+              "y": 40,
+              "w": 130,
+              "h": 31.5
+            },
+            {
+              "id": "rate",
+              "x": -105,
+              "y": 0,
+              "w": 78,
+              "h": 31.5
+            },
+            {
+              "id": "songs",
+              "x": 0,
+              "y": 0,
+              "w": 78,
+              "h": 31.5
+            },
+            {
+              "id": "help",
+              "x": 105,
+              "y": 0,
+              "w": 78,
+              "h": 31.5
+            },
+            {
+              "id": "menuMusic",
+              "x": 145,
+              "y": -69,
+              "w": 21,
+              "h": 20.7
+            },
+            {
+              "id": "back",
+              "x": -260.44444444444446,
+              "y": 137,
+              "w": 32.5,
+              "h": 40
+            },
+            {
+              "id": "slider-music",
+              "x": 103,
+              "y": -54,
+              "w": 38,
+              "h": 38
+            },
+            {
+              "id": "slider-sfx",
+              "x": 103,
+              "y": -94,
+              "w": 38,
+              "h": 38
+            }
+          ]
+        },
+        "items": [
+          {
+            "menu": "main",
+            "id": "play",
+            "x": 0,
+            "y": 10,
+            "w": 109.5,
+            "h": 109.5,
+            "scale": 1,
+            "acts": true
+          },
+          {
+            "menu": "main",
+            "id": "garage",
+            "x": -110,
+            "y": 10,
+            "w": 70,
+            "h": 70,
+            "scale": 1,
+            "acts": true
+          },
+          {
+            "menu": "main",
+            "id": "creator",
+            "x": 110,
+            "y": 10,
+            "w": 70,
+            "h": 70,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "bottom",
+            "id": "achievements",
+            "x": -83.5,
+            "y": -115,
+            "w": 51,
+            "h": 54,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "bottom",
+            "id": "options",
+            "x": -27.75,
+            "y": -115,
+            "w": 50.5,
+            "h": 54,
+            "scale": 1,
+            "acts": true
+          },
+          {
+            "menu": "bottom",
+            "id": "stats",
+            "x": 27.75,
+            "y": -115,
+            "w": 50.5,
+            "h": 54,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "bottom",
+            "id": "newgrounds",
+            "x": 83.5,
+            "y": -115,
+            "w": 51,
+            "h": 54,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "robtop",
+            "x": -234.44444444444446,
+            "y": -135,
+            "w": 80,
+            "h": 22.400000000000002,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "facebook",
+            "x": -262.44444444444446,
+            "y": -105,
+            "w": 25.200000000000003,
+            "h": 25.200000000000003,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "twitter",
+            "x": -233.44444444444446,
+            "y": -105,
+            "w": 25.6,
+            "h": 24.400000000000002,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "youtube",
+            "x": -204.44444444444446,
+            "y": -105,
+            "w": 25.200000000000003,
+            "h": 25.200000000000003,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "twitch",
+            "x": -175.44444444444446,
+            "y": -105,
+            "w": 25.6,
+            "h": 24.400000000000002,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "social",
+            "id": "discord",
+            "x": -175.44444444444446,
+            "y": -134,
+            "w": 25.6,
+            "h": 24.400000000000002,
+            "scale": 1,
+            "acts": false
+          },
+          {
+            "menu": "moreGames",
+            "id": "moreGames",
+            "x": 241.44444444444446,
+            "y": -115,
+            "w": 74.25,
+            "h": 63,
+            "scale": 1,
+            "acts": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "attempt-start",
+      "url": "http://localhost:3222/?level=1&manual=1",
+      "state": {
+        "attempts": 1,
+        "dead": false,
+        "x": 0,
+        "y": 15,
+        "percent": 0,
+        "maxX": 26384,
+        "hudPercent": 0,
+        "controls": [],
+        "endLevel": null,
+        "gameOptions": null,
+        "livePercent": 0,
+        "hud": {
+          "barX": 0,
+          "barY": 152,
+          "barW": 210,
+          "barH": 16,
+          "progressWidth": 206,
+          "fillLeft": -103,
+          "fillY": 152,
+          "labelX": 110,
+          "labelY": 152,
+          "labelAlign": -1,
+          "pauseX": 269.44444444444446,
+          "pauseY": 145
+        },
+        "mode": "cube",
+        "mini": false,
+        "coins": 0,
+        "speed": 311.58,
+        "mirrored": false,
+        "paused": false,
+        "audioState": "none",
+        "camY": -89.56283453472994,
+        "dualY": null,
+        "practice": false,
+        "checkpoints": [],
+        "autoCheckpoints": true,
+        "completed": false,
+        "saved": {
+          "normal": 0,
+          "practice": 0,
+          "coins": [],
+          "attempts": 0,
+          "jumps": 0
+        },
+        "skipped": 19,
+        "skippedArt": 0,
+        "skippedInvisible": 19,
+        "unknownIds": [],
+        "objects": 2291,
+        "particles": 22,
+        "shake": 0,
+        "shakeOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "triggerShake": 0
+      }
+    },
+    {
+      "name": "gameplay-hud",
+      "url": "http://localhost:3222/?level=1&manual=1",
+      "state": {
+        "attempts": 1,
+        "dead": false,
+        "x": 207.71999999999963,
+        "y": 15,
+        "percent": 0.7872953305033339,
+        "maxX": 26384,
+        "hudPercent": 0,
+        "controls": [],
+        "endLevel": null,
+        "gameOptions": null,
+        "livePercent": 0.7872953305033339,
+        "hud": {
+          "barX": 0,
+          "barY": 152,
+          "barW": 210,
+          "barH": 16,
+          "progressWidth": 206,
+          "fillLeft": -103,
+          "fillY": 152,
+          "labelX": 110,
+          "labelY": 152,
+          "labelAlign": -1,
+          "pauseX": 269.44444444444446,
+          "pauseY": 145
+        },
+        "mode": "cube",
+        "mini": false,
+        "coins": 0,
+        "speed": 311.58,
+        "mirrored": false,
+        "paused": false,
+        "audioState": "none",
+        "camY": -89.81969515423617,
+        "dualY": null,
+        "practice": false,
+        "checkpoints": [],
+        "autoCheckpoints": true,
+        "completed": false,
+        "saved": {
+          "normal": 0,
+          "practice": 0,
+          "coins": [],
+          "attempts": 0,
+          "jumps": 0
+        },
+        "skipped": 19,
+        "skippedArt": 0,
+        "skippedInvisible": 19,
+        "unknownIds": [],
+        "objects": 2291,
+        "particles": 20,
+        "shake": 0,
+        "shakeOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "triggerShake": 0
+      }
+    },
+    {
+      "name": "pause-normal",
+      "url": "http://localhost:3222/?level=1&manual=1",
+      "state": {
+        "attempts": 1,
+        "dead": false,
+        "x": 207.71999999999963,
+        "y": 15,
+        "percent": 0.7872953305033339,
+        "maxX": 26384,
+        "hudPercent": 0,
+        "controls": [
+          {
+            "id": "restartFull",
+            "x": -161.5,
+            "y": -30,
+            "w": 61.5,
+            "h": 64.5
+          },
+          {
+            "id": "practice",
+            "x": -85,
+            "y": -30,
+            "w": 61.5,
+            "h": 64.5
+          },
+          {
+            "id": "resume",
+            "x": 0,
+            "y": -30,
+            "w": 78.5,
+            "h": 81.5
+          },
+          {
+            "id": "quit",
+            "x": 85,
+            "y": -30,
+            "w": 61.5,
+            "h": 64.5
+          },
+          {
+            "id": "restart",
+            "x": 161.5,
+            "y": -30,
+            "w": 61.5,
+            "h": 64.5
+          },
+          {
+            "id": "settings",
+            "x": 248.44444444444446,
+            "y": 124,
+            "w": 30.299999999999997,
+            "h": 32.4
+          }
+        ],
+        "endLevel": null,
+        "gameOptions": null,
+        "livePercent": 0.7872953305033339,
+        "hud": {
+          "barX": 0,
+          "barY": 152,
+          "barW": 210,
+          "barH": 16,
+          "progressWidth": 206,
+          "fillLeft": -103,
+          "fillY": 152,
+          "labelX": 110,
+          "labelY": 152,
+          "labelAlign": -1,
+          "pauseX": 269.44444444444446,
+          "pauseY": 145
+        },
+        "mode": "cube",
+        "mini": false,
+        "coins": 0,
+        "speed": 311.58,
+        "mirrored": false,
+        "paused": true,
+        "audioState": "none",
+        "camY": -89.96435798276254,
+        "dualY": null,
+        "practice": false,
+        "checkpoints": [],
+        "autoCheckpoints": true,
+        "completed": false,
+        "saved": {
+          "normal": 0,
+          "practice": 0,
+          "coins": [],
+          "attempts": 0,
+          "jumps": 0
+        },
+        "skipped": 19,
+        "skippedArt": 0,
+        "skippedInvisible": 19,
+        "unknownIds": [],
+        "objects": 2291,
+        "particles": 21,
+        "shake": 0,
+        "shakeOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "triggerShake": 0
+      }
+    },
+    {
+      "name": "pause-practice",
+      "url": "http://localhost:3222/?level=1&manual=1",
+      "state": {
+        "attempts": 2,
+        "dead": false,
+        "x": 0,
+        "y": 15,
+        "percent": 0,
+        "maxX": 26384,
+        "hudPercent": 0,
+        "controls": [
+          {
+            "id": "restartFull",
+            "x": -161.5,
+            "y": -30,
+            "w": 61.5,
+            "h": 64.5
+          },
+          {
+            "id": "practice",
+            "x": -85,
+            "y": -30,
+            "w": 61.5,
+            "h": 64.5
+          },
+          {
+            "id": "resume",
+            "x": 0,
+            "y": -30,
+            "w": 78.5,
+            "h": 81.5
+          },
+          {
+            "id": "quit",
+            "x": 85,
+            "y": -30,
+            "w": 61.5,
+            "h": 64.5
+          },
+          {
+            "id": "restart",
+            "x": 161.5,
+            "y": -30,
+            "w": 61.5,
+            "h": 64.5
+          },
+          {
+            "id": "settings",
+            "x": 248.44444444444446,
+            "y": 124,
+            "w": 30.299999999999997,
+            "h": 32.4
+          }
+        ],
+        "endLevel": null,
+        "gameOptions": null,
+        "livePercent": 0,
+        "hud": {
+          "barX": 0,
+          "barY": 152,
+          "barW": 210,
+          "barH": 16,
+          "progressWidth": 206,
+          "fillLeft": -103,
+          "fillY": 152,
+          "labelX": 110,
+          "labelY": 152,
+          "labelAlign": -1,
+          "pauseX": 269.44444444444446,
+          "pauseY": 145
+        },
+        "mode": "cube",
+        "mini": false,
+        "coins": 0,
+        "speed": 311.58,
+        "mirrored": false,
+        "paused": true,
+        "audioState": "none",
+        "camY": -70.87829488429576,
+        "dualY": null,
+        "practice": true,
+        "checkpoints": [],
+        "autoCheckpoints": true,
+        "completed": false,
+        "saved": {
+          "normal": 0,
+          "practice": 0,
+          "coins": [],
+          "attempts": 0,
+          "jumps": 0
+        },
+        "skipped": 19,
+        "skippedArt": 0,
+        "skippedInvisible": 19,
+        "unknownIds": [],
+        "objects": 2291,
+        "particles": 9,
+        "shake": 0,
+        "shakeOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "triggerShake": 0
+      }
+    },
+    {
+      "name": "completion-normal",
+      "url": "http://localhost:3222/?level=1&manual=1",
+      "state": {
+        "attempts": 1,
+        "dead": false,
+        "x": 26390.82599999679,
+        "y": 165.53690084373548,
+        "percent": 100,
+        "maxX": 26384,
+        "hudPercent": 100,
+        "controls": [
+          {
+            "id": "replay",
+            "x": -100,
+            "y": 69.47676158621829,
+            "w": 61.5,
+            "h": 64.5
+          },
+          {
+            "id": "quit",
+            "x": 100,
+            "y": 69.47676158621829,
+            "w": 61.5,
+            "h": 64.5
+          }
+        ],
+        "endLevel": {
+          "t": 0.4516000000238418,
+          "endText": "Incredible!",
+          "time": 84.7,
+          "attempts": 1,
+          "practice": false
+        },
+        "gameOptions": null,
+        "livePercent": 100,
+        "hud": {
+          "barX": 0,
+          "barY": 152,
+          "barW": 210,
+          "barH": 16,
+          "progressWidth": 206,
+          "fillLeft": -103,
+          "fillY": 152,
+          "labelX": 110,
+          "labelY": 152,
+          "labelAlign": -1,
+          "pauseX": 269.44444444444446,
+          "pauseY": 145
+        },
+        "mode": "ship",
+        "mini": false,
+        "coins": 0,
+        "speed": 311.58,
+        "mirrored": false,
+        "paused": false,
+        "audioState": "running",
+        "camY": -28.322577922342376,
+        "dualY": null,
+        "practice": false,
+        "checkpoints": [],
+        "autoCheckpoints": true,
+        "completed": true,
+        "saved": {
+          "normal": 0,
+          "practice": 0,
+          "coins": [],
+          "attempts": 0,
+          "jumps": 0
+        },
+        "skipped": 19,
+        "skippedArt": 0,
+        "skippedInvisible": 19,
+        "unknownIds": [],
+        "objects": 2291,
+        "particles": 12,
+        "shake": 0,
+        "shakeOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "triggerShake": 0
+      }
+    }
+  ],
+  "errors": []
+}
