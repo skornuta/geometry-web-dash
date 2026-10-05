@@ -522,7 +522,11 @@ async function main() {
       // no baked tint: the game draws this sprite in the detail channel alone,
       // and the cyan 150,255,255 of OpenGD's table is the editor's own
       r: 255, g: 255, b: 255,
-      flipX: !!cs.fx, flipY: !!cs.fy, rot: cs.rot ?? 0,
+      // A loose node (on the object's own position) reports its rotation in
+      // world space, but the object's rotation is applied to its children, so
+      // the child takes the difference. A child node is already relative.
+      flipX: !!cs.fx, flipY: !!cs.fy,
+      rot: loose ? (cs.rot ?? 0) - (g.self.rot ?? 0) : cs.rot ?? 0,
       scaleX: cs.sx ?? 1, scaleY: cs.sy ?? 1, children: [],
     };
     if (!isChild && PIXEL_DETAIL_CHANNELS.has(d.id)) child.z = PIXEL_DETAIL_Z;
