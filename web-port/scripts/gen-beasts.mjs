@@ -90,6 +90,16 @@ export interface BeastAnim {
 }
 
 export const BEASTS: ReadonlyMap<number, BeastAnim> = new Map(Object.entries(${JSON.stringify(out)}).map(([k, v]) => [Number(k), v as BeastAnim]));
+
+/**
+ * The frame an animation shows at \`t\` seconds: \`floor(t / delay)\`, wrapped
+ * for a looped animation and held on the last frame otherwise.
+ */
+export function beastFrameIndex(a: BeastAnim, t: number): number {
+  const n = a.frames.length;
+  const k = Math.floor(Math.max(0, t) / a.delay);
+  return a.looped ? k % n : Math.min(k, n - 1);
+}
 `;
 writeFileSync(join(root, "src", "gd", "beasts.ts"), body);
 console.log(Object.entries(out).map(([id, v]) => `${id} ${v.name} ${v.anim} ${v.frames.length}f parts ${v.frames[0].length}`).join("\n"));

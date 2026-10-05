@@ -20,7 +20,7 @@ import { invisibleFade } from "../gd/invisible.ts";
 import { AUDIO_SCALE, KEY_NO_AUDIO_SCALE, audioScaleFactor } from "../gd/audioPulse.ts";
 import { CCEmitter } from "../engine/ccparticles.ts";
 import { portalBackId } from "../gd/portalBacks.ts";
-import { BEASTS } from "../gd/beasts.ts";
+import { BEASTS, beastFrameIndex } from "../gd/beasts.ts";
 import {
   CUSTOM_PARTICLE_ID, KEY_ANIMATE_ON_TRIGGER, KEY_PARTICLE_DATA, KEY_QUICK_START, KEY_UNIFORM_OBJECT_COLOR, KEY_USE_OBJECT_COLOR,
   customParticleConfig, type ParticleStruct,
@@ -1850,10 +1850,7 @@ function beastPose(
   b: NonNullable<DrawItem["beast"]>, frame: SpriteFrame, t: number,
 ): { x: number; y: number; w: number; h: number; rot: number } | null {
   const a = b.anim;
-  const n = a.frames.length;
-  let k = Math.floor(Math.max(0, t) / a.delay);
-  k = a.looped ? k % n : Math.min(k, n - 1);
-  const q = a.frames[k].find((p) => p.frame === b.part);
+  const q = a.frames[beastFrameIndex(a, t)].find((p) => p.frame === b.part);
   if (!q) return null;
   const lx = q.x * b.fx * b.scale, ly = q.y * b.fy * b.scale;
   const cos = Math.cos(b.rot), sin = Math.sin(b.rot);
