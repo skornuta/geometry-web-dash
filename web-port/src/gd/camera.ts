@@ -172,12 +172,15 @@ export function cameraBottomTarget(
 ): number {
   let camY: number;
   if (freeMode) mode = "cube";
-  // The ground modes follow the player through the deadzone; only the flying
-  // ones lock to the centre. Deadlocked 50% (robot, y 177): the native frame
+  // The cube and the robot follow the player through the deadzone; the flying
+  // modes and the spider (without free mode, which made `mode` cube above) lock
+  // to the centre. Native Dash spider x 975–1544 (dash-full.txt, Oct 3): the
+  // view holds at 79.0 while the player moves 163–292. The port's deadzone
+  // moved it 20–30 units there. Deadlocked 50% (robot, y 177): the native frame
   // puts the view's bottom near 17 — inside the cube deadzone's reach (-53..57)
   // — where the locked centre had it at 146, showing the ceiling instead of
   // the acid floor.
-  if (mode !== "cube" && mode !== "robot" && mode !== "spider") {
+  if (mode !== "cube" && mode !== "robot") {
     // `cam.y = winSize.height * -0.5 + cameraYCenter`, floored at 0 in GD space
     camY = Math.max(0 - GD_Y_OFFSET, cameraYCenter - viewH / 2);
   } else {

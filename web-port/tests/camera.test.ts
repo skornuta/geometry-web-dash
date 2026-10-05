@@ -19,8 +19,14 @@ test("a flipped player keeps the upright margins (native Dash f634, x 1007-1250)
   // blue orb at x 855: the cube flips and rises to ~60 above the centre with
   // the camera still at 43.0 (native x 849)
   assert.equal(target("cube", 43 + 160 + 60, true, 43), 43);
-  // the spider rests 70 above the centre on the ceiling, camera still
-  assert.equal(target("spider", 57.5 + 160 + 70, true, 57.5), 57.5);
+});
+
+test("the spider locks to its inherited centre, whatever the player does (native Dash x 975–1544)", () => {
+  // the view's centre is 150 (default) so the bottom is 150 - 160 = -10 in port
+  // units, i.e. 80 in game units; native holds 79.0 there (dash-full.txt)
+  assert.equal(target("spider", 57.5 + 160 + 70, true, 57.5), 80);
+  assert.equal(target("spider", 163.5, false, 79), 80);
+  assert.equal(target("spider", 292.5, false, 79), 80);
 });
 
 test("free mode follows like the cube in every mode (native Dash ball/swing)", () => {
