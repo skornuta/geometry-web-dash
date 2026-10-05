@@ -1,0 +1,8 @@
+node_modules
+dist
+
+# downloaded object-mapping source (GPL-3.0, not vendored — see PORT-PROGRESS.md)
+data/
+
+# screenshot-verification output
+shot*.png
