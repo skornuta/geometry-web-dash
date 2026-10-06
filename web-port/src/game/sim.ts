@@ -1178,7 +1178,13 @@ function stepCore(
       case "H": hitHead = true; break;
       case "F": flipOnHit = true; break;
       case "J": noAutoJump = true; break;
-      case "S": if (player.dash !== 0) { stopDash(player); note(s, "dash stopped"); } break;
+      case "S":
+        // the S block takes the press with the dash: a button held through it
+        // does not re-jump on landing until it is let go (Dash f2253, USER-12)
+        player.holdSpent = true;
+        player.queuedHold = false;
+        if (player.dash !== 0) { stopDash(player); note(s, "dash stopped"); }
+        break;
     }
   }
   // J is read by the *next* step's jump, as the original reads last frame's flag
