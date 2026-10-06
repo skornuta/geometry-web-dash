@@ -78,7 +78,7 @@ import {
 import { EndSequence } from "../gd/endSequence.ts";
 import { easedValue } from "../gd/easing.ts";
 import { groupAnchor } from "../gd/triggers.ts";
-import { scaledBandEdge, stepViewStatic } from "../gd/camera.ts";
+import { scaledBandEdge, stepViewStaticPair } from "../gd/camera.ts";
 import type { CustomLevel } from "../gd/gmd.ts";
 import {
   createEndViewTextures, drawEndFlash, drawEndGhosts, drawEndPortal, drawEndScreen, drawEndWorld,
@@ -1257,13 +1257,18 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     const zvW = zvWObj * squash, zvH = zvW0 * sa + zvH0 * ca;
     // Camera Static (1914) moves the whole view (see `TriggerRuntime.viewStatic`)
     let sX = camX, sY = camCentreY;
-    const vs = rtc?.viewStatic;
-    if (vs && sim.triggers) {
-      const tg = groupAnchor(sim.triggers.level, rtc, vs.group);
-      if (tg) {
-        // per-axis: `stepViewStatic` (gd/camera.ts) — an exit releases only its own axes
-        if (!stepViewStatic(vs, tg.x, tg.y, camX, camCentreY, lastView.x, lastView.y,
-          frame, paused, VIEW_OUT)) rtc!.viewStatic = null;
+    // Two statics can be live at once, one per axis (`viewStaticOther`); each
+    // axis takes its owner's value (`stepViewStaticPair`, gd/camera.ts)
+    const vs = rtc?.viewStatic ?? null, vo = rtc?.viewStaticOther ?? null;
+    if ((vs || vo) && sim.triggers) {
+      const tgS = vs ? groupAnchor(sim.triggers.level, rtc, vs.group) : null;
+      const tgO = vo ? groupAnchor(sim.triggers.level, rtc, vo.group) : null;
+      if (tgS || tgO) {
+        // an exit releases only its own axes, inside `stepViewStatic`
+        const live = stepViewStaticPair(vo, tgO, vs, tgS, camX, camCentreY, lastView.x, lastView.y,
+          frame, paused, zoom, viewW, VIEW_OUT);
+        if (!live.second) rtc!.viewStatic = null;
+        if (!live.first) rtc!.viewStaticOther = null;
         sX = VIEW_OUT.x; sY = VIEW_OUT.y;
       }
     }

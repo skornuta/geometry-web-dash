@@ -319,3 +319,55 @@ export function stepViewStatic(
   }
   return holdX || holdY || k < 1;
 }
+
+/** scratch outputs for `stepViewStaticPair`, so a frame allocates nothing */
+const PAIR_FIRST = { x: 0, y: 0 }, PAIR_SECOND = { x: 0, y: 0 };
+const PAIR_TG_FIRST = { x: 0, y: 0 }, PAIR_TG_SECOND = { x: 0, y: 0 };
+
+/** which axes a static owns (bit 1 x, bit 2 y): a both-axis static owns both */
+function ownedAxes(vs: ViewStatic | null): number {
+  return vs ? (vs.axis === 0 ? 3 : vs.axis) : 0;
+}
+
+/**
+ * A static's view centre for a zoomed view: the group's point is where the view's
+ * edge sits at zoom 1, and the zoom scales the half-window about it (native Dash
+ * 2185–2412, zoom 0.8333: the bottom is 135 − (320/2)/0.8333 + 90 = 33.0 and the
+ * left edge is 2311 − (571/2)/0.8333 = 1968.4). So the centre moves by
+ * half·(1 − 1/zoom), zero at zoom 1.
+ */
+function zoomedTarget(tg: { x: number; y: number }, zoom: number, viewW: number, out: { x: number; y: number }) {
+  const zc = 1 - 1 / (zoom > 0 ? zoom : 1);
+  out.x = tg.x + (viewW / 2) * zc;
+  out.y = tg.y + (DESIGN_H / 2) * zc;
+}
+
+/**
+ * The view while up to two Camera Statics are live, one per axis. Each axis
+ * takes the value of the static that owns it, and the follow where neither
+ * does. `first` is the older static (`viewStaticOther`), `second` the newer
+ * (`viewStatic`), so the newer one wins an axis that both could claim.
+ * Returns whether each static is still live (false once it has eased home).
+ */
+export function stepViewStaticPair(
+  first: ViewStatic | null, firstTg: { x: number; y: number } | null,
+  second: ViewStatic | null, secondTg: { x: number; y: number } | null,
+  camX: number, camY: number, lastX: number, lastY: number, frame: number, paused: boolean,
+  zoom: number, viewW: number,
+  out: { x: number; y: number },
+): { first: boolean; second: boolean } {
+  let aliveFirst = true, aliveSecond = true;
+  if (first && firstTg) {
+    zoomedTarget(firstTg, zoom, viewW, PAIR_TG_FIRST);
+    aliveFirst = stepViewStatic(first, PAIR_TG_FIRST.x, PAIR_TG_FIRST.y, camX, camY, lastX, lastY, frame, paused, PAIR_FIRST);
+  }
+  if (second && secondTg) {
+    zoomedTarget(secondTg, zoom, viewW, PAIR_TG_SECOND);
+    aliveSecond = stepViewStatic(second, PAIR_TG_SECOND.x, PAIR_TG_SECOND.y, camX, camY, lastX, lastY, frame, paused, PAIR_SECOND);
+  }
+  const ownFirst = first && firstTg ? ownedAxes(first) : 0;
+  const ownSecond = second && secondTg ? ownedAxes(second) : 0;
+  out.x = (ownSecond & 1) ? PAIR_SECOND.x : (ownFirst & 1) ? PAIR_FIRST.x : camX;
+  out.y = (ownSecond & 2) ? PAIR_SECOND.y : (ownFirst & 2) ? PAIR_FIRST.y : camY;
+  return { first: aliveFirst, second: aliveSecond };
+}

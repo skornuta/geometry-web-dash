@@ -437,6 +437,12 @@ export interface TriggerRuntime {
    * group 345 at x 21855 while the player wanders ±650 around it.
    */
   viewStatic: ViewStatic | null;
+  /**
+   * The static on the other axis, still live while `viewStatic` is set: a y-only
+   * and an x-only static fired together both hold, since GD keeps one state per
+   * axis (`updateStaticCameraPosToGroup` writes the x and y halves separately).
+   */
+  viewStaticOther: ViewStatic | null;
   tweens: Tween[];
   /** spawn-trigger activations still counting down */
   pending: {
@@ -739,7 +745,7 @@ export function positionedGroups(triggers: Trigger[]): Set<number> {
 export function createRuntime(level: Level): TriggerRuntime {
   const rt: TriggerRuntime = {
     colors: new Map(), groups: new Map(), next: 0, tweens: [], pending: [], time: 0,
-    channel: 0, dir: 4, fired: new Set(), rotations: [], timeWarp: 1, cameraStatic: null, viewStatic: null, endHit: false, controlsOff: [false, false], bgIndex: null, mgOffsetY: 0, camEdges: [0, 0, 0, 0], particleSpawns: [], areaTints: [], zoom: 1, camOffset: { x: 0, y: 0 }, camAngle: 0, camAngleTarget: 0, gradients: new Map(), shader: freshShaderState(), shaderZ: [1, 15],
+    channel: 0, dir: 4, fired: new Set(), rotations: [], timeWarp: 1, cameraStatic: null, viewStatic: null, viewStaticOther: null, endHit: false, controlsOff: [false, false], bgIndex: null, mgOffsetY: 0, camEdges: [0, 0, 0, 0], particleSpawns: [], areaTints: [], zoom: 1, camOffset: { x: 0, y: 0 }, camAngle: 0, camAngleTarget: 0, gradients: new Map(), shader: freshShaderState(), shaderZ: [1, 15],
     playerColors: [{ r: 125, g: 255, b: 0 }, { r: 0, g: 255, b: 255 }],
     shake: { strength: 0, remaining: 0 }, pulses: [],
     items: new Map(), counters: [], collisions: [], collidingPairs: new Set(),
@@ -763,6 +769,7 @@ export function resetRuntime(rt: TriggerRuntime, level: Level) {
   rt.timeWarp = 1;
   rt.cameraStatic = null;
   rt.viewStatic = null;
+  rt.viewStaticOther = null;
   rt.zoom = 1;
   rt.camOffset = { x: 0, y: 0 }; rt.camAngle = 0; rt.camAngleTarget = 0;
   rt.gradients = new Map();
@@ -824,6 +831,7 @@ export function restoreRuntime(rt: TriggerRuntime, snap: TriggerRuntime) {
   rt.timeWarp = snap.timeWarp;
   rt.cameraStatic = snap.cameraStatic && { ...snap.cameraStatic };
   rt.viewStatic = snap.viewStatic && { ...snap.viewStatic };
+  rt.viewStaticOther = snap.viewStaticOther && { ...snap.viewStaticOther };
   rt.zoom = snap.zoom;
   rt.camOffset = { ...snap.camOffset }; rt.camAngle = snap.camAngle; rt.camAngleTarget = snap.camAngleTarget;
   rt.gradients = new Map(snap.gradients);
@@ -867,7 +875,7 @@ export function cloneRuntime(rt: TriggerRuntime): TriggerRuntime {
     colors, groups, next: rt.next, time: rt.time,
     channel: rt.channel, dir: rt.dir, fired: new Set(rt.fired),
     rotations: rt.rotations.map((r) => ({ ...r })), timeWarp: rt.timeWarp,
-    cameraStatic: rt.cameraStatic && { ...rt.cameraStatic }, viewStatic: rt.viewStatic && { ...rt.viewStatic }, endHit: rt.endHit, controlsOff: [...rt.controlsOff], bgIndex: rt.bgIndex, mgOffsetY: rt.mgOffsetY, camEdges: [...rt.camEdges], particleSpawns: [], areaTints: rt.areaTints.map((a) => ({ ...a })), zoom: rt.zoom,
+    cameraStatic: rt.cameraStatic && { ...rt.cameraStatic }, viewStatic: rt.viewStatic && { ...rt.viewStatic }, viewStaticOther: rt.viewStaticOther && { ...rt.viewStaticOther }, endHit: rt.endHit, controlsOff: [...rt.controlsOff], bgIndex: rt.bgIndex, mgOffsetY: rt.mgOffsetY, camEdges: [...rt.camEdges], particleSpawns: [], areaTints: rt.areaTints.map((a) => ({ ...a })), zoom: rt.zoom,
     camOffset: { ...rt.camOffset }, camAngle: rt.camAngle, camAngleTarget: rt.camAngleTarget,
     gradients: new Map(rt.gradients),
     shader: { ...rt.shader },
@@ -1251,17 +1259,27 @@ function fire(rt: TriggerRuntime, t: Trigger, playerX: number, playerY: number) 
       // the physics band (`cameraStatic`) is released by any exit: keeping it
       // after an x-only exit faults Dash's replay at f15767 (macro-compare)
       rt.cameraStatic = null;
+      // key 465 is `m_exitInstant` (Geode bindings, CameraTriggerGameObject); 453 is `m_smoothVelocity`
+      const instant = propBool(t.props, 465);
       if (rt.viewStatic) {
-        // key 465 is `m_exitInstant` (Geode bindings, CameraTriggerGameObject); 453 is `m_smoothVelocity`
-        const instant = propBool(t.props, 465);
         rt.viewStatic = { ...rt.viewStatic, ...ease, dur: instant ? 0 : dur, t: 0, exit: true,
           exitAxis: rt.viewStatic.exitAxis | mask, fromX: null, fromY: null };
+      }
+      if (rt.viewStaticOther && (rt.viewStaticOther.axis & mask) !== 0) {
+        rt.viewStaticOther = { ...rt.viewStaticOther, ...ease, dur: instant ? 0 : dur, t: 0, exit: true,
+          exitAxis: rt.viewStaticOther.exitAxis | mask, fromX: null, fromY: null };
       }
       return;
     }
     const vGroup = propInt(t.props, P.SECONDARY_GROUP_ID, -1);
     if (vGroup > 0) {
-      rt.viewStatic = { group: vGroup, axis: propInt(t.props, P.CAMERA_AXIS, 0), dur, ...ease, t: 0,
+      // a static on the other axis stays live beside the new one; a both-axis
+      // static, or one on the same axis, is replaced as before
+      const axis = propInt(t.props, P.CAMERA_AXIS, 0);
+      const old = rt.viewStatic;
+      rt.viewStaticOther = old && old.axis !== 0 && axis !== 0 && old.axis !== axis && !old.exit ? old
+        : rt.viewStaticOther && rt.viewStaticOther.axis !== axis && axis !== 0 ? rt.viewStaticOther : null;
+      rt.viewStatic = { group: vGroup, axis, dur, ...ease, t: 0,
         exit: false, exitAxis: 0, fromX: null, fromY: null,
         follow: propBool(t.props, 212) ? Math.max(1, propFloat(t.props, 213, 1)) : 0 };
     }
@@ -1948,6 +1966,7 @@ export function updateTriggers(
   if (rt.shader.swStrength > 0) rt.shader.swT += dt * rt.shader.swSpeed;
   if (rt.cameraStatic) rt.cameraStatic.t += dt;
   if (rt.viewStatic) rt.viewStatic.t += dt;
+  if (rt.viewStaticOther) rt.viewStaticOther.t += dt;
 
   // pulses in flight age; a finished one stops overlaying its target
   if (rt.pulses.length) {
