@@ -142,16 +142,25 @@ export function bandFor(mode: Gamemode, mini: boolean, zoom = 1): { below: numbe
  * The camera centre a gamemode portal installs. Below a mode-specific height
  * the game snaps to a fixed value, otherwise it quantises the portal's y to the
  * 30-unit grid.
+ *
+ * The spider takes the flying snap. The binary's camera-target function (the
+ * unnamed code at m1 0xfd210, called from `switchToSpiderMode` m1 0xfd160 with
+ * mode code 0x21) picks its threshold from the mode code (300, 240 or 270)
+ * and takes the larger of two thresholds; the spider's only special step is a
+ * gate that skips the 270 check (`cmp w21, #0x21` at 0xfd364). The spider's
+ * floor (240 here, as for the ship) is not decoded: 270 is what the threshold
+ * gives for mode 0x21. It does not change the portals in Fingerdash (y 225) or
+ * level 3001 (y 285), whose heights are above 270. Cube, robot and swing inherit.
  */
 export function cameraCenterForPortal(mode: Gamemode, portalY: number): number | null {
   const gdY = portalY + GD_Y_OFFSET;
   switch (mode) {
-    case "ship": case "ufo": case "wave":
+    case "ship": case "ufo": case "wave": case "spider":
       return (gdY < 270 ? 240 : Math.floor(gdY / 30) * 30) - GD_Y_OFFSET;
     case "ball":
       return (gdY < 240 ? 210 : Math.floor(gdY / 30) * 30) - GD_Y_OFFSET;
     default:
-      return null; // cube/robot/spider/swing inherit the current centre
+      return null; // cube/robot/swing inherit the current centre
   }
 }
 
