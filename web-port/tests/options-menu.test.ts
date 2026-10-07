@@ -18,7 +18,7 @@ import {
   MUSIC_LABEL_Y, OPTIONS_BUTTONS, POPUP_H, POPUP_W, SFX_LABEL_DY,
   SLIDER_BAR_HEIGHT, SLIDER_LENGTH_INSET, dropDownLayout, easeInOut,
   optionsLayout, sliderLength, thumbOffset, togglePosition, toggleLabelPosition,
-  valueFromOffset, MORE_OPTIONS_PAGES, MORE_OPTIONS_PAGE_TITLES,
+  valueFromOffset, MORE_OPTIONS_PAGES, MORE_OPTIONS_PAGE_TITLES, initialDropProgress,
 } from "../src/ui/optionsMenu.ts";
 import { SETTINGS_KEYS } from "../src/gd/save.ts";
 
@@ -187,4 +187,15 @@ test("MoreOptions pages keep the original's titles and slots", () => {
   // slot 5 is the right column's third line
   const p = togglePosition(slot, 0, MORE_OPTIONS_ROW_STEP);
   assert.equal(p.x, GAME_OPTIONS_COL_X[1]);
+});
+
+test("F4: Fast Menu on opens the drop-down already settled, with no slide and no dim fade", () => {
+  // `showLayer` snaps to the end position when game variable 0168 is set
+  assert.equal(initialDropProgress(true), 1);
+  // and with it off the animation starts as it always has, at the top
+  assert.equal(initialDropProgress(false), 0);
+  const snapped = dropDownLayout(480, 320, DROP_HEIGHT, initialDropProgress(true));
+  close(snapped.slide, 0);
+  const plain = dropDownLayout(480, 320, DROP_HEIGHT, initialDropProgress(false));
+  close(plain.slide, 320);
 });

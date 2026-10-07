@@ -15,6 +15,8 @@
  * degrades to an in-memory save rather than throwing.
  */
 
+import { ICON_COUNTS, ICON_TABS, PLAYER_COLORS } from "./icons.ts";
+
 const KEY = "gd-web-save";
 const VERSION = 1;
 
@@ -95,6 +97,12 @@ export interface Settings {
    * Until then the pause menu shows the `GJ_practiceTxt_001` hint.
    */
   clickedPractice: boolean;
+  /**
+   * `Fast Menu`, game variable **"0168"**: when set, the Options drop-down
+   * opens already settled — no slide and no dim fade (`GJDropDownLayer::showLayer`
+   * snaps it, REFERENCE.md §16.1). Off by default, so the animation plays.
+   */
+  fastMenu: boolean;
 }
 
 /**
@@ -106,6 +114,7 @@ export const SETTINGS_KEYS = [
   "musicVolume", "sfxVolume", "seenGarage",
   "showProgressBar", "showPercentage", "showPauseButton", "pauseButtonOnLeft",
   "menuMusic", "autoCheckpoints", "hideAttempts", "percentageDecimals", "clickedPractice",
+  "fastMenu",
 ] as const satisfies readonly (keyof Settings)[];
 
 /** the icon kit selection; indices are 1-based frame numbers as in the game */
@@ -144,7 +153,7 @@ function defaults(): SaveData {
       showProgressBar: true, showPercentage: true,
       showPauseButton: true, pauseButtonOnLeft: false,
       menuMusic: true, autoCheckpoints: true, hideAttempts: false,
-      percentageDecimals: false, clickedPractice: false,
+      percentageDecimals: false, clickedPractice: false, fastMenu: false,
     },
     // the game's own starting kit: cube 1, default green/white, no glow
     icons: {
@@ -167,13 +176,19 @@ function migrate(raw: unknown): SaveData {
     if (typeof s.seenGarage === "boolean") out.settings.seenGarage = s.seenGarage;
     for (const k of ["showProgressBar", "showPercentage", "showPauseButton",
       "pauseButtonOnLeft", "menuMusic", "autoCheckpoints", "hideAttempts",
-      "percentageDecimals", "clickedPractice"] as const) {
+      "percentageDecimals", "clickedPractice", "fastMenu"] as const) {
       if (typeof s[k] === "boolean") out.settings[k] = s[k];
     }
   }
   if (o.icons && typeof o.icons === "object") {
-    Object.assign(out.icons, o.icons as Partial<IconKit>);
-    out.icons.glow = out.icons.glow === true;
+    // each field is kept only if it is a valid index; anything else keeps its default
+    const ic = o.icons as Partial<Record<keyof IconKit, unknown>>;
+    for (const m of ICON_TABS) {
+      if (isIndex(ic[m], 1, ICON_COUNTS[m])) out.icons[m] = ic[m];
+    }
+    if (isIndex(ic.col1, 0, PLAYER_COLORS.length - 1)) out.icons.col1 = ic.col1;
+    if (isIndex(ic.col2, 0, PLAYER_COLORS.length - 1)) out.icons.col2 = ic.col2;
+    out.icons.glow = ic.glow === true;
   }
   if (o.levels && typeof o.levels === "object") {
     for (const [k, v] of Object.entries(o.levels as Record<string, unknown>)) {
@@ -185,8 +200,8 @@ function migrate(raw: unknown): SaveData {
         coins: Array.isArray(s.coins)
           ? [...new Set(s.coins.filter((n) => typeof n === "number" && n >= 0 && n < 3))]
           : [],
-        attempts: Math.max(0, Math.floor(Number(s.attempts) || 0)),
-        jumps: Math.max(0, Math.floor(Number(s.jumps) || 0)),
+        attempts: count(s.attempts),
+        jumps: count(s.jumps),
       };
     }
   }
@@ -194,6 +209,14 @@ function migrate(raw: unknown): SaveData {
 }
 
 const clamp01 = (n: number) => (Number.isFinite(n) ? Math.min(1, Math.max(0, n)) : 1);
+/** a whole count, never negative; NaN and Infinity (e.g. JSON `1e999`) read as 0 */
+const count = (n: unknown) => {
+  const v = Number(n);
+  return Number.isFinite(v) ? Math.max(0, Math.floor(v)) : 0;
+};
+/** a whole number in [lo, hi]; anything else is not a usable icon or colour index */
+const isIndex = (v: unknown, lo: number, hi: number): v is number =>
+  typeof v === "number" && Number.isInteger(v) && v >= lo && v <= hi;
 const clampPct = (n: unknown) => {
   const v = Number(n);
   return Number.isFinite(v) ? Math.min(100, Math.max(0, v)) : 0;

@@ -20,7 +20,7 @@ import {
 } from "./sprites.ts";
 import {
   CHAIN_DX, CHAIN_DY, DROP_BACK_SIZE_MULT, DROP_DIM_OPACITY, DROP_DURATION,
-  DROP_HEIGHT, GAME_OPTIONS_LABEL_DX, GAME_OPTIONS_LABEL_SCALE,
+  DROP_HEIGHT, GAME_OPTIONS_LABEL_DX, initialDropProgress, GAME_OPTIONS_LABEL_SCALE,
   GAME_OPTIONS_ROW_STEP, GAME_OPTIONS_TOGGLE_SCALE, LABEL_SCALE, LIST_COLOR,
   LIST_OPACITY, MENU_MUSIC_BUTTON_SCALE, MENU_MUSIC_LABEL,
   MENU_MUSIC_LABEL_OFFSET_Y, MENU_MUSIC_LABEL_SCALE, MORE_OPTIONS_PAGES,
@@ -97,6 +97,8 @@ export class OptionsOverlay {
   constructor(deps: OptionsDeps) {
     this.deps = deps;
     const s = save.settings();
+    // Fast Menu (game variable 0168) opens the drop-down settled, with no slide and no dim fade
+    this.t = initialDropProgress(s.fastMenu);
 
     this.buttons = new UiMenu("optionsButtons");
     for (const b of OPTIONS_BUTTONS) {

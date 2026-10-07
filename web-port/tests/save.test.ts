@@ -10,9 +10,39 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import * as save from "../src/gd/save.ts";
+import { ICON_COUNTS, PLAYER_COLORS } from "../src/gd/icons.ts";
 
 function fresh() {
   save.loadFrom(null);
+}
+
+/** the defaults, as a plain value, to compare a repaired load against */
+function defaultSave() {
+  save.loadFrom(null);
+  return structuredClone(save.save());
+}
+
+/**
+ * Run `body` with a fake `localStorage` whose `getItem` is `getItem`, then
+ * remove it again. Returns every write `body` caused, so a test can assert
+ * that loading never rewrites storage. Node has no localStorage, so this is the
+ * only way to reach the parse path in save.ts (`loadFrom` skips it).
+ */
+function withStorage(getItem: (key: string) => string | null, body: () => void): string[] {
+  const writes: string[] = [];
+  const g = globalThis as { localStorage?: unknown };
+  g.localStorage = {
+    getItem,
+    setItem: (key: string, value: string) => { writes.push(`${key}=${value}`); },
+  };
+  try {
+    save.resetCache();
+    body();
+  } finally {
+    delete g.localStorage;
+    save.resetCache();
+  }
+  return writes;
 }
 
 test("normal and practice percent are separate stats", () => {
@@ -94,4 +124,118 @@ test("totalCoins counts every level's coins", () => {
   save.recordCoin(1, 1, false);
   save.recordCoin(2, 0, false);
   assert.equal(save.totalCoins(), 3);
+});
+
+// ── F5: a missing, corrupt, or older save boots with defaults and never throws ──
+
+test("F5 case 1: a missing save key boots with defaults", () => {
+  const expected = defaultSave();
+  const keys: string[] = [];
+  const writes = withStorage((key) => { keys.push(key); return null; }, () => {
+    assert.deepEqual(structuredClone(save.save()), expected);
+  });
+  assert.deepEqual(keys, ["gd-web-save"], "reads the storage key the game has always used");
+  assert.deepEqual(writes, [], "loading never rewrites storage");
+});
+
+test("F5 case 2: corrupt JSON text boots with defaults and does not throw", () => {
+  const expected = defaultSave();
+  const writes = withStorage(() => "[1,2", () => {
+    assert.deepEqual(structuredClone(save.save()), expected);
+  });
+  assert.deepEqual(writes, []);
+});
+
+test("F5 case 3: a throwing getItem (storage disabled) boots with defaults", () => {
+  const expected = defaultSave();
+  const writes = withStorage(() => { throw new Error("storage disabled"); }, () => {
+    assert.deepEqual(structuredClone(save.save()), expected);
+  });
+  assert.deepEqual(writes, []);
+});
+
+test("F5 case 4: a non-object top level boots with defaults", () => {
+  const expected = defaultSave();
+  for (const text of ["42", '"x"', "null", "[]"]) {
+    withStorage(() => text, () => {
+      assert.deepEqual(structuredClone(save.save()), expected, `top level ${text}`);
+    });
+  }
+});
+
+test("F5 case 5: an older save fills missing fields with defaults and keeps the present ones", () => {
+  const expected = defaultSave();
+  // no `v`, no `icons`, and a `settings` block from before percentageDecimals and clickedPractice
+  const older = {
+    levels: { "1": { normal: 60, practice: 10, coins: [1], attempts: 4, jumps: 90 } },
+    settings: { musicVolume: 0.25, sfxVolume: 0.5 },
+  };
+  withStorage(() => JSON.stringify(older), () => {
+    const s = save.save();
+    assert.equal(s.v, expected.v);
+    assert.deepEqual(s.levels["1"], { normal: 60, practice: 10, coins: [1], attempts: 4, jumps: 90 });
+    assert.equal(s.settings.musicVolume, 0.25, "present field kept");
+    assert.equal(s.settings.sfxVolume, 0.5, "present field kept");
+    assert.equal(s.settings.percentageDecimals, expected.settings.percentageDecimals, "added later: default");
+    assert.equal(s.settings.clickedPractice, expected.settings.clickedPractice, "added later: default");
+    assert.deepEqual(s.icons, expected.icons, "missing icons block: default kit");
+  });
+});
+
+test("F5 case 6: infinite attempts and jumps are repaired to 0 in memory", () => {
+  const writes = withStorage(() => '{"levels":{"1":{"attempts":1e999,"jumps":1e999}}}', () => {
+    const st = save.levelStats(1);
+    assert.equal(st.attempts, 0, "attempts: Infinity becomes 0");
+    assert.equal(st.jumps, 0, "jumps: Infinity becomes 0");
+    // the repaired count keeps counting from 0, not from Infinity
+    assert.equal(save.recordAttempt(1), 1);
+  });
+  // the load itself wrote nothing; only the explicit recordAttempt flushed
+  assert.equal(writes.length, 1);
+  assert.match(writes[0], /"attempts":1,/);
+});
+
+test("F5 case 7: an icon that is not a valid index falls back to its default, field by field", () => {
+  save.loadFrom({
+    icons: {
+      cube: "abc",
+      ship: null,
+      ball: ICON_COUNTS.ball + 1,
+      ufo: 3,
+      wave: 0,
+      robot: 2.5,
+      spider: ICON_COUNTS.spider,
+      swing: -1,
+      col1: PLAYER_COLORS.length,
+      col2: 5,
+      glow: true,
+    },
+  });
+  const k = save.icons();
+  const d = defaultSave().icons;
+  assert.equal(k.cube, d.cube, "non-number falls back");
+  assert.equal(k.ship, d.ship, "null falls back");
+  assert.equal(k.ball, d.ball, "past the last ball icon falls back");
+  assert.equal(k.ufo, 3, "a valid index is kept");
+  assert.equal(k.wave, d.wave, "0 is below the first icon");
+  assert.equal(k.robot, d.robot, "a non-whole index falls back");
+  assert.equal(k.spider, ICON_COUNTS.spider, "the last spider icon is still valid");
+  assert.equal(k.swing, d.swing, "a negative index falls back");
+  assert.equal(k.col1, d.col1, "past the palette falls back");
+  assert.equal(k.col2, 5, "a valid palette index is kept");
+  assert.equal(k.glow, true);
+});
+
+test("F4: Fast Menu is off on a fresh save", () => {
+  fresh();
+  assert.equal(save.settings().fastMenu, false);
+});
+
+test("F4: a saved fastMenu true survives a reload, and a non-boolean falls back to off", () => {
+  save.loadFrom({ v: 1, settings: { fastMenu: true } });
+  assert.equal(save.settings().fastMenu, true);
+  save.loadFrom(JSON.parse(JSON.stringify({ v: 1, settings: { fastMenu: true } })));
+  assert.equal(save.settings().fastMenu, true, "survives a JSON round trip");
+  save.loadFrom({ v: 1, settings: { fastMenu: "yes" } });
+  assert.equal(save.settings().fastMenu, false, "a non-boolean is not trusted");
 });

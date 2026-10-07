@@ -159,6 +159,16 @@ export function easeInOut(t: number, rate = DROP_EASE_RATE): number {
   return k < 1 ? 0.5 * Math.pow(k, rate) : 1 - 0.5 * Math.pow(2 - k, rate);
 }
 
+/**
+ * The drop-down's starting progress. `GJDropDownLayer::showLayer` runs the
+ * 0.5 s slide and fade unless game variable `"0168"` (Fast Menu) is set, in
+ * which case it snaps to the settled end (REFERENCE.md §16.1). `1` is the
+ * settled, fully dimmed state; `0` is the animation's start.
+ */
+export function initialDropProgress(fastMenu: boolean): number {
+  return fastMenu ? 1 : 0;
+}
+
 export interface DropDownLayout {
   /** panel size */
   width: number;
