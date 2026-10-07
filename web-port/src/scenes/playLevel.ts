@@ -11,6 +11,7 @@ import {
 } from "../game/sim.ts";
 import { CheckpointStack } from "../gd/checkpoints.ts";
 import * as save from "../gd/save.ts";
+import { PendingCoins } from "../gd/pendingCoins.ts";
 import { ICON_TABS, iconFrames, playerColor, clampIcon, PLAYER_COLORS, playerGlow } from "../gd/icons.ts";
 import { IconSheets } from "../gd/iconSheets.ts";
 import type { CCEmitter } from "../engine/ccparticles.ts";
@@ -400,6 +401,8 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   const iconAnim = [{ tilt: 0, roll: 0 }, { tilt: 0, roll: 0 }];
   /** coins already chimed this attempt, so the sfx fires once each */
   const coinsSeen = new Set<number>();
+  /** coins taken this attempt; written to the save only on a normal-mode completion */
+  const pending = new PendingCoins();
   let deathPlayed = false;
   /** practice mode is toggled from the pause menu, or started with `?practice=1` */
   let practice = params.get("practice") === "1";
@@ -579,6 +582,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     if (scored) save.recordAttempt(levelNum);
     best = 0;
     coinsSeen.clear();
+    pending.clear();
     restartMusic();
     camY = 0;
     attemptLabel = undefined;
@@ -608,6 +612,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     // chime set has to follow the same rewind or they re-collect in silence
     coinsSeen.clear();
     for (const idx of sim.collected) coinsSeen.add(idx);
+    pending.clear();
     restartMusic();
   };
 
@@ -986,10 +991,10 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       // `GameObject::spawnDefaultPickupParticle`: coinPickupEffect at the coin
       const coin = world.interactives[idx];
       if (fxLib && coin && !paused) oneShots.add(oneShot(fxLib, "coinPickupEffect", coin.x, coin.y));
-      // The original refuses to award coins picked up in practice mode;
-      // `recordCoin` enforces that rather than the caller.
+      // Held for this attempt only. The save is written on a normal-mode
+      // completion (see the `complete` branch); a death drops it.
       const ord = coinOrdinal.get(idx);
-      if (scored && ord !== undefined) save.recordCoin(levelNum, ord, practice);
+      if (scored && ord !== undefined) pending.take(ord);
     }
     // --- particles and streaks ---
     // Driven off frame time rather than the physics step: these are cosmetic,
@@ -1119,6 +1124,12 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
           // fades it out only for a level whose settings ask (kA16, unset in
           // all 22), so the song plays on under the results.
           bankProgress();
+          // `recordCoin` refuses practice pickups itself; the guard keeps the
+          // pending buffer from being written at all outside normal mode
+          if (!practice) {
+            for (const ord of pending.ordinals()) save.recordCoin(levelNum, ord, false);
+          }
+          pending.clear();
           if (!practice) void audio.playSfx(SFX.complete);
         } else if (ev === "text" && fxLib) {
           // `showCompleteText` +432..792: two levelComplete01 bursts at the
