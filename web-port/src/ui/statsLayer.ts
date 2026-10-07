@@ -20,15 +20,21 @@ import type { Renderer } from "../engine/renderer.ts";
 import type { LoadedFont } from "../engine/bmfont.ts";
 import { COINS_PER_LEVEL, LEVELS } from "../gd/levels.ts";
 import * as save from "../gd/save.ts";
-import type { UiSprites } from "./sprites.ts";
+import { HD } from "../gd/sheets.ts";
+import { drawNineSlice, type UiSprites } from "./sprites.ts";
 import { MenuHost, MenuItem, UiMenu } from "./controls.ts";
 import {
   DROP_BACK_SIZE_MULT, DROP_DIM_OPACITY, LABEL_SCALE, dropDownLayout, drawLabel,
 } from "./optionsMenu.ts";
-import { drawDropDownPanel, type Loose } from "./optionsOverlay.ts";
+import { BUTTON_SPRITE_PAD, drawDropDownPanel, type Loose } from "./optionsOverlay.ts";
 
 /** APPROXIMATION: panel height. The binary's layout is not decoded. */
 export const STATS_HEIGHT = 220;
+/** APPROXIMATION: the save-file buttons sit this far above the panel's bottom edge */
+const SAVE_BUTTON_DY = 30;
+/** the options drop-down's pair: caption width 130, centres at -79 and +79 */
+const SAVE_BUTTON_WIDTH = 130;
+const SAVE_BUTTON_DX = 79;
 /** APPROXIMATION: first row's distance below the panel's top edge, design units */
 const ROW_FIRST_DY = 34;
 /** APPROXIMATION: row spacing, design units */
@@ -75,8 +81,16 @@ export interface StatsDeps {
   font: LoadedFont;
   /** `GJ_table*` and the dim are drawn with this flat white texel */
   white: Loose;
+  /** `goldFont.fnt`, the caption font of the save-file buttons */
+  goldFont: LoadedFont;
+  /** `GJ_button_01.png`, the nine-slice behind the save-file buttons */
+  button: Loose;
   /** the back arrow and Escape */
   onClose(): void;
+  /** "Save file: download" */
+  onExportSave(): void;
+  /** "Save file: load" */
+  onImportSave(): void;
 }
 
 /**
@@ -85,10 +99,12 @@ export interface StatsDeps {
  * Later packets add their buttons to `menu`.
  */
 export class StatsLayer {
-  /** the layer's own controls; F6 adds its buttons here */
+  /** the layer's own controls: the back arrow and the two save-file buttons */
   readonly menu: UiMenu;
   private readonly deps: StatsDeps;
   private readonly host: MenuHost;
+  /** download, then load; positioned in `layout` */
+  private readonly saveButtons: MenuItem[];
 
   constructor(deps: StatsDeps) {
     this.deps = deps;
@@ -97,7 +113,32 @@ export class StatsLayer {
       id: "back", frame: deps.sprites.require("GJ_arrow_03_001.png"),
       sizeMult: DROP_BACK_SIZE_MULT, onActivate: () => deps.onClose(),
     }));
+    this.saveButtons = [
+      this.menu.add(this.saveButton("saveDownload", "Save file: download", deps.onExportSave)),
+      this.menu.add(this.saveButton("saveLoad", "Save file: load", deps.onImportSave)),
+    ];
     this.host = new MenuHost(deps.renderer.canvas, [this.menu], () => this.scale());
+  }
+
+  /**
+   * A `ButtonSprite` caption, as the options drop-down builds its buttons: the
+   * background is the caption plus the 16-unit pad, and the caption shrinks to
+   * the 130 width, never past scale 1.
+   */
+  private saveButton(id: string, label: string, onActivate: () => void): MenuItem {
+    const { goldFont, button } = this.deps;
+    const w = SAVE_BUTTON_WIDTH + BUTTON_SPRITE_PAD;
+    const h = goldFont.font.lineHeight * HD + 4;
+    const natural = goldFont.measure(label) * HD;
+    const labelScale = natural > SAVE_BUTTON_WIDTH ? SAVE_BUTTON_WIDTH / natural : 1;
+    return new MenuItem({
+      id, content: { w, h }, onActivate,
+      render: (r, x, y, scale) => {
+        drawNineSlice(r, button, x, y, w * scale, h * scale);
+        // `m_labelOffset` is (0, 2) for a goldFont caption
+        drawLabel(r, goldFont, label, x, y + 2 * scale, labelScale * scale);
+      },
+    });
   }
 
   private scale(): number {
@@ -122,6 +163,10 @@ export class StatsLayer {
     this.menu.setPosition(0, 0);
     back.x = L.backX;
     back.y = L.backY;
+    const [download, load] = this.saveButtons;
+    download.x = -SAVE_BUTTON_DX;
+    load.x = SAVE_BUTTON_DX;
+    download.y = load.y = L.bottom + SAVE_BUTTON_DY;
   }
 
   /** every control's design-space rect, for the browser harness */

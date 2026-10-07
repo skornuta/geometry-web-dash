@@ -32,6 +32,7 @@ import { GRAVITY, JUMP_VELOCITY, SPEEDS, integrate, snapRotation, type CubeState
 import { ICON_COUNTS, PLAYER_COLORS, iconFrames, playerColor } from "../gd/icons.ts";
 import { IconSheets } from "../gd/iconSheets.ts";
 import * as save from "../gd/save.ts";
+import { downloadSaveFile, openSaveFilePicker } from "../gd/progressFile.ts";
 import { UiSprites, drawUiSprite, fromGdUi, screenBounds, type UiFrame } from "../ui/sprites.ts";
 import { MenuHost, MenuItem, UiMenu } from "../ui/controls.ts";
 import { OPTIONS_FRAMES, OptionsOverlay, type OptionsTextures } from "../ui/optionsOverlay.ts";
@@ -280,7 +281,8 @@ export async function startMainMenu(renderer: Renderer) {
     startMusic();
     if (!optionsArtLoaded) { void loadOptionsArt().then(goStats); return; }
     stats = new StatsLayer({
-      renderer, sprites, font, white, onClose: closeStats,
+      renderer, sprites, font, white, goldFont, button: optionsTextures.button,
+      onClose: closeStats, onExportSave: downloadSaveFile, onImportSave: openSaveFilePicker,
     });
     host.dispose();
   };
