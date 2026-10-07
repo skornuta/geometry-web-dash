@@ -15,9 +15,10 @@
  * exceptions" in REFERENCE.md §8: the profile button, the daily chest and the
  * quit button would each need account, currency or process state this port does
  * not have, so they are omitted rather than faked. Creator, achievements,
- * stats, newgrounds, the social row and more-games *are* drawn — removing them
- * would change the layout this file exists to reproduce — but they are inert,
- * because their destinations are outside the locked project scope.
+ * newgrounds, the social row and more-games *are* drawn — removing them would
+ * change the layout this file exists to reproduce — but they are inert, because
+ * their destinations are outside the locked project scope. Stats opens the
+ * offline stats page (`ui/statsLayer.ts`).
  */
 
 import { SceneFade } from "../engine/transition.ts";
@@ -34,6 +35,7 @@ import * as save from "../gd/save.ts";
 import { UiSprites, drawUiSprite, fromGdUi, screenBounds, type UiFrame } from "../ui/sprites.ts";
 import { MenuHost, MenuItem, UiMenu } from "../ui/controls.ts";
 import { OPTIONS_FRAMES, OptionsOverlay, type OptionsTextures } from "../ui/optionsOverlay.ts";
+import { StatsLayer } from "../ui/statsLayer.ts";
 import { SLIDER_BAR, SLIDER_GROOVE, SLIDER_THUMB, SLIDER_THUMB_SEL } from "../ui/optionsMenu.ts";
 
 /* ------------------------------------------------------------------ *
@@ -234,6 +236,8 @@ export async function startMainMenu(renderer: Renderer) {
    * why the background, the cube and the music all keep going behind it.
    */
   let overlay: OptionsOverlay | null = null;
+  /** the Stats page, over the menu like the settings drop-down */
+  let stats: StatsLayer | null = null;
 
   /**
    * `GJDropDownLayer`'s two chains are the one piece of settings art that lives
@@ -270,6 +274,21 @@ export async function startMainMenu(renderer: Renderer) {
     overlay = null;
     host = makeHost();
   };
+  /** the Stats button: a page over the menu, like the settings drop-down */
+  const goStats = () => {
+    if (overlay || stats) return;
+    startMusic();
+    if (!optionsArtLoaded) { void loadOptionsArt().then(goStats); return; }
+    stats = new StatsLayer({
+      renderer, sprites, font, white, onClose: closeStats,
+    });
+    host.dispose();
+  };
+  const closeStats = () => {
+    stats?.dispose();
+    stats = null;
+    host = makeHost();
+  };
 
   /* ---------------- menus ---------------- */
 
@@ -292,7 +311,7 @@ export async function startMainMenu(renderer: Renderer) {
   const bottomMenu = new UiMenu("bottom");
   bottomMenu.add(item("achievements", "GJ_achBtn_001.png"));
   bottomMenu.add(item("options", "GJ_optionsBtn_001.png", { onActivate: goOptions }));
-  bottomMenu.add(item("stats", "GJ_statsBtn_001.png"));
+  bottomMenu.add(item("stats", "GJ_statsBtn_001.png", { onActivate: goStats }));
   bottomMenu.add(item("newgrounds", "GJ_ngBtn_001.png"));
   bottomMenu.alignItemsHorizontallyWithPadding(BOTTOM_MENU_PADDING);
 
@@ -388,6 +407,7 @@ export async function startMainMenu(renderer: Renderer) {
     startMusic();
     if (overlay && overlay.handleKey(e.code)) { e.preventDefault(); return; }
     if (overlay) return;
+    if (stats) { if (stats.handleKey(e.code)) e.preventDefault(); return; }
     switch (e.code) {
       case "Enter": case "Space": e.preventDefault(); goPlay(); break;
       case "KeyI": e.preventDefault(); goGarage(); break;
@@ -522,6 +542,9 @@ export async function startMainMenu(renderer: Renderer) {
     if (overlay) {
       overlay.update(dt);
       overlay.layout(viewW, viewH);
+    } else if (stats) {
+      stats.update(dt);
+      stats.layout(viewW, viewH);
     } else {
       host.update(dt);
     }
@@ -550,6 +573,7 @@ export async function startMainMenu(renderer: Renderer) {
 
     // the drop-down sits over the whole menu, dim included
     overlay?.draw(viewW, viewH);
+    stats?.draw(viewW, viewH);
 
     fade.draw(dt, scale, viewW, viewH);
     renderer.flush();
@@ -568,6 +592,7 @@ export async function startMainMenu(renderer: Renderer) {
         navigating: fade.leaving,
         cube: { x: cube.x, y: cube.y, icon: cubeIcon, onGround: cube.onGround },
         seenGarage: save.settings().seenGarage,
+        stats: stats ? { controls: stats.controls() } : null,
         options: overlay
           ? {
               t: overlay.t, popup: overlay.popupOpen,
@@ -599,6 +624,8 @@ export async function startMainMenu(renderer: Renderer) {
     release() { return host.touch.ended()?.id ?? null; },
     openOptions: goOptions,
     closeOptions,
+    openStats: goStats,
+    closeStats,
     /** the drop-down's `Options` button: MoreOptionsLayer */
     openMoreOptions: () => overlay?.openMoreOptions(),
     /** design-space centre of a settings control, drop-down or popup */
