@@ -19,7 +19,6 @@ const GAMEPLAY_SFX = new Set([
   "endStart_02.ogg",  // level complete
   "playSound_01.ogg", // start / retry
   "quitSound_01.ogg",
-  "secretKey.ogg",    // secret coin pickup
 ]);
 
 /**

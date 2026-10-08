@@ -68,7 +68,7 @@ import {
   PRACTICE_OFF_FRAME, ROW_PADDING, SLIDER_LABEL_DY, SLIDER_LABEL_SCALE, SLIDER_SCALE,
   drawPauseBar, pauseLayout, pauseRow, showPracticeHint,
 } from "../ui/pauseMenu.ts";
-import { musicUrl, SFX } from "../gd/audio-map.ts";
+import { gameplaySfx, musicUrl, SFX } from "../gd/audio-map.ts";
 import { COINS_PER_LEVEL, LEVELS } from "../gd/levels.ts";
 import { BACK_LIMB_TINT } from "../gd/anim.ts";
 import { animFrame, createAnimPlayer, stepAnim, type LimbMode } from "../gd/player-anim.ts";
@@ -993,7 +993,8 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     for (const idx of sim.collected) {
       if (coinsSeen.has(idx)) continue;
       coinsSeen.add(idx);
-      void audio.playSfx(SFX.coin);
+      const coinSfx = gameplaySfx("coin");
+      if (coinSfx) void audio.playSfx(coinSfx);
       // `GameObject::spawnDefaultPickupParticle`: coinPickupEffect at the coin
       const coin = world.interactives[idx];
       if (fxLib && coin && !paused) oneShots.add(oneShot(fxLib, "coinPickupEffect", coin.x, coin.y));

@@ -41,11 +41,22 @@ export function musicUrl(levelNum: number): string | null {
  * numeric `sfx/` library, and are copied by `npm run assets`.
  *
  * Classic gameplay is deliberately quiet: there is **no jump sound**, and orbs
- * and pads are silent — only death, completion and coins make noise. Do not add
+ * and pads are silent — only death and completion make noise. Do not add
  * a jump sfx "for feel"; it is wrong.
  */
 export const SFX = {
   death: "/assets/explode_11.ogg",
   complete: "/assets/endStart_02.ogg",
-  coin: "/assets/secretKey.ogg",
 } as const;
+
+/**
+ * Which loose sound a gameplay event plays, or null for silence.
+ *
+ * A secret-coin pickup is silent: the native pickup path (`pickupItem`,
+ * `spawnDefaultPickupParticle`) has no audio call. `secretKey.ogg` is the
+ * end-screen / New Best reward jingle, not the pickup sound.
+ */
+export function gameplaySfx(event: "death" | "complete" | "coin"): string | null {
+  if (event === "coin") return null;
+  return SFX[event];
+}
