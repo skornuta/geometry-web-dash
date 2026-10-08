@@ -22,6 +22,10 @@ import {
   DEATH_ROTATION_VAR, DEATH_LAST_FRAME, GLITTER_MODES, glitterEmitter, objectEmitter, oneShot, orbWaveColor, orbWaveFrom,
   ORB_WAVE_TO, ORB_WAVE_DURATION, speedEffectFor, Shake, DEATH_SHAKE, type WaveTrail,
 } from "../gd/effects.ts";
+import {
+  NEW_BEST_FRAME, NEW_BEST_LABEL_SCALE, NEW_BEST_LABEL_Y, NEW_BEST_Y,
+  deathPercent, newBestLabel, newBestScale, shouldShowNewBest,
+} from "../gd/newBest.ts";
 import { circleWaveAt, LEVEL_TIMESTAMP, progressPercent, type CircleWaveSpec } from "../gd/levelEnd.ts";
 import { OBJECT_DEFS } from "../gd/objects.ts";
 import { P, propFloat } from "../gd/props.ts";
@@ -44,7 +48,7 @@ import { LoadedFont } from "../engine/bmfont.ts";
 import {
   currentPercent, currentPercentInt, drawHud, hudGeometry, type HudSettings,
 } from "../ui/gameplayHud.ts";
-import { UiSprites, drawNineSlice, drawUiSprite, type UiFrame } from "../ui/sprites.ts";
+import { UiSprites, contentSize, drawNineSlice, drawUiSprite, type UiFrame } from "../ui/sprites.ts";
 import { MenuHost } from "../ui/controls.ts";
 import { TogglePopup } from "../ui/optionsOverlay.ts";
 import {
@@ -404,6 +408,8 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   /** coins taken this attempt; written to the save only on a normal-mode completion */
   const pending = new PendingCoins();
   let deathPlayed = false;
+  /** the "New Best" popup (`PlayLayer::showNewBest`): seconds since it appeared */
+  let newBest: { t: number; percent: number } | null = null;
   /** practice mode is toggled from the pause menu, or started with `?practice=1` */
   let practice = params.get("practice") === "1";
   /** green-diamond checkpoints; only live while `practice` is on */
@@ -1064,6 +1070,13 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
 
     if (sim.dead && !deathPlayed) {
       deathPlayed = true;
+      // `destroyPlayer`: a normal-mode death above the saved best shows the popup.
+      // The save is only written at the next reset, so it still holds the old best.
+      if (scored && shouldShowNewBest({
+        percent: percentNow(), savedBest: save.levelStats(levelNum).normal, practice,
+      })) {
+        newBest = { t: 0, percent: deathPercent(percentNow()) };
+      }
       // `playDeathEffect`, death effect 1: the sprite, the particles, two waves
       const dead = sim.dual?.dead ? sim.dual.player : player;
       const size = dead.mini ? MINI_SCALE : 1;
@@ -1957,6 +1970,24 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       drawEndScreen(renderer, endSeq, endTex, { p1: P1, p2: P2 },
         (s) => drawUiSprite(renderer, bannerFrame, 0, BANNER_DY, { scale: s }));
       renderer.camera = { x: camX, y: camCentreY, scale };
+    }
+
+    // --- `showNewBest`: a node at screen centre + 20, popped in with an elastic scale ---
+    if (newBest) {
+      if (!paused) newBest.t += frame;
+      const k = newBestScale(newBest.t);
+      const nbFrame = hudSheet?.has(NEW_BEST_FRAME) ? hudSheet.require(NEW_BEST_FRAME) : null;
+      if (k === null) newBest = null;
+      else if (font && nbFrame) {
+        const cy = camCentreY + NEW_BEST_Y;
+        // the sprite's anchor is (0.5, 0): its bottom edge rides on the node's origin
+        drawUiSprite(renderer, nbFrame, camX, cy + (contentSize(nbFrame.frame).h * k) / 2,
+          { scale: k });
+        // the label hangs from (0, -4) with anchor (0.5, 1)
+        const ls = HD * NEW_BEST_LABEL_SCALE * k;
+        font.draw(renderer, newBestLabel(newBest.percent), camX,
+          cy + NEW_BEST_LABEL_Y * k - font.font.base * ls, ls, 1, 1, 1, 1, 0);
+      }
     }
 
     // --- the reproduced PauseLayer ---
