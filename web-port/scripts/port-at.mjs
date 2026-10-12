@@ -42,7 +42,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e)));
-  await page.goto(`http://localhost:3222/?level=${lvl}&manual=1`);
+  await page.goto(`http://localhost:${process.env.GD_PORT ?? 3222}/?level=${lvl}&manual=1`);
   await page.waitForFunction(() => window.__play);
   const head = flat.slice(0, Math.max(0, flat.length - TAIL));
   const tail = flat.slice(head.length);
