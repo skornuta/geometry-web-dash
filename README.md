@@ -2,7 +2,7 @@
 
 A high-performance, 1:1 web port of **Geometry Dash 2.2** built with vanilla **TypeScript + WebGL2**. 
 
-Unlike emulators or binary recompilations, this engine is ultra-lightweight (~450 KB asset footprint), runs natively at **240 Hz**, and achieves locked 60/120/240 fps across all browsers and weak hardware (including Chromebooks).
+Unlike emulators or binary recompilations, this engine is ultra-lightweight (~450 KB asset footprint), runs natively at **240 Hz**, and achieves locked 60/120/240 fps across all browsers and weak hardware.
 
 ## Features & Progress
 
