@@ -6,7 +6,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { CollisionWorld, hitsSlopeWall, slopeSurfaceY } from "../src/game/collision.ts";
-import { cloneSim, createSim, restoreSim, simPress, simStep, STEP } from "../src/game/sim.ts";
+import {
+  advanceFixedSteps, cloneSim, createSim, MAX_FRAME, restoreSim, simPress, simStep, STEP,
+} from "../src/game/sim.ts";
 import type { Level } from "../src/gd/level.ts";
 import { SPEEDS, flipGravity } from "../src/gd/physics.ts";
 import { bandFor } from "../src/gd/camera.ts";
@@ -56,6 +58,73 @@ function run(world: CollisionWorld, secs: number, opts: {
   }
   return s;
 }
+
+test("the fixed-step accumulator gives the same run at 60 Hz and 120 Hz render rates", () => {
+  // `playLevel.ts`'s render loop wakes at whatever rate the display offers
+  // and hands `advanceFixedSteps` however many seconds that call covered; the
+  // sim itself only ever moves in whole 1/240s steps. A 120 Hz display calls
+  // in twice as often with half the frame time per call — the accumulator
+  // must still spend the same wall-clock time on physics, or faster hardware
+  // would play the level differently from slower hardware (G2). Real
+  // `requestAnimationFrame` timing is never perfectly regular, so this drives
+  // both rates with jittery per-frame deltas (not an exact 1/60 or 1/120
+  // every time) — a build that resets the accumulator each call instead of
+  // carrying its remainder (the classic bug this guards against) drifts
+  // steps away under jitter even though it happens to line up at exactly
+  // regular 60/120 Hz ticks, which divide 240 evenly and would hide it.
+  const drive = (renderHz: number, totalSeconds: number) => {
+    // a spike and a pad along the way so the run exercises death and a
+    // trigger, not just empty free space
+    const world = worldOf([{ id: 8, x: 1200, y: 15 }, { id: 35, x: 2400, y: 2 }]);
+    const s = createSim(0, SPEEDS[1]);
+    simPress(s); // held throughout, so the cube keeps re-jumping off the ground
+    let acc = 0;
+    const nominal = 1 / renderHz;
+    const jitter = [1, 0.85, 1.1, 0.95, 1.05, 0.9]; // a display's frame pacing is never exact
+    const frames = Math.round(totalSeconds * renderHz);
+    for (let i = 0; i < frames; i++) {
+      const frame = nominal * jitter[i % jitter.length];
+      acc = advanceFixedSteps(acc, frame, () => {
+        if (s.dead) return false;
+        simStep(s, world, STEP, true);
+        return !s.dead;
+      });
+    }
+    return s;
+  };
+  const at60 = drive(60, 3);
+  const at120 = drive(120, 3);
+  assert.ok(Math.abs(at60.steps - at120.steps) <= 1,
+    `60 Hz took ${at60.steps} steps, 120 Hz took ${at120.steps} steps — jittery frame pacing must not drift them apart`);
+  assert.equal(at60.dead, at120.dead);
+  const closeEnough = (a: number, b: number, label: string) =>
+    assert.ok(Math.abs(a - b) < 0.5, `${label}: 60 Hz ${a}, 120 Hz ${b}`);
+  closeEnough(at60.player.x, at120.player.x, "x");
+  closeEnough(at60.player.y, at120.player.y, "y");
+});
+
+test("a long stalled frame is clamped by the caller, not by the accumulator itself", () => {
+  // `advanceFixedSteps` trusts whatever `frame` it is handed — it is the
+  // scene's job to clamp a long stall (a backgrounded tab, a debugger pause)
+  // to MAX_FRAME before calling it, or focus returning would demand a burst
+  // of hundreds of catch-up steps in one go.
+  let unclamped = 0;
+  advanceFixedSteps(0, 10 /* a 10 s stall, far past MAX_FRAME */, () => { unclamped++; return true; });
+  assert.equal(unclamped, Math.round(10 / STEP), "an unclamped stall runs every step it implies");
+
+  let clamped = 0;
+  const frame = Math.min(10, MAX_FRAME); // what playLevel.ts's loop actually passes in
+  advanceFixedSteps(0, frame, () => { clamped++; return true; });
+  // the exact count a single MAX_FRAME-sized accumulator fits (same float
+  // arithmetic as advanceFixedSteps, so this does not hardcode a rounded value)
+  let acc = 0, expected = 0;
+  acc += MAX_FRAME;
+  while (acc >= STEP) { acc -= STEP; expected++; }
+  assert.equal(clamped, expected,
+    "clamping the frame to MAX_FRAME bounds the catch-up to a fixed number of steps");
+  assert.ok(Math.abs(clamped - MAX_FRAME / STEP) <= 1, `expected roughly ${MAX_FRAME / STEP} steps, got ${clamped}`);
+  assert.ok(clamped < unclamped, "the clamp must actually reduce the catch-up");
+});
 
 test("a ground pad fires while the player runs over it", () => {
   // The pad's box is y = 0..4; a grounded player's centre sits at y = 15, so a

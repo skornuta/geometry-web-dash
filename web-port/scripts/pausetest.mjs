@@ -46,6 +46,23 @@ await page.waitForTimeout(100);
 const repeated = await info();
 console.log(`after blur/repeated Escape: audioState=${repeated.audioState}  paused=${repeated.paused}`);
 
+// Resume, then switch tabs: `document.hidden` + visibilitychange, not blur,
+// is what a browser actually fires when you leave the tab (blur alone also
+// fires for e.g. opening devtools without leaving the tab).
+await page.keyboard.press("Escape");
+await page.waitForTimeout(600);
+const beforeHidden = await info();
+await page.evaluate(() => {
+  Object.defineProperty(document, "hidden", { value: true, configurable: true });
+  document.dispatchEvent(new Event("visibilitychange"));
+});
+await page.waitForTimeout(100);
+const hidden = await info();
+console.log(`after visibilitychange (hidden): audioState=${hidden.audioState}  paused=${hidden.paused}`);
+await page.evaluate(() => {
+  Object.defineProperty(document, "hidden", { value: false, configurable: true });
+});
+
 await browser.close();
 
 const ok = playing.audioState === "running"
@@ -54,6 +71,8 @@ const ok = playing.audioState === "running"
   && afterPointer.x === pausedInfo.x && queuedAfter === queuedBefore
   && resumed.audioState === "running" && resumed.paused === false
   && blurred.paused && blurred.audioState === "suspended"
-  && repeated.paused && repeated.x === blurred.x;
+  && repeated.paused && repeated.x === blurred.x
+  && beforeHidden.paused === false && beforeHidden.audioState === "running"
+  && hidden.paused && hidden.audioState === "suspended";
 console.log(ok ? "PASS — music freezes with the pause menu" : "FAIL — music did not follow the pause state");
 process.exit(ok ? 0 : 1);

@@ -6,7 +6,7 @@ import { createTexture, loadAtlas, loadImage, setRepeatWrap, type SpriteFrame } 
 import { LevelScene, HD, headerFloat } from "./levelScene.ts";
 import { CollisionWorld, slopeSurfaceY, PLAYER_INNER_HALF } from "../game/collision.ts";
 import {
-  applyPortalsBefore, createSim, resetSim, simPress, simStep, STEP,
+  advanceFixedSteps, applyPortalsBefore, createSim, MAX_FRAME, resetSim, simPress, simStep, STEP,
   type SimEffect, type SimState,
 } from "../game/sim.ts";
 import { CheckpointStack } from "../gd/checkpoints.ts";
@@ -90,8 +90,6 @@ import {
   drawWave,
 } from "./levelEndView.ts";
 
-/** never simulate more than this much time in one frame (tab was backgrounded) */
-const MAX_FRAME = 0.25;
 /** how long the cube stays dead before the level restarts */
 const RESPAWN_DELAY = 0.8;
 /** the view a Camera Static holds this frame, written by `stepViewStatic` (reused, no per-frame allocation) */
@@ -972,9 +970,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
         else reset();
       }
     } else {
-      acc += frame;
-      while (acc >= STEP) {
-        acc -= STEP;
+      acc = advanceFixedSteps(acc, frame, () => {
         simStep(sim, world, STEP, holding, warnDual);
         stepCameraY();
         pressUnseen = false;
@@ -982,8 +978,8 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
         // drained per step: `sim.effects` only ever holds the last one's
         for (const e of sim.effects) stepEffects.push(e);
         if (!sim.ended) runSteps++;
-        if (sim.dead) break;
-      }
+        return !sim.dead;
+      });
       if (progX(player.x) > best) best = progX(player.x);
     }
 

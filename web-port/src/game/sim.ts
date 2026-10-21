@@ -29,7 +29,7 @@ import { bandFor, cameraCenterForPortal } from "../gd/camera.ts";
 import { hitboxScale, speedConstants, SPEED_PHYSICS, SPEEDS, RAW_VELOCITY } from "../gd/physics.ts";
 import { freshPlayer, stepPlayer, stopDash, type Gamemode, type PlayerState, type StepInput } from "../gd/gamemodes.ts";
 import {
-  applyPortal, activateOrb, activatePad, spiderTeleport, SPIDER_SIZE, GAMEMODE_PORTALS, type RunState,
+  applyPortal, activateOrb, activatePad, spiderTeleport, spiderOrbJump, SPIDER_SIZE, GAMEMODE_PORTALS, type RunState,
 } from "../gd/interactives.ts";
 import { checkSnapJump } from "../gd/snapjump.ts";
 import { easedValue } from "../gd/easing.ts";
@@ -48,6 +48,39 @@ import { endTriggerX, lastObjectX, levelLength } from "../gd/levelEnd.ts";
 /** the game steps physics at this fixed rate */
 export const STEP_HZ = 240;
 export const STEP = 1 / STEP_HZ;
+
+/**
+ * Never simulate more than this much wall-clock time in one call to
+ * `advanceFixedSteps` (the scene clamps `frame` to this before passing it
+ * in). Without it, a long stall — a backgrounded tab, a slow device, a
+ * debugger pause — would demand a burst of hundreds of catch-up steps the
+ * instant the tab regains focus; capping the catch-up to 60 steps (0.25 s)
+ * means the sim visibly "loses" the stalled time rather than fast-forwarding
+ * through it.
+ */
+export const MAX_FRAME = 0.25;
+
+/**
+ * The fixed-step accumulator that decouples the sim's rate (240 Hz, always)
+ * from however often the caller is woken up to advance it. The scene's
+ * `requestAnimationFrame` loop calls this once per drawn frame with however
+ * many seconds of wall time that frame covered (already clamped to
+ * `MAX_FRAME` by the caller, so a stall does not demand a huge catch-up);
+ * a 60 Hz display passes ~1/60 s a call, a 120 Hz one ~1/120 s twice as often,
+ * and either way `step()` runs once per whole STEP that fits, with the
+ * remainder carried in the returned accumulator. The same number of physics
+ * steps — and so the same simulation result — comes out however often the
+ * caller wakes, which is the whole point: render rate must never change
+ * gameplay. `step()` returns `false` to stop early (the sim died mid-run).
+ */
+export function advanceFixedSteps(acc: number, frame: number, step: () => boolean | void): number {
+  acc += frame;
+  while (acc >= STEP) {
+    acc -= STEP;
+    if (step() === false) break;
+  }
+  return acc;
+}
 
 const HALF0 = PLAYER_SIZE / 2;
 
@@ -750,7 +783,7 @@ function fireTouchedOrb(
   // 2.2's spider orb (3004, `GameObjectType` SpiderOrb) flips the player to
   // the surface along its gravity, as the spider's own jump does
   if (it.id === 3004 && world) {
-    spiderTeleport(player, world, s.triggers?.rt);
+    spiderOrbJump(player, world, s.triggers?.rt, it.props);
     player.holdSpent = true;
   } else if (!activateOrb(it.id, player, s.run.speed, it.props)) return false;
   player.queuedHold = false;
