@@ -30,6 +30,7 @@ import type { Renderer } from "../engine/renderer.ts";
 import type { LoadedFont } from "../engine/bmfont.ts";
 import { HD } from "../gd/sheets.ts";
 import { easedValue } from "../gd/easing.ts";
+import * as save from "../gd/save.ts";
 import { drawNineSlice, type LooseTexture } from "./sprites.ts";
 import { MenuItem, UiMenu } from "./controls.ts";
 import { drawLabel } from "./optionsMenu.ts";
@@ -125,8 +126,14 @@ export function alertLayout(width: number, lines: number, textScale = 1): AlertL
   };
 }
 
-/** the layer's scale and the dim's opacity `t` seconds after `show` */
-export function alertShowState(t: number): { scale: number; dim: number } {
+/**
+ * The layer's scale and the dim's opacity `t` seconds after `show`. With Fast
+ * Menu (game variable `"0168"`) `FLAlertLayer::init` sets `m_noElasticity`, and
+ * `show` (exe `0x140052c00`) then runs neither the elastic pop nor the dim fade:
+ * the layer is settled from the first frame.
+ */
+export function alertShowState(t: number, fastMenu = false): { scale: number; dim: number } {
+  if (fastMenu) return { scale: 1, dim: ALERT_DIM_OPACITY };
   const k = Math.min(1, Math.max(0, t / ALERT_POP_DURATION));
   const scale = ALERT_POP_FROM + (1 - ALERT_POP_FROM) * easedValue(k, 6, ALERT_POP_PERIOD);
   const dim = ALERT_DIM_OPACITY * Math.min(1, Math.max(0, t / ALERT_FADE_DURATION));
@@ -149,6 +156,8 @@ export interface AlertDeps {
 /** a live `FLAlertLayer` with one button */
 export class AlertLayer {
   t = 0;
+  /** game variable `"0168"`, read in `FLAlertLayer::init` */
+  private readonly fastMenu = save.settings().fastMenu;
   readonly menu = new UiMenu("alert");
   readonly layout: AlertLayout;
   private readonly lines: TextRun[][];
@@ -184,12 +193,12 @@ export class AlertLayer {
 
   /** the scale the layer is drawn at right now (the pop-in) */
   get scale(): number {
-    return alertShowState(this.t).scale;
+    return alertShowState(this.t, this.fastMenu).scale;
   }
 
   draw(renderer: Renderer, viewW: number, viewH: number) {
     const d = this.deps;
-    const { scale, dim } = alertShowState(this.t);
+    const { scale, dim } = alertShowState(this.t, this.fastMenu);
     const w = d.white;
     renderer.draw(w.tex, w.texW, w.texH, w.frame, 0, 0, viewW, viewH, 0, 0, 0, 0, dim);
     const L = this.layout;

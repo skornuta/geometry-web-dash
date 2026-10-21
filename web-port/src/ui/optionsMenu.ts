@@ -601,6 +601,25 @@ export const MORE_OPTIONS_PAGES: readonly MoreOptionsPage[] = [
         label: "Percentage Decimals", gameVariable: "0126", setting: "percentageDecimals",
         info: "Shows decimals in level progress.",
       },
+      // Slots 6..8, from `init`'s addToggle order (exe 0x140373740, page = count / 10)
+      {
+        label: "Show Leaderboard\nPercentage", gameVariable: "0099", setting: null,
+        note: "an online leaderboard option, out of scope",
+      },
+      {
+        label: "Do Not...", gameVariable: "0095", setting: null,
+        note: "the original's own description says it does nothing useful",
+      },
+      {
+        label: "Confirm Exit", gameVariable: "0167", setting: null,
+        note: "the port's pause menu exits without a confirmation window; not wired",
+      },
+      {
+        // the tenth and last toggle of the page: `addToggle("Fast\nMenu", "0168", ...)` at exe
+        // 0x14037415f, the count then being 69 (page 6, slot 9)
+        label: "Fast\nMenu", gameVariable: "0168", setting: "fastMenu",
+        info: "Makes transitions between menu pages faster.",
+      },
     ],
   },
 ];
