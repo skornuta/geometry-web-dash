@@ -59,7 +59,6 @@ test("grid scales come from the getItems table at unlockType - 1", () => {
     assert.ok(Math.abs(gridScale(tab as never) - scale) < 1e-6, `${tab} ${gridScale(tab as never)}`);
   }
 });
-});
 
 test("a fresh save starts every extra on its first choice", () => {
   save.loadFrom(undefined);
