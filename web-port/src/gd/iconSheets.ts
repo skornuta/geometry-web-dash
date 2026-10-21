@@ -14,11 +14,12 @@
 
 import type { Renderer } from "../engine/renderer.ts";
 import { loadAtlas } from "../engine/atlas.ts";
-import type { Gamemode } from "./gamemodes.ts";
+import type { IconMode } from "./icons.ts";
 import type { UiSheet, UiSprites } from "../ui/sprites.ts";
 
 /** the file prefix each gamemode's sheets use */
-export const ICON_SHEET_PREFIX: Record<Gamemode, string> = {
+export const ICON_SHEET_PREFIX: Record<IconMode, string> = {
+  jetpack: "jetpack",
   cube: "player",
   ship: "ship",
   ball: "player_ball",
@@ -30,7 +31,7 @@ export const ICON_SHEET_PREFIX: Record<Gamemode, string> = {
 };
 
 /** `player_31-hd`: indices are zero-padded to two digits, as the files are */
-export function iconSheetBase(mode: Gamemode, idx: number): string {
+export function iconSheetBase(mode: IconMode, idx: number): string {
   return `${ICON_SHEET_PREFIX[mode]}_${String(idx).padStart(2, "0")}-hd`;
 }
 
@@ -51,11 +52,11 @@ export class IconSheets {
     this.sprites = sprites;
   }
 
-  isLoaded(mode: Gamemode, idx: number): boolean {
+  isLoaded(mode: IconMode, idx: number): boolean {
     return this.loaded.has(iconSheetBase(mode, idx));
   }
 
-  load(mode: Gamemode, idx: number): Promise<void> {
+  load(mode: IconMode, idx: number): Promise<void> {
     const base = iconSheetBase(mode, idx);
     let p = this.pending.get(base);
     if (!p) {
@@ -70,7 +71,7 @@ export class IconSheets {
     return p;
   }
 
-  loadAll(list: readonly (readonly [Gamemode, number])[]): Promise<void> {
+  loadAll(list: readonly (readonly [IconMode, number])[]): Promise<void> {
     return Promise.all(list.map(([m, i]) => this.load(m, i))).then(() => undefined);
   }
 }

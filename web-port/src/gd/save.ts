@@ -15,7 +15,7 @@
  * degrades to an in-memory save rather than throwing.
  */
 
-import { ICON_COUNTS, ICON_TABS, PLAYER_COLORS } from "./icons.ts";
+import { EXTRA_COUNTS, EXTRA_KEYS, ICON_COUNTS, ICON_TABS, PLAYER_COLORS } from "./icons.ts";
 
 const KEY = "gd-web-save";
 const VERSION = 1;
@@ -127,6 +127,14 @@ export interface IconKit {
   robot: number;
   spider: number;
   swing: number;
+  /**
+   * The garage's three extra categories (all 1-based, like the icons): the jetpack
+   * skin, the trail (`player_special_NN`) and the death effect (`explosionIcon_NN`).
+   * Only the garage reads them so far.
+   */
+  jetpack: number;
+  trail: number;
+  deathEffect: number;
   /** colour channel indices into the game's 42-entry player palette */
   col1: number;
   col2: number;
@@ -158,6 +166,7 @@ function defaults(): SaveData {
     // the game's own starting kit: cube 1, default green/white, no glow
     icons: {
       cube: 1, ship: 1, ball: 1, ufo: 1, wave: 1, robot: 1, spider: 1, swing: 1,
+      jetpack: 1, trail: 1, deathEffect: 1,
       col1: 0, col2: 3, glow: false,
     },
   };
@@ -185,6 +194,9 @@ function migrate(raw: unknown): SaveData {
     const ic = o.icons as Partial<Record<keyof IconKit, unknown>>;
     for (const m of ICON_TABS) {
       if (isIndex(ic[m], 1, ICON_COUNTS[m])) out.icons[m] = ic[m];
+    }
+    for (const k of EXTRA_KEYS) {
+      if (isIndex(ic[k], 1, EXTRA_COUNTS[k])) out.icons[k] = ic[k];
     }
     if (isIndex(ic.col1, 0, PLAYER_COLORS.length - 1)) out.icons.col1 = ic.col1;
     if (isIndex(ic.col2, 0, PLAYER_COLORS.length - 1)) out.icons.col2 = ic.col2;

@@ -98,6 +98,66 @@ export const ICON_TABS: Gamemode[] = [
   "cube", "ship", "ball", "ufo", "wave", "robot", "spider", "swing",
 ];
 
+/**
+ * The garage's three extra categories, after the eight gamemodes (the 11 tabs of
+ * `setupIconSelect`).
+ *
+ * **Jetpack** is an icon family like the others: `jetpack_%02d_001.png`,
+ * `_2_`, `_extra_` and `_glow_` (format strings in `ACTUAL_steamgd/GeometryDash.exe`),
+ * one sheet per icon in `Resources/icons/`, 8 of them. It is a garage selection
+ * only: the jetpack skin is for platformer ships, which the port does not have.
+ *
+ * **Trail** and **death effect** are single frames, not layered icons.
+ * `GJItemIcon::init` (exe `0x14027ab10`) builds the browser cell for unlock type 10
+ * (streak) and 11 (death effect) as `"%s_%02d_001.png"` over the prefixes
+ * `player_special` and `explosionIcon`: 7 and 20 frames, all in `GJ_GameSheet03`.
+ */
+export type IconMode = Gamemode | "jetpack";
+export type ExtraKey = "jetpack" | "trail" | "deathEffect";
+export const EXTRA_COUNTS: Record<ExtraKey, number> = { jetpack: 8, trail: 7, deathEffect: 20 };
+export const EXTRA_KEYS: readonly ExtraKey[] = ["jetpack", "trail", "deathEffect"];
+
+export type GarageTab = Gamemode | ExtraKey;
+/** all 11 garage tabs, in the game's order */
+export const GARAGE_TABS: readonly GarageTab[] = [...ICON_TABS, ...EXTRA_KEYS];
+
+/** how many choices a garage tab holds */
+export function tabCount(tab: GarageTab): number {
+  return tab in EXTRA_COUNTS ? EXTRA_COUNTS[tab as ExtraKey] : ICON_COUNTS[tab as Gamemode];
+}
+
+/** `player_special_03_001.png` — a trail's garage icon */
+export function trailIconFrame(idx: number): string {
+  return `player_special_${pad(clampPick("trail", idx))}_001.png`;
+}
+
+/** `explosionIcon_07_001.png` — a death effect's garage icon */
+export function deathEffectIconFrame(idx: number): string {
+  return `explosionIcon_${pad(clampPick("deathEffect", idx))}_001.png`;
+}
+
+function clampPick(key: ExtraKey, idx: number): number {
+  return Math.max(1, Math.min(EXTRA_COUNTS[key], Math.floor(idx) || 1));
+}
+
+/**
+ * `GJGarageLayer::getItems` sizes each grid cell from a 15-float table indexed by
+ * `unlockType - 1` (exe `0x14027b710`, jump table `0x14027b76c`). The unlock type is
+ * the icon type run through `0x14017c5e0`: cube 1, ship 4, ball 5, ufo 6, wave 7,
+ * robot 8, spider 9, trail 10, death effect 11, swing 13, jetpack 14. Decoded from
+ * the exe's code, not read as a plain gamemode order.
+ */
+export const GRID_SCALE_TABLE: readonly number[] = [
+  0.8, 1.0, 1.0, 0.6, 0.75, 0.68, 0.8, 0.65, 0.65, 0.8, 0.8, 0.8, 0.7, 0.6, 0.8,
+];
+export const UNLOCK_TYPE: Record<GarageTab, number> = {
+  cube: 1, ship: 4, ball: 5, ufo: 6, wave: 7, robot: 8, spider: 9,
+  trail: 10, deathEffect: 11, swing: 13, jetpack: 14,
+};
+export function gridScale(tab: GarageTab): number {
+  return GRID_SCALE_TABLE[UNLOCK_TYPE[tab] - 1];
+}
+
 /** two-digit index as the atlas spells it (`player_01_001.png`) */
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -106,9 +166,10 @@ export const LIMB_MODES: ReadonlySet<Gamemode> = new Set<Gamemode>(["robot", "sp
 export const LIMB_COUNT = 4;
 
 /** the atlas prefix for one icon of a gamemode, e.g. cube 7 -> `player_07` */
-function prefixFor(mode: Gamemode, idx: number): string {
-  const n = pad(Math.max(1, Math.min(ICON_COUNTS[mode], idx)));
+function prefixFor(mode: IconMode, idx: number): string {
+  const n = pad(Math.max(1, Math.min(mode === "jetpack" ? EXTRA_COUNTS.jetpack : ICON_COUNTS[mode], idx)));
   switch (mode) {
+    case "jetpack": return `jetpack_${n}`;
     case "cube": return `player_${n}`;
     case "ship": return `ship_${n}`;
     case "ball": return `player_ball_${n}`;
@@ -141,9 +202,9 @@ export interface IconLayers {
  * in the atlas and skips any that are missing, because which optional layers
  * exist varies per icon, not just per gamemode.
  */
-export function iconFrames(mode: Gamemode, idx: number, limb = 1): IconLayers {
+export function iconFrames(mode: IconMode, idx: number, limb = 1): IconLayers {
   const p = prefixFor(mode, idx);
-  if (LIMB_MODES.has(mode)) {
+  if (mode !== "jetpack" && LIMB_MODES.has(mode)) {
     const l = `${p}_${pad(Math.max(1, Math.min(LIMB_COUNT, limb)))}`;
     return {
       main: `${l}_001.png`,
@@ -191,6 +252,6 @@ export function playerGlow(
 }
 
 /** clamp a saved icon index into the range this install actually has */
-export function clampIcon(mode: Gamemode, idx: number): number {
-  return Math.max(1, Math.min(ICON_COUNTS[mode], Math.floor(idx) || 1));
+export function clampIcon(mode: GarageTab, idx: number): number {
+  return Math.max(1, Math.min(tabCount(mode), Math.floor(idx) || 1));
 }

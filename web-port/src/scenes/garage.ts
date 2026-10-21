@@ -24,8 +24,11 @@ import { LoadedFont } from "../engine/bmfont.ts";
 import { AudioEngine } from "../engine/audio.ts";
 import { resolveView } from "../gd/camera.ts";
 import { HD } from "../gd/sheets.ts";
-import type { Gamemode } from "../gd/gamemodes.ts";
-import { ICON_TABS, ICON_COUNTS, PLAYER_COLORS, iconFrames, playerColor, clampIcon, playerGlow } from "../gd/icons.ts";
+import {
+  GARAGE_TABS, gridScale, PLAYER_COLORS, iconFrames, playerColor, clampIcon,
+  playerGlow, tabCount, trailIconFrame, deathEffectIconFrame,
+  type GarageTab, type IconMode,
+} from "../gd/icons.ts";
 import { particleColors } from "../gd/effects.ts";
 import { IconSheets } from "../gd/iconSheets.ts";
 import { BACK_LIMB_TINT, ROBOT_ANIM, SPIDER_ANIM } from "../gd/anim.ts";
@@ -100,14 +103,9 @@ const DOT_PADDING = 6;
  * The tab row has **11** togglers (setupIconSelect +460..1740). GD scales each
  * toggler's *sprites* to 0.9 after creating it, so the toggler's content size —
  * which drives both the alignment and the hit rect — stays the full sprite's.
- * The last three (jetpack, trail, death effect) are outside the locked scope:
- * drawn with their art, inert.
+ * The last three (jetpack, trail, death effect) are real tabs: each opens its own
+ * grid and writes its own save field (`IconKit.jetpack` / `trail` / `deathEffect`).
  */
-const EXTRA_TABS: readonly [string, string][] = [
-  ["gj_jetpackBtn_off_001.png", "gj_jetpackBtn_on_001.png"],
-  ["gj_streakBtn_off_001.png", "gj_streakBtn_on_001.png"],
-  ["gj_explosionBtn_off_001.png", "gj_explosionBtn_on_001.png"],
-];
 /** the grid: 12 columns, 3 rows; `ListButtonBar::create(..., 12, 3, 5, 5, 25, 220, 1)` */
 const GRID_COLS = 12;
 const GRID_ROWS = 3;
@@ -149,16 +147,14 @@ const SELECT_SCALE = 0.85;
 const GRID_ICON_COLOR1: readonly [number, number, number] = [175, 175, 175];
 const GRID_ICON_COLOR2: readonly [number, number, number] = [255, 255, 255];
 /**
- * Per-icon-type grid scale, a 15-float table at `0x100722234` indexed by
- * `iconType - 1` — getItems +384..392.
+ * Per-icon-type grid scale: `getItems`' 15-float table indexed by
+ * `unlockType - 1` (see `gridScale`). Ship is 0.6, not 1.0: with 1.0 the 36 ships on
+ * a page overflow their 30-unit cells.
  */
-const GRID_ICON_SCALE: Record<Gamemode, number> = {
-  cube: 0.8, ship: 1.0, ball: 1.0, ufo: 0.6,
-  wave: 0.75, robot: 0.68, spider: 0.8, swing: 0.65,
-};
+const GRID_ICON_SCALE = (tab: GarageTab): number => gridScale(tab);
 
 /** off/on toggler art per supported gamemode — setupIconSelect +464..1352 */
-const TAB_FRAMES: Record<Gamemode, [string, string]> = {
+const TAB_FRAMES: Record<GarageTab, [string, string]> = {
   cube: ["gj_iconBtn_off_001.png", "gj_iconBtn_on_001.png"],
   ship: ["gj_shipBtn_off_001.png", "gj_shipBtn_on_001.png"],
   ball: ["gj_ballBtn_off_001.png", "gj_ballBtn_on_001.png"],
@@ -167,6 +163,9 @@ const TAB_FRAMES: Record<Gamemode, [string, string]> = {
   robot: ["gj_robotBtn_off_001.png", "gj_robotBtn_on_001.png"],
   spider: ["gj_spiderBtn_off_001.png", "gj_spiderBtn_on_001.png"],
   swing: ["gj_swingBtn_off_001.png", "gj_swingBtn_on_001.png"],
+  jetpack: ["gj_jetpackBtn_off_001.png", "gj_jetpackBtn_on_001.png"],
+  trail: ["gj_streakBtn_off_001.png", "gj_streakBtn_on_001.png"],
+  deathEffect: ["gj_explosionBtn_off_001.png", "gj_explosionBtn_on_001.png"],
 };
 
 /* ---------------- CharacterColorPage, m1 0x57c894 ---------------- */
@@ -245,7 +244,6 @@ const GARAGE_FRAMES = [
   "GJ_closeBtn_001.png", "GJ_starsIcon_001.png", "GJ_coinsIcon_001.png",
   "GJ_unlockTxt_001.png", "GJ_shardsBtn_001.png", "shopRope_001.png",
   ...Object.values(TAB_FRAMES).flat(),
-  ...EXTRA_TABS.flat(),
 ] as const;
 
 type Loose = LooseTexture & { frame: SpriteFrame };
@@ -285,10 +283,13 @@ export async function startGarage(renderer: Renderer) {
   // older half, so the visible page's icons are fetched as it is shown
   const iconSheets = new IconSheets(renderer, sprites);
   const loadVisibleIcons = () => {
-    const m = mode();
     const first = page * PER_PAGE + 1;
-    const want: [Gamemode, number][] = [[m, selected()]];
-    for (let n = first; n < first + PER_PAGE && n <= ICON_COUNTS[m]; n++) want.push([m, n]);
+    const want: [IconMode, number][] = [[previewMode, previewSelected()]];
+    const m = mode();
+    if (isIconTab(m)) {
+      want.push([m, selected()]);
+      for (let n = first; n < first + PER_PAGE && n <= tabCount(m); n++) want.push([m, n]);
+    }
     iconSheets.loadAll(want).catch((e) => console.error("icon sheets failed to load:", e));
   };
 
@@ -309,11 +310,26 @@ export async function startGarage(renderer: Renderer) {
   /** the colour popup: null when closed, otherwise which channel it edits */
   let popup: "col1" | "col2" | null = null;
 
-  const mode = (): Gamemode => ICON_TABS[tab];
+  const mode = (): GarageTab => GARAGE_TABS[tab];
+  /** the tabs that hold layered player icons; trail and death effect hold single frames */
+  const isIconTab = (m: GarageTab): m is IconMode => m !== "trail" && m !== "deathEffect";
   const selected = () => clampIcon(mode(), kit[mode()] ?? 1);
+  /**
+   * The preview above the tabs shows the last *icon* tab opened (the original shows the
+   * last icon type equipped, REFERENCE.md §19.5), so opening Trail or Death Effect
+   * leaves the player on the stand.
+   */
+  let previewMode: IconMode = "cube";
+  const previewSelected = () => clampIcon(previewMode, kit[previewMode] ?? 1);
+  const openTab = (i: number) => {
+    tab = i;
+    const m = mode();
+    if (isIconTab(m)) previewMode = m;
+    syncPage();
+  };
   // `setupPage +816..844`: `count / 36 + 1`, integer division — so a count that
   // is an exact multiple of 36 gets one empty trailing page, as in the original
-  const pageCount = () => Math.floor(ICON_COUNTS[mode()] / PER_PAGE) + 1;
+  const pageCount = () => Math.floor(tabCount(mode()) / PER_PAGE) + 1;
 
   const syncPage = () => { page = Math.floor((selected() - 1) / PER_PAGE); };
   syncPage();
@@ -336,6 +352,7 @@ export async function startGarage(renderer: Renderer) {
     const v = clampIcon(m, n);
     kit[m] = v;
     save.setIcons({ [m]: v } as Partial<typeof kit>);
+    if (isIconTab(m)) previewMode = m;
   };
 
   const setColor = (which: "col1" | "col2", idx: number) => {
@@ -405,11 +422,10 @@ export async function startGarage(renderer: Renderer) {
           onActivate,
         });
       };
-      ICON_TABS.forEach((m, i) => {
+      GARAGE_TABS.forEach((m, i) => {
         tabs.add(tabItem(`tab-${m}`, TAB_FRAMES[m][i === tab ? 1 : 0],
-          () => { tab = i; syncPage(); rebuild(); }));
+          () => { openTab(i); rebuild(); }));
       });
-      EXTRA_TABS.forEach(([off], i) => tabs.add(tabItem(`tab-extra-${i}`, off)));
       tabs.alignItemsHorizontallyWithPadding(TAB_PADDING);
       built.push(tabs);
 
@@ -417,7 +433,7 @@ export async function startGarage(renderer: Renderer) {
       const first = page * PER_PAGE + 1;
       for (let i = 0; i < PER_PAGE; i++) {
         const n = first + i;
-        if (n > ICON_COUNTS[mode()]) break;
+        if (n > tabCount(mode())) break;
         grid.add(new MenuItem({
           id: `icon-${n}`, frame: sprites.require("playerSquare_001.png"),
           onActivate: () => { setIcon(n); rebuild(); },
@@ -462,7 +478,7 @@ export async function startGarage(renderer: Renderer) {
     startMusic();
     switch (e.code) {
       case "Escape": e.preventDefault(); back(); break;
-      case "Tab": e.preventDefault(); tab = (tab + 1) % ICON_TABS.length; syncPage(); rebuild(); break;
+      case "Tab": e.preventDefault(); openTab((tab + 1) % GARAGE_TABS.length); rebuild(); break;
       case "ArrowLeft": e.preventDefault(); setIcon(selected() - 1); syncPage(); rebuild(); break;
       case "ArrowRight": e.preventDefault(); setIcon(selected() + 1); syncPage(); rebuild(); break;
       case "KeyG": e.preventDefault(); toggleGlow(); break;
@@ -516,7 +532,7 @@ export async function startGarage(renderer: Renderer) {
 
   /** the layered icon; `colors` overrides the player's own, as the grid does */
   function drawIcon(
-    m: Gamemode, idx: number, x: number, y: number, scale: number, a = 1,
+    m: IconMode, idx: number, x: number, y: number, scale: number, a = 1,
     colors?: readonly [readonly [number, number, number], readonly [number, number, number]],
   ) {
     const n = iconFrames(m, idx);
@@ -651,7 +667,7 @@ export async function startGarage(renderer: Renderer) {
     drawUiSprite(renderer, line, lineP.x, lineP.y);
 
     // the live preview
-    drawIcon(mode(), selected(), lineP.x, lineP.y + PREVIEW_SCALE * 15 + 1, PREVIEW_SCALE);
+    drawIcon(previewMode, previewSelected(), lineP.x, lineP.y + PREVIEW_SCALE * 15 + 1, PREVIEW_SCALE);
 
     // tabs
     const tabs = menus.find((m) => m.id === "tabs");
@@ -668,8 +684,15 @@ export async function startGarage(renderer: Renderer) {
       const n = first + i;
       drawUiSprite(renderer, sprites.require("playerSquare_001.png"), item.x, item.y,
         { scale: item.scale });
-      drawIcon(mode(), n, item.x, item.y, GRID_ICON_SCALE[mode()] * item.scale, 1,
-        [GRID_ICON_COLOR1, GRID_ICON_COLOR2]);
+      const m = mode();
+      const scale = GRID_ICON_SCALE(m) * item.scale;
+      if (m === "trail" || m === "deathEffect") {
+        // single frames, drawn as they are (`GJItemIcon::init` unlock types 10 and 11)
+        const name = m === "trail" ? trailIconFrame(n) : deathEffectIconFrame(n);
+        drawUiSprite(renderer, sprites.require(name), item.x, item.y, { scale });
+      } else {
+        drawIcon(m, n, item.x, item.y, scale, 1, [GRID_ICON_COLOR1, GRID_ICON_COLOR2]);
+      }
     });
     // the two selection rings, over the chosen cell and the chosen tab
     const chosenCell = grid?.items[selected() - first];
@@ -773,7 +796,7 @@ export async function startGarage(renderer: Renderer) {
       }
       return null;
     },
-    setTab: (i: number) => { tab = i; syncPage(); rebuild(); },
+    setTab: (i: number) => { openTab(i); rebuild(); },
     setPage: (p: number) => { page = Math.max(0, Math.min(pageCount() - 1, p)); rebuild(); },
     setIcon: (n: number) => { setIcon(n); syncPage(); rebuild(); },
     setColor,
