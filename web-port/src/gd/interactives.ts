@@ -199,7 +199,10 @@ function pinkOrbMult(p: PlayerState): number {
 function dropOrbSpeed(p: PlayerState): number {
   switch (p.mode) {
     case "ufo": return 11.2;
-    case "ship": case "wave": return 14;
+    // the swing reaches the wave's -14 too: `ringJump` +1896 tests `m_isDart`
+    // (`[0x96c]`) and then `m_isSwing` (`[0x974]`) before the -15 default at
+    // +3084, so only the cube, ball and robot take 15
+    case "ship": case "wave": case "swing": return 14;
     case "spider": return 16.5;
     default: return 15;
   }
