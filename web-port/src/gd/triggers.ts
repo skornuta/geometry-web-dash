@@ -347,6 +347,13 @@ export interface TriggerRuntime {
   /** an End trigger (3600) has been passed — the sim ends the level */
   endHit: boolean;
   /**
+   * The ghost trail (objects 32 on / 33 off → `PlayLayer::toggleGhostEffect`
+   * m1 0xabc14, see `gd/ghostTrail.ts`). Off at the start of every attempt
+   * (`PlayerObject::resetObject` toggles it to 0) and restored with a
+   * checkpoint (`loadFromCheckpoint`), so it lives in the runtime.
+   */
+  ghost: boolean;
+  /**
    * Options trigger (2899, `GameOptionsTrigger`) keys 165/199: player 1's and
    * player 2's controls switched off. `GameOptionsSetting` is On 1, Off −1,
    * 0 leaves it as it is. Dash turns both off over its cutscenes (x 15255 →
@@ -524,6 +531,7 @@ const UNIMPLEMENTED = new Set([
 
 const TRIGGER_IDS = new Set<number>([
   ...Object.keys(LEGACY_COLOR_TARGET).map(Number),
+  32, 33,
   899, 901, 1006, 1007, 1049, 1268, 1346, 1520,
   1585, 1611, 1616, 1811, 1812, 1815, 1817, 3620, 1913, 1914, 1916, 1935, 2015, 2067, 2903, 2904, 2910, 2911, 2905, 2907, 2913, 2914, 2916, 2919, 2920, 2921, 2922, 2923, 2900, 2899, 2999, 3029, 2062, 3608, 3010, 3600,
   ...UNIMPLEMENTED,
@@ -745,7 +753,7 @@ export function positionedGroups(triggers: Trigger[]): Set<number> {
 export function createRuntime(level: Level): TriggerRuntime {
   const rt: TriggerRuntime = {
     colors: new Map(), groups: new Map(), next: 0, tweens: [], pending: [], time: 0,
-    channel: 0, dir: 4, fired: new Set(), rotations: [], timeWarp: 1, cameraStatic: null, viewStatic: null, viewStaticOther: null, endHit: false, controlsOff: [false, false], bgIndex: null, mgOffsetY: 0, camEdges: [0, 0, 0, 0], particleSpawns: [], areaTints: [], zoom: 1, camOffset: { x: 0, y: 0 }, camAngle: 0, camAngleTarget: 0, gradients: new Map(), shader: freshShaderState(), shaderZ: [1, 15],
+    channel: 0, dir: 4, fired: new Set(), rotations: [], timeWarp: 1, cameraStatic: null, viewStatic: null, viewStaticOther: null, endHit: false, controlsOff: [false, false], bgIndex: null, mgOffsetY: 0, camEdges: [0, 0, 0, 0], particleSpawns: [], areaTints: [], zoom: 1, camOffset: { x: 0, y: 0 }, camAngle: 0, camAngleTarget: 0, gradients: new Map(), shader: freshShaderState(), shaderZ: [1, 15], ghost: false,
     playerColors: [{ r: 125, g: 255, b: 0 }, { r: 0, g: 255, b: 255 }],
     shake: { strength: 0, remaining: 0 }, pulses: [],
     items: new Map(), counters: [], collisions: [], collidingPairs: new Set(),
@@ -776,6 +784,7 @@ export function resetRuntime(rt: TriggerRuntime, level: Level) {
   rt.shader = freshShaderState();
   rt.shaderZ = [1, 15];
   rt.endHit = false;
+  rt.ghost = false;
   rt.controlsOff = [false, false];
   rt.bgIndex = null;
   rt.mgOffsetY = 0;
@@ -838,6 +847,7 @@ export function restoreRuntime(rt: TriggerRuntime, snap: TriggerRuntime) {
   rt.shader = { ...snap.shader };
   rt.shaderZ = [...snap.shaderZ];
   rt.endHit = snap.endHit;
+  rt.ghost = snap.ghost;
   rt.controlsOff = [...snap.controlsOff];
   rt.bgIndex = snap.bgIndex;
   rt.mgOffsetY = snap.mgOffsetY;
@@ -875,7 +885,7 @@ export function cloneRuntime(rt: TriggerRuntime): TriggerRuntime {
     colors, groups, next: rt.next, time: rt.time,
     channel: rt.channel, dir: rt.dir, fired: new Set(rt.fired),
     rotations: rt.rotations.map((r) => ({ ...r })), timeWarp: rt.timeWarp,
-    cameraStatic: rt.cameraStatic && { ...rt.cameraStatic }, viewStatic: rt.viewStatic && { ...rt.viewStatic }, viewStaticOther: rt.viewStaticOther && { ...rt.viewStaticOther }, endHit: rt.endHit, controlsOff: [...rt.controlsOff], bgIndex: rt.bgIndex, mgOffsetY: rt.mgOffsetY, camEdges: [...rt.camEdges], particleSpawns: [], areaTints: rt.areaTints.map((a) => ({ ...a })), zoom: rt.zoom,
+    cameraStatic: rt.cameraStatic && { ...rt.cameraStatic }, viewStatic: rt.viewStatic && { ...rt.viewStatic }, viewStaticOther: rt.viewStaticOther && { ...rt.viewStaticOther }, endHit: rt.endHit, ghost: rt.ghost, controlsOff: [...rt.controlsOff], bgIndex: rt.bgIndex, mgOffsetY: rt.mgOffsetY, camEdges: [...rt.camEdges], particleSpawns: [], areaTints: rt.areaTints.map((a) => ({ ...a })), zoom: rt.zoom,
     camOffset: { ...rt.camOffset }, camAngle: rt.camAngle, camAngleTarget: rt.camAngleTarget,
     gradients: new Map(rt.gradients),
     shader: { ...rt.shader },
@@ -1247,6 +1257,10 @@ function fire(rt: TriggerRuntime, t: Trigger, playerX: number, playerY: number) 
   // level's last object). APPROXIMATION: its options (keys like "no effects",
   // "instant") are not read; the scene plays the usual ending.
   if (t.id === 3600) { rt.endHit = true; return; }
+  // Ghost trail on (32) / off (33): `EffectGameObject::triggerObject` m1
+  // 0x172da4 +1680 / +320 -> `PlayLayer::toggleGhostEffect(1 / 0)` m1 0xabc14
+  // (`gd/ghostTrail.ts`). The object's own keys are not read.
+  if (t.id === 32 || t.id === 33) { rt.ghost = t.id === 32; return; }
   if (t.id === 1914) {
     const dur = Math.max(0, propFloat(t.props, P.DURATION, 0));
     const ease = { type: propInt(t.props, P.EASING, 0), rate: propFloat(t.props, P.EASING_RATE, 2) };

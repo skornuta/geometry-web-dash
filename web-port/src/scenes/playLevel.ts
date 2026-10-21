@@ -81,6 +81,7 @@ import {
   BANNER_DY, clampCameraLeft, endPortalY,
 } from "../gd/levelEnd.ts";
 import { EndSequence } from "../gd/endSequence.ts";
+import { GhostTrail, ghostIcon, type GhostPose } from "../gd/ghostTrail.ts";
 import { easedValue } from "../gd/easing.ts";
 import { groupAnchor } from "../gd/triggers.ts";
 import { scaledBandEdge, stepViewStaticPair } from "../gd/camera.ts";
@@ -401,6 +402,12 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
    * together at twice the rate (USER-08).
    */
   const iconAnim = [{ tilt: 0, roll: 0 }, { tilt: 0, roll: 0 }];
+  /**
+   * The ghost trail triggers 32/33 switch on (`gd/ghostTrail.ts`): the copies,
+   * and each player's icon pose as `drawPlayerIcon` last put it down.
+   */
+  const ghostTrail = new GhostTrail();
+  const ghostPose: (GhostPose | null)[] = [null, null];
   /** coins already chimed this attempt, so the sfx fires once each */
   const coinsSeen = new Set<number>();
   /** coins taken this attempt; written to the save only on a normal-mode completion */
@@ -454,6 +461,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   let explode: { t: number; first: number; delay: number; scale: number; rot: number } | null = null;
   const resetFx = () => {
     endPortalFx = null;
+    ghostTrail.clear();
     pfx1?.reset();
     pfx2?.reset();
     oneShots.clear();
@@ -1050,6 +1058,10 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
         } else pfx2.tick(frame);
       }
       oneShots.update(frame);
+      // the trail stops with the player (`playerDestroyed` and `playCompleteEffect`
+      // toggle it off) but the copies already made fade on
+      ghostTrail.update(frame, !!sim.triggers?.rt.ghost && !sim.dead && !sim.ended && !endSeq,
+        [ghostPose[0], sim.dual && !sim.dual.dead ? ghostPose[1] : null]);
       for (let i = waves.length - 1; i >= 0; i--) {
         waves[i].t += frame;
         if (waves[i].t > waves[i].spec.duration) waves.splice(i, 1);
@@ -1597,6 +1609,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
 
       // the ending's `CCRotateBy` turns the whole player node, clockwise
       const rot = ((angle - spinDeg) * Math.PI) / 180;
+      ghostPose[slot] = { x: player.x, y: player.y, rot, flipY, mode: player.mode, mini: player.mini };
 
       // --- robot and spider: seven (six) skeletal parts, not one sprite ---
       if (player.mode === "robot" || player.mode === "spider") {
@@ -1739,6 +1752,25 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       if (st) {
         drawWave(renderer, endTex, w.x, w.y, st.radius, w.spec.lineWidth, w.spec.outline,
           { r: w.color[0] / 255, g: w.color[1] / 255, b: w.color[2] / 255 }, st.opacity * w.alpha);
+      }
+    }
+
+    // the ghost trail's copies sit just under the player (`trailSnapshot` adds
+    // each at the icon's z − 1), additive in the strong form of colour 1 —
+    // or plain black when colour 1 is black (`toggleGhostEffect` +96..196)
+    if (icons && ghostTrail.snaps.length) {
+      const black = kitCol1[0] === 0 && kitCol1[1] === 0 && kitCol1[2] === 0;
+      const gr = black ? 0 : strongCol1[0] / 255, gg = black ? 0 : strongCol1[1] / 255,
+        gb = black ? 0 : strongCol1[2] / 255;
+      for (const { snap, alpha, scale } of ghostTrail.live()) {
+        const ic = ghostIcon(snap.mode);
+        const gf = ic ? iconFrame(ic.mode).main : null;
+        if (!ic || !gf) continue;
+        const sizeScale = snap.mini ? MINI_SCALE : 1;
+        const oy = ic.dy * (snap.flipY ? -1 : 1) * sizeScale;
+        drawIconSprite(gf, snap.x - oy * Math.sin(snap.rot), snap.y + oy * Math.cos(snap.rot),
+          snap.rot, HD * sizeScale * ic.s * scale, 1, 1, false, snap.flipY,
+          gr, gg, gb, alpha, black ? "normal" : "additive");
       }
     }
 
