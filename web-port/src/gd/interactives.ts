@@ -293,7 +293,10 @@ export function activateOrb(
   // Clubstep f9164, a mini ball on a yellow orb moves at 6.131 raw after its
   // first gravity step (8.944 x 0.7), where rounding last gives 6.132.
   p.yVel = quantizeVelocity(p.yVel);
+  // `ringJump` +2644..2700: ball and spider x 0.7, swing x the double 0.6
+  // (0x3fe3333340000000); no other mode is scaled
   if (p.mode === "ball" || p.mode === "spider") p.yVel *= 0.7;
+  else if (p.mode === "swing") p.yVel *= 0.6;
 
   if (id === 84) flipGravity(p, !p.gravityFlipped);
   return true;
@@ -402,6 +405,43 @@ export const LEVEL_CEILING = 1500;
  * `simPress`) this took resync faults 62 -> 59.
  */
 export const SPIDER_SIZE = 0.9;
+
+/**
+ * `GameObject::isFacingDown` (m1 0x4f9198) and its sideways twin (0x4f9228):
+ * the rotation, truncated to whole degrees, and the Y flip. Multiples of 90
+ * take their own branch (down only at +-180); anything else is down inside
+ * 91..269 (or the mirrored -269..-91), and the flip inverts it. The sideways
+ * form is "facing left": multiples of 90 give 270 unflipped or 90 flipped.
+ */
+export function objectFacing(rotation: number, flipY: boolean, sideways = false): boolean {
+  const r = Math.trunc(rotation);
+  const inRange = (r >= 91 && r <= 269) || (r >= -269 && r <= -91);
+  const multiple = r % 90 === 0;
+  if (!sideways) return flipY !== (multiple ? Math.abs(r) === 180 : inRange);
+  if (multiple) {
+    const n = r < 0 ? r + 360 : r;
+    return (n === 270 && !flipY) || (n === 90 && flipY);
+  }
+  return flipY !== inRange;
+}
+
+/**
+ * The spider orb (3004, `GameObjectType` 43), `ringJump` +792..888: the
+ * player's gravity is first set to the direction the orb faces (through
+ * `flipGravity`, only when it differs), then `spiderTestJump` teleports it to
+ * the surface along that gravity and flips. So the exit is fixed by the orb's
+ * orientation, not by the gravity the player arrived with. Dash's two orbs
+ * (13965 upright, 14325 flipped) are entered at the aligned gravity and match
+ * a plain toggle; entered the other way round the plain toggle goes the wrong
+ * way.
+ */
+export function spiderOrbJump(
+  p: PlayerState, world: WorldView, rt: TriggerRuntime | undefined, props: Map<number, string>,
+) {
+  const facing = objectFacing(propFloat(props, P.ROTATION, 0), propBool(props, P.FLIP_Y), p.sideways);
+  if (p.gravityFlipped !== facing) flipGravity(p, facing);
+  spiderTeleport(p, world, rt);
+}
 
 export function spiderTeleport(p: PlayerState, world: WorldView, rt?: TriggerRuntime) {
   const g = gravitySign(p);

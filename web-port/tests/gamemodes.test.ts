@@ -698,3 +698,53 @@ test("Fix Robot Jump (kA34): a pad ends a robot's jump charge; classic levels ke
     assert.equal(p.jumping, !fix, fix ? "fixed levels stop the charge" : "classic levels keep floating");
   }
 });
+
+test("the spider orb sets gravity to the orb's facing, then teleports (ringJump +792)", async () => {
+  const { objectFacing, spiderOrbJump } = await import("../src/gd/interactives.ts");
+  // GameObject::isFacingDown: rotation truncated; multiples of 90 down only at 180
+  assert.equal(objectFacing(0, false), false);
+  assert.equal(objectFacing(180, false), true);
+  assert.equal(objectFacing(-180, false), true);
+  assert.equal(objectFacing(90, false), false);
+  assert.equal(objectFacing(135.9, false), true);
+  assert.equal(objectFacing(0, true), true);
+  assert.equal(objectFacing(180, true), false);
+  // a floor at y 0 (top 0) and a ceiling whose underside is at 300
+  const world = {
+    near: () => [
+      { kind: "solid", id: 1, x: 0, y: -15, hw: 500, hh: 15 },
+      { kind: "solid", id: 2, x: 0, y: 315, hw: 500, hh: 15 },
+    ],
+  } as never;
+  const props = (over: Record<number, string>) => new Map<number, string>(Object.entries(over).map(([k, v]) => [Number(k), v]));
+  // an upright orb always sends the player to the ceiling, whatever gravity it arrived with
+  for (const arrivedFlipped of [false, true]) {
+    const p = playerAt("cube", { y: 150, gravityFlipped: arrivedFlipped });
+    spiderOrbJump(p, world, undefined, props({}));
+    assert.equal(p.gravityFlipped, true, `upright, arrived ${arrivedFlipped}`);
+    assert.equal(p.y, 300 - 15, `upright, arrived ${arrivedFlipped}: ceiling`);
+  }
+  // a flipped (key 5) orb always sends it to the floor
+  for (const arrivedFlipped of [false, true]) {
+    const p = playerAt("cube", { y: 150, gravityFlipped: arrivedFlipped });
+    spiderOrbJump(p, world, undefined, props({ 5: "1" }));
+    assert.equal(p.gravityFlipped, false, `flipped, arrived ${arrivedFlipped}`);
+    assert.equal(p.y, 15, `flipped, arrived ${arrivedFlipped}: floor`);
+  }
+});
+
+test("orbs in swing mode launch at 0.6 of the table value (ringJump +2668)", () => {
+  // `ringJump` multiplies the launch by 0.7 for a ball or spider, and by the
+  // double 0x3fe3333340000000 (0.6) for a swing; every other mode keeps the
+  // value. The ordinary per-mode table applies first (swing takes the default).
+  const cases: [number, number][] = [[36, 1], [1333, 1.38], [141, 0.72]];
+  for (const [id, mult] of cases) {
+    const s = playerAt("swing");
+    activateOrb(id, s);
+    assert.ok(Math.abs(s.yVel - JUMP_VELOCITY * mult * 0.6) < ORB_GRID,
+      `swing orb ${id}: ${s.yVel} vs ${JUMP_VELOCITY * mult * 0.6}`);
+  }
+  const mini = playerAt("swing", { mini: true });
+  activateOrb(36, mini);
+  assert.ok(Math.abs(mini.yVel - JUMP_VELOCITY * 0.8 * 0.6) < ORB_GRID, "mini swing");
+});
