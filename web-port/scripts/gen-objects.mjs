@@ -552,9 +552,10 @@ async function main() {
 
   const lit = (d) => {
     const kids = d.children.length ? `, children: ${JSON.stringify(d.children)}` : "";
+    const op = d.opacity !== undefined ? `, opacity: ${d.opacity}` : "";
     return `  [${d.id}, { frame: ${JSON.stringify(d.frame)}, sheet: "${d.sheet}", type: ${d.type}` +
       `, kind: "${d.kind}", color: "${d.color}", primaryCh: ${d.primaryCh}` +
-      `, secondaryCh: ${d.secondaryCh}, zLayer: ${d.zLayer}, zOrder: ${d.zOrder}${kids} }],`;
+      `, secondaryCh: ${d.secondaryCh}, zLayer: ${d.zLayer}, zOrder: ${d.zOrder}${op}${kids} }],`;
   };
 
   // Saw 88 is one half-blade (\`sawblade_01\`, trimmed to the left half of a
@@ -564,6 +565,15 @@ async function main() {
   // blended (Theory of Everything 9%); a 1080p 2.2 recording (YouTube
   // y3EFoKZd2js) shows a seamless blade. Turned about the centre, the halves
   // meet exactly.
+  // 668 (`d_pixelArt01_001`, Theory of Everything 2's background machinery)
+  // draws at opacity 0.4 in a native capture round (BUGS.md BUG-12,
+  // 2026-09-27, L9/13/16/18/19/20 at 25/50/75%) with no opacity key, group, or
+  // `customSetup` difference from 669, which draws at full opacity in the same
+  // dump. Not decoded further (no mechanism found); pinned to the measured
+  // value.
+  for (const d of defs) {
+    if (d.id === 668) d.opacity = 0.4;
+  }
   for (const d of defs) {
     if (d.id === 88 && d.children?.[0]?.frame === "sawblade_01_001.png") {
       d.children[0].dx = 0;
@@ -645,6 +655,8 @@ export interface ObjectDef {
   secondaryCh: number;
   zLayer: number;
   zOrder: number;
+  /** multiplies the resolved colour's alpha; absent means 1 (no change) */
+  opacity?: number;
   children?: ChildDef[];
 }
 

@@ -52,6 +52,8 @@ export interface ObjectDef {
   secondaryCh: number;
   zLayer: number;
   zOrder: number;
+  /** multiplies the resolved colour's alpha; absent means 1 (no change) */
+  opacity?: number;
   children?: ChildDef[];
 }
 
@@ -435,7 +437,7 @@ export const OBJECT_DEFS: Map<number, ObjectDef> = new Map([
   [665, { frame: "blockOutline_14_001.png", sheet: "game", type: 25, kind: "slope", color: "base", primaryCh: 1004, secondaryCh: -1, zLayer: 5, zOrder: 3 }],
   [666, { frame: "blockOutline_15_001.png", sheet: "game", type: 25, kind: "slope", color: "base", primaryCh: 1004, secondaryCh: -1, zLayer: 5, zOrder: 3 }],
   [667, { frame: "pit_07_001.png", sheet: "game", type: 2, kind: "hazard", color: "black", primaryCh: 1004, secondaryCh: -1, zLayer: 5, zOrder: 1 }],
-  [668, { frame: "d_pixelArt01_001_001.png", sheet: "game", type: 7, kind: "deco", color: "black", primaryCh: 1004, secondaryCh: -1, zLayer: 1, zOrder: -7 }],
+  [668, { frame: "d_pixelArt01_001_001.png", sheet: "game", type: 7, kind: "deco", color: "black", primaryCh: 1004, secondaryCh: -1, zLayer: 1, zOrder: -7, opacity: 0.4 }],
   [669, { frame: "d_pixelArt01_002_001.png", sheet: "game", type: 7, kind: "deco", color: "black", primaryCh: 1004, secondaryCh: -1, zLayer: 1, zOrder: -7 }],
   [670, { frame: "d_pixelArt01_003_001.png", sheet: "game", type: 7, kind: "deco", color: "black", primaryCh: 1004, secondaryCh: -1, zLayer: 1, zOrder: -7 }],
   [671, { frame: "d_pixelArt01_004_001.png", sheet: "game", type: 7, kind: "deco", color: "black", primaryCh: 1004, secondaryCh: -1, zLayer: 1, zOrder: -7 }],

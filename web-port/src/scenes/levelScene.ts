@@ -426,6 +426,11 @@ export class LevelScene {
   private resolveColor(
     props: Map<number, string>, slot: ColorSlot,
     primaryCh: number, secondaryCh: number, baked?: { r: number; g: number; b: number },
+    /**
+     * Multiplies the result's alpha — the object definition's own intrinsic
+     * opacity (`ObjectDef.opacity`, e.g. id 668, BUG-12), not an editor key.
+     */
+    opacity = 1,
   ): Rgba {
     // The pre-2.0 colour key 19 picks a channel for objects that set neither
     // 21 nor 22: on the detail colour when the object has one, else the main.
@@ -438,11 +443,12 @@ export class LevelScene {
     const fallback: Rgba = baked
       ? { r: baked.r / 255, g: baked.g / 255, b: baked.b / 255, a: 1, blend: "normal" as BlendMode, ch: -1 }
       : WHITE;
+    const withOpacity = (c: Rgba): Rgba => opacity === 1 ? c : { ...c, a: c.a * opacity };
     switch (slot) {
       case "black":
-        return this.channelRgba(1010) ?? { r: 0, g: 0, b: 0, a: 1, blend: "normal", ch: 1010 };
+        return withOpacity(this.channelRgba(1010) ?? { r: 0, g: 0, b: 0, a: 1, blend: "normal", ch: 1010 });
       case "base":
-        return this.boundChannel(propInt(props, P.MAIN_COLOR, primaryCh)) ?? fallback;
+        return withOpacity(this.boundChannel(propInt(props, P.MAIN_COLOR, primaryCh)) ?? fallback);
       case "detail": {
         // A single-colour object whose one colour is detail-typed still keeps
         // it in key 21, the editor's "Main": Deadlocked's acid (1052/1228,
@@ -451,10 +457,10 @@ export class LevelScene {
           ? propInt(props, P.SECONDARY_COLOR, secondaryCh)
           : propInt(props, P.MAIN_COLOR, propInt(props, P.SECONDARY_COLOR, primaryCh));
         const c = this.boundChannel(ch) ?? fallback;
-        return { ...c, detail: true };
+        return withOpacity({ ...c, detail: true });
       }
       default:
-        return fallback;
+        return withOpacity(fallback);
     }
   }
 
@@ -759,16 +765,18 @@ export class LevelScene {
     fx: number, fy: number, objFlipX: boolean, objFlipY: boolean,
     groups: number[] = [],
     nativeOffset?: ReadonlyMap<ChildDef, readonly [number, number]>,
+    /** the parent object's own intrinsic opacity (`ObjectDef.opacity`) */
+    opacity = 1,
   ) {
     for (const c of kids ?? []) {
       const mirrored = fx * fy < 0;
       const spriteRot = objRotCCW + (mirrored ? c.rot : -c.rot) * DEG;
-      const col = this.resolveColor(props, c.color, primaryCh, secondaryCh, c);
+      const col = this.resolveColor(props, c.color, primaryCh, secondaryCh, c, opacity);
       const [cdx, cdy] = nativeOffset?.get(c) ?? [c.dx, c.dy];
       this.emit(c.sheet, c.frame, cdx, cdy, objX, objY, objRotCCW, scale, fx, fy,
         spriteRot, objFlipX !== c.flipX, objFlipY !== c.flipY, col, c.scaleX, c.scaleY, groups);
       this.emitChildren(c.children, props, primaryCh, secondaryCh, objX, objY, objRotCCW,
-        scale, fx, fy, objFlipX !== c.flipX, objFlipY !== c.flipY, groups);
+        scale, fx, fy, objFlipX !== c.flipX, objFlipY !== c.flipY, groups, undefined, opacity);
     }
   }
 
@@ -990,7 +998,7 @@ export class LevelScene {
     this.setAxisScale(o, scale);
     const flipX = propBool(o.props, P.FLIP_X), flipY = propBool(o.props, P.FLIP_Y);
     const fx = flipX ? -1 : 1, fy = flipY ? -1 : 1;
-    const col = this.resolveColor(o.props, def.color, def.primaryCh, def.secondaryCh);
+    const col = this.resolveColor(o.props, def.color, def.primaryCh, def.secondaryCh, undefined, def.opacity);
 
     const groups = parseGroups(o);
     // Where the game itself lays these sprites out (gd/nativeGeometry.ts) —
@@ -1039,7 +1047,7 @@ export class LevelScene {
     const behind = kids.filter((c) => c.z < 0);
     const front = kids.filter((c) => c.z >= 0);
     this.emitChildren(behind, o.props, def.primaryCh, def.secondaryCh,
-      o.x, o.y, objRotCCW, scale, fx, fy, flipX, flipY, groups, kidOffset);
+      o.x, o.y, objRotCCW, scale, fx, fy, flipX, flipY, groups, kidOffset, def.opacity);
     if (!RAMP_STRIP_ONLY.has(o.id)) {
       this.curMain = true;
       this.emit(def.sheet, def.frame, mx, my, o.x, o.y, objRotCCW, scale, fx, fy,
@@ -1047,7 +1055,7 @@ export class LevelScene {
       this.curMain = false;
     }
     this.emitChildren(front, o.props, def.primaryCh, def.secondaryCh,
-      o.x, o.y, objRotCCW, scale, fx, fy, flipX, flipY, groups, kidOffset);
+      o.x, o.y, objRotCCW, scale, fx, fy, flipX, flipY, groups, kidOffset, def.opacity);
 
     // A teleport portal is a *pair*: the game builds the exit portal itself
     // (`TeleportPortalObject::m_orangePortal`), so the level data holds only
