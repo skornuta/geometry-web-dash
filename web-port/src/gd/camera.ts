@@ -302,36 +302,52 @@ export interface ViewStatic {
 export function stepViewStatic(
   vs: ViewStatic, tgX: number, tgY: number, camX: number, camY: number,
   lastX: number, lastY: number, frame: number, paused: boolean,
-  out: { x: number; y: number },
+  out: { x: number; y: number }, offX = 0, offY = 0, lastOffX = offX, lastOffY = offY,
 ): boolean {
   const hold = vs.axis === 0 ? 3 : vs.axis;
   const rel = vs.exitAxis & hold;
   const relX = (rel & 1) !== 0, relY = (rel & 2) !== 0;
   const holdX = (hold & 1) !== 0 && !relX, holdY = (hold & 2) !== 0 && !relY;
-  if (vs.fromX === null || vs.fromY === null) { vs.fromX = lastX; vs.fromY = lastY; }
+  // A follow chases the group's own point; the zoom's offset (`zoomedTarget`)
+  // is added to what it reaches, not chased with it. Native Dash 13200–14800
+  // (dash-full.txt): the zoom swings 0.6 -> 0.96 -> 0.6 while the view's centre
+  // stays 1 % a frame behind the guide, and the bottom is that centre less
+  // 160 / zoom at every sample. A static without follow keeps its from-to ease
+  // in the zoomed space (offsets are 0 there).
+  const chase = vs.follow > 0;
+  if (vs.fromX === null || vs.fromY === null) {
+    // `lastOff*`: the offset already inside `last*` (the view a previous
+    // static drew at its zoom; none if the plain follow drew it)
+    vs.fromX = chase ? lastX - lastOffX : lastX;
+    vs.fromY = chase ? lastY - lastOffY : lastY;
+  }
   const k = vs.dur > 0 ? easedValue(Math.min(1, vs.t / vs.dur), vs.type, vs.rate) : 1;
   out.x = camX; out.y = camY;
-  if (holdX && vs.follow > 0) {
+  if (holdX && chase) {
     // follow: chase the (moving) target by 1/easing of the gap a 60 Hz frame
     const f = paused ? 0 : Math.min(1, (frame * 60) / vs.follow);
     vs.fromX += (tgX - vs.fromX) * f;
-    out.x = vs.fromX;
+    out.x = vs.fromX + offX;
   } else if (holdX || relX) {
-    out.x = vs.fromX + ((relX ? camX : tgX) - vs.fromX) * k;
+    const from = chase ? vs.fromX + offX : vs.fromX;
+    out.x = from + ((relX ? camX : tgX + (chase ? 0 : offX)) - from) * k;
   }
-  if (holdY && vs.follow > 0) {
+  if (holdY && chase) {
     const f = paused ? 0 : Math.min(1, (frame * 60) / vs.follow);
     vs.fromY += (tgY - vs.fromY) * f;
-    out.y = vs.fromY;
+    out.y = vs.fromY + offY;
   } else if (holdY || relY) {
-    out.y = vs.fromY + ((relY ? camY : tgY) - vs.fromY) * k;
+    const from = chase ? vs.fromY + offY : vs.fromY;
+    out.y = from + ((relY ? camY : tgY + (chase ? 0 : offY)) - from) * k;
   }
   return holdX || holdY || k < 1;
 }
 
 /** scratch outputs for `stepViewStaticPair`, so a frame allocates nothing */
 const PAIR_FIRST = { x: 0, y: 0 }, PAIR_SECOND = { x: 0, y: 0 };
-const PAIR_TG_FIRST = { x: 0, y: 0 }, PAIR_TG_SECOND = { x: 0, y: 0 };
+const PAIR_OFF = { x: 0, y: 0 };
+/** the last view this module drew and the zoom offset inside it (see `stepViewStaticPair`) */
+const pairLast = { x: NaN, y: NaN, offX: 0, offY: 0 };
 
 /** which axes a static owns (bit 1 x, bit 2 y): a both-axis static owns both */
 function ownedAxes(vs: ViewStatic | null): number {
@@ -339,16 +355,16 @@ function ownedAxes(vs: ViewStatic | null): number {
 }
 
 /**
- * A static's view centre for a zoomed view: the group's point is where the view's
- * edge sits at zoom 1, and the zoom scales the half-window about it (native Dash
- * 2185–2412, zoom 0.8333: the bottom is 135 − (320/2)/0.8333 + 90 = 33.0 and the
- * left edge is 2311 − (571/2)/0.8333 = 1968.4). So the centre moves by
- * half·(1 − 1/zoom), zero at zoom 1.
+ * The offset a zoomed view puts on a static's centre: the group's point is where
+ * the view's edge sits at zoom 1, and the zoom scales the half-window about it
+ * (native Dash 2185–2412, zoom 0.8333: the bottom is 135 − (320/2)/0.8333 + 90 =
+ * 33.0 and the left edge is 2311 − (571/2)/0.8333 = 1968.4). So the centre moves
+ * by half·(1 − 1/zoom), zero at zoom 1.
  */
-function zoomedTarget(tg: { x: number; y: number }, zoom: number, viewW: number, out: { x: number; y: number }) {
+function zoomOffset(zoom: number, viewW: number, out: { x: number; y: number }) {
   const zc = 1 - 1 / (zoom > 0 ? zoom : 1);
-  out.x = tg.x + (viewW / 2) * zc;
-  out.y = tg.y + (DESIGN_H / 2) * zc;
+  out.x = (viewW / 2) * zc;
+  out.y = (DESIGN_H / 2) * zc;
 }
 
 /**
@@ -366,17 +382,20 @@ export function stepViewStaticPair(
   out: { x: number; y: number },
 ): { first: boolean; second: boolean } {
   let aliveFirst = true, aliveSecond = true;
+  zoomOffset(zoom, viewW, PAIR_OFF);
+  // the offset the previous frame's view carries, when it was this function's
+  const fromPairX = lastX === pairLast.x, fromPairY = lastY === pairLast.y;
+  const lox = fromPairX ? pairLast.offX : 0, loy = fromPairY ? pairLast.offY : 0;
   if (first && firstTg) {
-    zoomedTarget(firstTg, zoom, viewW, PAIR_TG_FIRST);
-    aliveFirst = stepViewStatic(first, PAIR_TG_FIRST.x, PAIR_TG_FIRST.y, camX, camY, lastX, lastY, frame, paused, PAIR_FIRST);
+    aliveFirst = stepViewStatic(first, firstTg.x, firstTg.y, camX, camY, lastX, lastY, frame, paused, PAIR_FIRST, PAIR_OFF.x, PAIR_OFF.y, lox, loy);
   }
   if (second && secondTg) {
-    zoomedTarget(secondTg, zoom, viewW, PAIR_TG_SECOND);
-    aliveSecond = stepViewStatic(second, PAIR_TG_SECOND.x, PAIR_TG_SECOND.y, camX, camY, lastX, lastY, frame, paused, PAIR_SECOND);
+    aliveSecond = stepViewStatic(second, secondTg.x, secondTg.y, camX, camY, lastX, lastY, frame, paused, PAIR_SECOND, PAIR_OFF.x, PAIR_OFF.y, lox, loy);
   }
   const ownFirst = first && firstTg ? ownedAxes(first) : 0;
   const ownSecond = second && secondTg ? ownedAxes(second) : 0;
   out.x = (ownSecond & 1) ? PAIR_SECOND.x : (ownFirst & 1) ? PAIR_FIRST.x : camX;
   out.y = (ownSecond & 2) ? PAIR_SECOND.y : (ownFirst & 2) ? PAIR_FIRST.y : camY;
+  pairLast.x = out.x; pairLast.y = out.y; pairLast.offX = PAIR_OFF.x; pairLast.offY = PAIR_OFF.y;
   return { first: aliveFirst, second: aliveSecond };
 }
