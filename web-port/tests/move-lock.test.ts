@@ -131,3 +131,76 @@ test("a later move on the same group adds to what the first one did", () => {
   updateTriggers(rt, triggers, 250, 2, 0);   // second completes: +40
   assert.equal(groupState(rt, 5).dx, 140);
 });
+
+// --- Dash's guide group 304 (x 15675): lock to the player at 5 %, forever ---
+//
+// `GroupCommandObject2::runMoveCommand` (m1 0x447558) stores the lock modifiers
+// (keys 143 / 144) as given, 0 becoming 1.0 (`fcmeq 0` + `bsl 1.0` at
+// 0x4475cc..0x4475dc); `EffectManager::prepareMoveActions` (m1 0x27de38,
+// 0x27e1b0..0x27e1fc) adds `mod * player delta` to the command's offset each
+// step. `GroupCommandObject2::step` (0x44722c, 0x4472dc..0x4472f0) finishes a
+// command when its time reaches the duration, except a duration of exactly -1:
+// that one never finishes. The delta is zeroed when the step teleported the
+// player (`GJBaseGameLayer::update`, m1 0x1232e8..0x123324). Native Dash
+// (dash-full.txt): the camera's guide climbs 0.05 * (741 - 489) = 12.6 by the
+// time the stop trigger at x 15645 ends the lock, which is the camera's
+// 390.927 pin.
+
+test("keys 143 / 144 scale how far the group follows the player", () => {
+  const level = moveLevel({ 51: "5", 28: "0", 29: "0", 10: "2", 58: "1", 59: "1", 143: "0.5", 144: "0.05" });
+  const rt = createRuntime(level);
+  const triggers = buildTriggers(level);
+  updateTriggers(rt, triggers, 100, 0, 15);
+  updateTriggers(rt, triggers, 300, 1, 215);
+  assert.equal(groupState(rt, 5).dx, 100, "x follows at 50 %");
+  assert.ok(Math.abs(groupState(rt, 5).dy - 10) < 1e-9, "y follows at 5 %");
+});
+
+test("a modifier of 0 means 1.0, as in the binary", () => {
+  const level = moveLevel({ 51: "5", 28: "0", 29: "0", 10: "2", 59: "1", 144: "0" });
+  const rt = createRuntime(level);
+  const triggers = buildTriggers(level);
+  updateTriggers(rt, triggers, 100, 0, 15);
+  updateTriggers(rt, triggers, 100, 1, 215);
+  assert.equal(groupState(rt, 5).dy, 200);
+});
+
+function lockForeverLevel(): Level {
+  return {
+    colors: new Map(), bgColorChannel: 0, groundColorChannel: 0,
+    lineColorChannel: 0, rawHeader: "",
+    objects: [
+      // the move trigger is itself in group 7
+      { id: 901, x: 100, y: 0, props: new Map<number, string>([[51, "5"], [57, "7"], [28, "0"], [29, "0"], [10, "-1"], [59, "1"], [144, "0.05"]]) },
+      // and a stop trigger (1616) addresses that group
+      { id: 1616, x: 500, y: 0, props: new Map<number, string>([[51, "7"]]) },
+    ],
+  } as never;
+}
+
+test("a duration of -1 keeps the lock running until a stop trigger ends it", () => {
+  const level = lockForeverLevel();
+  const rt = createRuntime(level);
+  const triggers = buildTriggers(level);
+  updateTriggers(rt, triggers, 100, 0, 0);
+  // an hour of play later the lock is still running
+  updateTriggers(rt, triggers, 200, 3600, 100);
+  assert.ok(Math.abs(groupState(rt, 5).dy - 5) < 1e-9);
+  updateTriggers(rt, triggers, 300, 1 / 240, 300);
+  assert.ok(Math.abs(groupState(rt, 5).dy - 15) < 1e-9);
+  // the stop trigger at x 500
+  updateTriggers(rt, triggers, 500, 1 / 240, 300);
+  updateTriggers(rt, triggers, 520, 1 / 240, 900);
+  assert.ok(Math.abs(groupState(rt, 5).dy - 15) < 1e-9, "stopped: the player's climb no longer counts");
+});
+
+test("a step that teleported the player does not count towards the lock", () => {
+  const level = lockForeverLevel();
+  const rt = createRuntime(level);
+  const triggers = buildTriggers(level);
+  updateTriggers(rt, triggers, 100, 0, 0);
+  updateTriggers(rt, triggers, 110, 1 / 240, 100);
+  updateTriggers(rt, triggers, 120, 1 / 240, 1300, true);  // teleported 1200 up
+  updateTriggers(rt, triggers, 130, 1 / 240, 1310);
+  assert.ok(Math.abs(groupState(rt, 5).dy - 0.05 * 110) < 1e-9);
+});

@@ -8,7 +8,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseLevelString, type Level } from "../src/gd/level.ts";
 import { buildTriggers, createRuntime, groupAnchor, updateTriggers, type TriggerRuntime } from "../src/gd/triggers.ts";
-import { stepViewStatic, VIEW_H, type ViewStatic } from "../src/gd/camera.ts";
+import { stepViewStatic, stepViewStaticPair, VIEW_H, GD_Y_OFFSET, type ViewStatic } from "../src/gd/camera.ts";
 import { createSim, simPress, simStep, STEP } from "../src/game/sim.ts";
 import { SPEEDS } from "../src/gd/physics.ts";
 import { loadWorld } from "../scripts/headless.mjs";
@@ -74,11 +74,13 @@ test("a both-axis exit releases both axes and the view goes home", async () => {
   assert.ok(Math.abs(out.y - 800) < 0.5 && Math.abs(out.x - 1000) < 0.5);
 });
 
-// The native pin (`/tmp/gd-ui-capture/dash-top.txt`: camera bottom 390.927 at
-// frames 11029–15472, x 15001–17001). Replays the Dash macro through the sim,
-// which is the real route — the channel-10 exit at x 15767 fires on it.
+// The native pin: Dash's view bottom settles at 390.927 (zoom 0.6, x 15001–17001;
+// docs/fidelity/captures-2026-10-03/dash-full.txt rows 14960–15472). Replays the
+// Dash macro through the sim, which is the real route — the channel-10 exit at
+// x 15767 fires on it. The bottom is the zoomed one the scene hands over
+// (`stepViewStaticPair` with the live zoom) in the game's own y (port + 90).
 const DASH_MACRO = join(root, "..", "macros-main", "Dash.gdr.json");
-type ViewSample = { frame: number; x: number; centreY: number };
+type ViewSample = { frame: number; x: number; centreY: number; bottomGd: number };
 let dashViews: ViewSample[] | null = null;
 
 async function dashViewRun(): Promise<ViewSample[]> {
@@ -111,9 +113,10 @@ async function dashViewRun(): Promise<ViewSample[]> {
     const tg = groupAnchor(level, rt, vs.group);
     if (!tg) continue;
     const camY = s.player.y;
-    stepViewStatic(vs, tg.x, tg.y, s.player.x, camY, last.x || s.player.x, last.y || camY, 1 / 60, false, out);
+    const zoom = rt.zoom;
+    stepViewStaticPair(null, null, vs, tg, s.player.x, camY, last.x || s.player.x, last.y || camY, 1 / 60, false, zoom, 571, out);
     last.x = out.x; last.y = out.y;
-    samples.push({ frame: f, x: s.player.x, centreY: out.y });
+    samples.push({ frame: f, x: s.player.x, centreY: out.y, bottomGd: out.y - VIEW_H / 2 + GD_Y_OFFSET });
   }
   dashViews = samples;
   return samples;
@@ -123,15 +126,25 @@ test("Dash: after the x-only exit at x 15767 the view stays on group 304's guide
   const samples = await dashViewRun();
   const late = samples.filter((v) => v.frame >= 15080 && v.frame <= 15472);
   assert.ok(late.length > 0, "the static is still set after the exit");
+  // the guide sits at 555 + 12.6 (its lock-to-player climb); the centre is that
+  // plus the zoom offset 160 * (1 - 1/0.6)
+  const centre = 555 + 12.6 + 160 * (1 - 1 / 0.6);
   for (const v of late) {
-    assert.ok(Math.abs(v.centreY - 555) < 0.5, `frame ${v.frame}: y ${v.centreY.toFixed(2)} is not the guide's 555`);
+    assert.ok(Math.abs(v.centreY - centre) < 0.5, `frame ${v.frame}: y ${v.centreY.toFixed(2)} is not the guide's ${centre.toFixed(2)}`);
   }
 });
 
-test("Dash: camera bottom is pinned at 390.927 from x 15001 to 17001", { todo: "bottom = guide 555 - VIEW_H/2 = 395.0, 4.07 above native's 390.927; offset not yet decoded" }, async () => {
+test("Dash: camera bottom settles at the native 390.927 once the guide's lock-to-player move has run", async () => {
   const samples = await dashViewRun();
-  for (const v of samples.filter((s) => s.frame >= 11029 && s.frame <= 15472)) {
-    const bottom = v.centreY - VIEW_H / 2;
-    assert.ok(Math.abs(bottom - 390.927) < 0.5, `frame ${v.frame}: bottom ${bottom.toFixed(3)}`);
+  const native = new Map<number, number>();
+  for (const l of readFileSync(join(root, "..", "docs", "fidelity", "captures-2026-10-03", "dash-full.txt"), "utf8").split("\n")) {
+    const p = l.split(" ");
+    if (p.length > 12) native.set(+p[0], +p[10]);
+  }
+  const late = samples.filter((v) => v.frame >= 15000 && v.frame <= 15472);
+  assert.ok(late.length > 100);
+  for (const v of late) {
+    assert.ok(Math.abs(v.bottomGd - native.get(v.frame)!) < 0.5,
+      `frame ${v.frame}: bottom ${v.bottomGd.toFixed(3)} vs native ${native.get(v.frame)}`);
   }
 });

@@ -87,6 +87,12 @@ const HALF0 = PLAYER_SIZE / 2;
 /** everything an attempt needs; `clone()` must copy all of it */
 export interface SimState {
   player: PlayerState;
+  /**
+   * The player's last step was a jump rather than a movement (portal or spider
+   * teleport); the next trigger update hands it to the lock-to-player moves
+   * (`updateTriggers`' `teleported`), which then ignore that step's y movement.
+   */
+  teleportedStep?: boolean;
   run: RunState;
   dead: boolean;
   /** portals fire once per attempt */
@@ -562,6 +568,7 @@ export function simPress(s: SimState, world?: CollisionWorld, partner = false) {
     const l = toLocal(p, p.x, p.y);
     p.x = l.x; p.y = l.y;
     spiderTeleport(p, viewFor(world, p), s.triggers?.rt);
+    s.teleportedStep = true;
     const w = toWorld(p, p.x, p.y);
     p.x = w.x; p.y = w.y;
     s.player.queuedHold = false;
@@ -573,6 +580,7 @@ export function simPress(s: SimState, world?: CollisionWorld, partner = false) {
     const l = toLocal(p, p.x, p.y);
     p.x = l.x; p.y = l.y;
     fireTouchedOrb(s, true, s, viewFor(world, p));
+    s.teleportedStep = true;
     const w = toWorld(p, p.x, p.y);
     p.x = w.x; p.y = w.y;
   }
@@ -907,7 +915,8 @@ function stepOne(
   // reached is already applied when collision runs this step.
   if (s.triggers && !skipTriggers) {
     // playerY matters for move triggers that lock to the player (key 59)
-    updateTriggers(s.triggers.rt, s.triggers.list, player.x, dt * s.triggers.rt.timeWarp, player.y);
+    updateTriggers(s.triggers.rt, s.triggers.list, player.x, dt * s.triggers.rt.timeWarp, player.y, !!s.teleportedStep);
+    s.teleportedStep = false;
     // the blocks have just moved with their groups, so the collision triggers
     // see this step's positions
     stepCollisionBlocks(s);
@@ -973,6 +982,7 @@ function stepCore(
   // 58.7% to 100% and changes no other level's sweep result.
   if (holding && player.queuedHold && spiderCanTeleport(s)) {
     spiderTeleport(player, world, s.triggers?.rt);
+    s.teleportedStep = true;
     player.queuedHold = false;
     consumed = true;
   }
@@ -1847,6 +1857,7 @@ function stepCore(
     const exit = anchor && toLocal(player, anchor.x, anchor.y);
     applyPortal(it.id, it.props, player, run, onDual, exit);
     player.teleported = true;
+    s.teleportedStep = true;
     note(s, `portal ${it.id} y${before.toFixed(0)}->${player.y.toFixed(0)}`);
     // **A teleport always reaches the player before the block that stopped
     // it**: `checkCollisions` (m1 0xfe188) walks the sections through

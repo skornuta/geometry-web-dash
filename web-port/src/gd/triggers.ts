@@ -128,6 +128,8 @@ type Tween = Eased & (
      * `atX`/`atY` are where the player was when it started.
      */
     lockX: boolean; lockY: boolean; atX: number; atY: number;
+    /** keys 143 / 144: the share of the player's movement the lock passes on (a 0 key is 1.0) */
+    modX: number; modY: number;
     /** eased progress and player position at the last step, so each move can
      * contribute its own *increment* and several can run on one group at once */
     kPrev: number; lastX: number; lastY: number;
@@ -1225,6 +1227,11 @@ function stopTriggerGroup(rt: TriggerRuntime, group: number) {
   rt.pending = rt.pending.filter((p) => !p.src?.includes(group));
 }
 
+function lockModifier(props: Map<number, string>, key: number): number {
+  const v = propFloat(props, key, 0);
+  return v === 0 ? 1 : v;
+}
+
 /** run one trigger now */
 function fire(rt: TriggerRuntime, t: Trigger, playerX: number, playerY: number) {
   const dur = propFloat(t.props, P.DURATION, 0);
@@ -1522,7 +1529,10 @@ function fire(rt: TriggerRuntime, t: Trigger, playerX: number, playerY: number) 
         if (mode === 1) dy = 0;
         else if (mode === 2) dx = 0;
       }
-      if (dur <= 0) {
+      // A duration of exactly -1 never ends (`GroupCommandObject2::step`, m1
+      // 0x44722c, 0x4472dc..0x4472f0: finished when time >= duration unless the
+      // duration is -1); only a stop trigger ends it. Dash's guide group 304 runs one.
+      if (dur <= 0 && dur !== -1) {
         s.dx += dx; s.dy += dy;
       } else {
         // no filtering: moves stack (see the increment in `updateTriggers`)
@@ -1532,6 +1542,8 @@ function fire(rt: TriggerRuntime, t: Trigger, playerX: number, playerY: number) 
           lockX: propBool(t.props, P.LOCK_TO_PLAYER_X),
           lockY: propBool(t.props, P.LOCK_TO_PLAYER_Y),
           atX: playerX, atY: playerY,
+          // `runMoveCommand` (m1 0x447558, 0x4475cc..0x4475dc): a modifier of 0 becomes 1.0
+          modX: lockModifier(t.props, 143), modY: lockModifier(t.props, 144),
           kPrev: 0, lastX: playerX, lastY: playerY,
         });
       }
@@ -1968,8 +1980,15 @@ function firePassed(rt: TriggerRuntime, triggers: Trigger[], playerX: number, pl
   }
 }
 
+/**
+ * `teleported`: the player's last step was a jump (portal or spider teleport),
+ * not a movement. `GJBaseGameLayer::update` (m1 0x1232e8..0x123324) zeroes the
+ * y delta it hands the lock-to-player moves when it differs from the
+ * player's own expected movement by more than 16 substeps' worth.
+ */
 export function updateTriggers(
   rt: TriggerRuntime, triggers: Trigger[], playerX: number, dt: number, playerY = 0,
+  teleported = false,
 ) {
   rt.time += dt;
   // the chromatic glitch's own clock (`preChromaticGlitchShader` m1 0x34ff24, kept under 1000)
@@ -2052,8 +2071,12 @@ export function updateTriggers(
     // whole point of them — and would end the move early, frozen mid-overshoot;
     // while ExponentialInOut tops out at 1 - 2^-11 and so would never end at
     // all, leaving the group 0.05% short and the tween running forever.
-    const done = w.t >= w.dur;
-    const k = done ? 1 : easedValue(w.t / w.dur, w.ease, w.rate);
+    // a duration of -1 (a lock that runs until stopped) never completes; its
+    // displacement part counts as complete at once (`step` clamps the duration
+    // to a tiny positive number for the progress, m1 0x447324..0x447334)
+    const forever = w.kind === "move" && w.dur === -1;
+    const done = !forever && w.t >= w.dur;
+    const k = done || forever ? 1 : easedValue(w.t / w.dur, w.ease, w.rate);
     if (w.kind === "color") {
       const c = colorState(rt, w.ch);
       c.r = w.from.r + (w.to.r - w.from.r) * k;
@@ -2067,8 +2090,10 @@ export function updateTriggers(
       // apply — the original stacks its move actions, and Geometrical Dominator
       // spawns exactly such a pair (a rise plus a lock-to-player) on group 96.
       // Whatever a lock accumulated stays put once the move ends.
-      s.dx += (k - w.kPrev) * (w.toX - w.fromX) + (w.lockX ? playerX - w.lastX : 0);
-      s.dy += (k - w.kPrev) * (w.toY - w.fromY) + (w.lockY ? playerY - w.lastY : 0);
+      // `prepareMoveActions` (m1 0x27de38, 0x27e1b0..0x27e1fc): the lock adds the
+      // modifier times the player's movement; a teleporting step's y movement is 0
+      s.dx += (k - w.kPrev) * (w.toX - w.fromX) + (w.lockX ? w.modX * (playerX - w.lastX) : 0);
+      s.dy += (k - w.kPrev) * (w.toY - w.fromY) + (w.lockY && !teleported ? w.modY * (playerY - w.lastY) : 0);
       w.kPrev = k;
       w.lastX = playerX;
       w.lastY = playerY;
