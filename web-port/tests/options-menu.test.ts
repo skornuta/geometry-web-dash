@@ -199,3 +199,23 @@ test("F4: Fast Menu on opens the drop-down already settled, with no slide and no
   const plain = dropDownLayout(480, 320, DROP_HEIGHT, initialDropProgress(false));
   close(plain.slide, 320);
 });
+
+test("F4: the Fast Menu row is the Other page's tenth row, decoded from MoreOptionsLayer::init", () => {
+  // ACTUAL_steamgd/GeometryDash.exe, MoreOptionsLayer::init (0x140373740): toggles go through
+  // addToggle (0x140374b80), whose page is `count / 10`, and each category ends by rounding the
+  // count up to the next multiple of 10. Counting from 0, "Fast\nMenu" / "0168" is the 70th
+  // toggle added: page 6, slot 9. Its description is "Makes transitions between menu pages faster."
+  const other = MORE_OPTIONS_PAGES.find((p) => p.title === "Other")!;
+  const slot = other.options.findIndex((o) => o.gameVariable === "0168");
+  assert.equal(slot, 9);
+  const row = other.options[slot];
+  assert.equal(row.label, "Fast\nMenu");
+  assert.equal(row.setting, "fastMenu");
+  assert.equal(row.info, "Makes transitions between menu pages faster.");
+  // the rows in between keep their slots, recorded as unsupported
+  assert.deepEqual(other.options.slice(6, 9).map((o) => o.gameVariable), ["0099", "0095", "0167"]);
+  for (const o of other.options.slice(6, 9)) assert.equal(o.setting, null);
+  // slot 9 is the right column's fifth line
+  const p = togglePosition(slot, 0, MORE_OPTIONS_ROW_STEP);
+  assert.equal(p.x, GAME_OPTIONS_COL_X[1]);
+});

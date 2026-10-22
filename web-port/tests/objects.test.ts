@@ -204,3 +204,22 @@ test("the 2.2 special blocks are invisible in play, and the gravity dash orb is 
   assert.equal(INVISIBLE_GAMEPLAY_BLOCKS.has(1751), false, "1751 is the gravity dash orb");
   assert.equal(OBJECT_DEFS.get(1751)?.kind, "orb");
 });
+
+test("Dash's 51 % room digits (4506-4508) and the item 4401 draw a 1.875x copy of their art behind it", () => {
+  // The game's `geometry` dump (data/native-geometry.jsonl) lists for each of
+  // these ids one visible child node of the main sprite's own size (11x14 for
+  // 4506) at scale 1.875, z -1, beside the 1x colour sprite — and a 2.2
+  // playthrough shows the cyan digits about twice the size the port drew. No
+  // other id in the 22 levels has such a node.
+  for (const id of [4401, 4506, 4507, 4508]) {
+    const def = OBJECT_DEFS.get(id)!;
+    const big = def.children?.find((c) => c.scaleX === 1.875 && c.scaleY === 1.875);
+    assert.ok(big, `${id} has the scaled child`);
+    assert.equal(big.frame, def.frame, `${id}'s child is the main frame`);
+    assert.equal(big.z, -1);
+    assert.deepEqual([big.dx, big.dy], [0, 0]);
+    // the colour sprite stays at 1x on top
+    const detail = def.children!.find((c) => c.color === "detail")!;
+    assert.deepEqual([detail.scaleX, detail.scaleY], [1, 1]);
+  }
+});

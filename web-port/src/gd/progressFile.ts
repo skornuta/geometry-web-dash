@@ -18,7 +18,7 @@
  * as storage does).
  */
 
-import { ICON_COUNTS, ICON_TABS, PLAYER_COLORS } from "./icons.ts";
+import { EXTRA_COUNTS, EXTRA_KEYS, ICON_COUNTS, ICON_TABS, PLAYER_COLORS } from "./icons.ts";
 import * as save from "./save.ts";
 import { SETTINGS_KEYS, type SaveData } from "./save.ts";
 
@@ -88,6 +88,12 @@ function checkSave(s: Record<string, unknown>): string | null {
       const v = s.icons[m];
       if (v !== undefined && !isIntIn(v, 1, ICON_COUNTS[m])) {
         return `icons.${m} must be a whole number from 1 to ${ICON_COUNTS[m]}`;
+      }
+    }
+    for (const k of EXTRA_KEYS) {
+      const v = s.icons[k];
+      if (v !== undefined && !isIntIn(v, 1, EXTRA_COUNTS[k])) {
+        return `icons.${k} must be a whole number from 1 to ${EXTRA_COUNTS[k]}`;
       }
     }
     const top = PLAYER_COLORS.length - 1;

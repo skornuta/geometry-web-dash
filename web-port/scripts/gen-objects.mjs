@@ -550,6 +550,31 @@ async function main() {
     if (PIXEL_DETAIL_CHANNELS.has(d.id)) { d.primaryCh = 1; d.secondaryCh = 2; }
   }
 
+  // --- the scaled copy behind the pixel items (Dash's 51 % room digits) ---
+  //
+  // The `geometry` dump lists, for 4401 and 4506-4508, one visible child node
+  // of the main sprite's own size at scale 1.875 and z -1, beside the 1x colour
+  // sprite. A 2.2 playthrough shows the cyan digits about twice the size the
+  // port drew (BUGS [OPEN] 51 % room digits): the child is the visible glyph,
+  // the main and colour sprites sit inside it. No other id has a child of its
+  // own size at a scale above 1.5. The frame is the main sprite's (the sizes
+  // match the dump to the unit) and it takes the main colour.
+  let bigKids = 0;
+  for (const d of defs) {
+    const g = native.get(d.id);
+    const kid = g && nativeKids(g).find((c) => c.sx > 1.5 && c.sx === c.sy
+      && c.z < 0 && Math.abs(c.w - g.self.w) < 0.6 && Math.abs(c.h - g.self.h) < 0.6);
+    if (!kid || d.children.some((c) => c.frame === d.frame)) continue;
+    d.children.push({
+      frame: d.frame, sheet: d.sheet, dx: 0, dy: 0, z: kid.z, color: "base",
+      r: 255, g: 255, b: 255, flipX: false, flipY: false, rot: 0,
+      scaleX: kid.sx, scaleY: kid.sy, children: [],
+    });
+    d.children.sort((a, b) => a.z - b.z);
+    bigKids++;
+  }
+  console.log(`scaled copies of the main sprite: ${bigKids}`);
+
   const lit = (d) => {
     const kids = d.children.length ? `, children: ${JSON.stringify(d.children)}` : "";
     const op = d.opacity !== undefined ? `, opacity: ${d.opacity}` : "";
