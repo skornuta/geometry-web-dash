@@ -129,7 +129,9 @@ if (errors.length) {
   // nothing about the physics, and must not be quoted as if it did.
   console.log(`${errors.length} level(s) ERRORED and did not play at all — `
     + `this sweep is not evidence about gameplay: ${errors.map((r) => r.level).join(", ")}`);
-  process.exitCode = 1;
 }
+// An exhausted search is not proof of a physics regression, but it is still
+// an unmet acceptance gate. Keep that distinct from crashed-child errors above.
+if (done !== results.length) process.exitCode = 1;
 
 }

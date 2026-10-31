@@ -6,6 +6,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { classify } from "../scripts/sweep.mjs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { spawnSync } from "node:child_process";
 
 const COMPLETED = `level 3: COMPLETED
   x 12345 / 12345  (100.0%)
@@ -54,4 +58,42 @@ test("stderr on an otherwise good run does not turn it into an error", () => {
   // autoplay writes progress notes to stderr; only a missing verdict is fatal
   const r = classify(COMPLETED, "some warning\n", 0);
   assert.equal(r.status, "complete");
+});
+
+// Exercise the real CLI with a deterministic child instead of an expensive
+// search. A FAILED result is valid search output, but must fail the gate.
+function runSweep(output: string, code: number) {
+  const dir = mkdtempSync(join(tmpdir(), "gd-sweep-gate-"));
+  try {
+    writeFileSync(join(dir, "sweep.mjs"),
+      readFileSync(new URL("../scripts/sweep.mjs", import.meta.url)));
+    writeFileSync(join(dir, "autoplay.mjs"),
+      `console.log(${JSON.stringify(output)}); process.exitCode = ${code};`);
+    return spawnSync(process.execPath,
+      [join(dir, "sweep.mjs"), "--levels=1", "--retry=0"],
+      { encoding: "utf8", timeout: 10000 });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+test("the sweep CLI exits nonzero when a search cannot complete a level", () => {
+  const r = runSweep(FAILED, 1);
+  assert.ifError(r.error);
+  assert.match(r.stdout, /0 \/ 1 complete/);
+  assert.equal(r.status, 1);
+});
+
+test("the sweep CLI exits zero when every requested level completes", () => {
+  const r = runSweep(COMPLETED, 0);
+  assert.ifError(r.error);
+  assert.match(r.stdout, /1 \/ 1 complete/);
+  assert.equal(r.status, 0);
+});
+
+test("the sweep CLI still exits nonzero when a child crashes", () => {
+  const r = runSweep("", 1);
+  assert.ifError(r.error);
+  assert.match(r.stdout, /1 level\(s\) ERRORED/);
+  assert.equal(r.status, 1);
 });
