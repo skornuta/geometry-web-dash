@@ -7,10 +7,16 @@
     <style>
       html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
       #game { display: block; width: 100vw; height: 100vh; }
+      #boot { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+        font: 600 20px/1.4 system-ui, sans-serif; color: #fff; text-align: center; padding: 24px;
+        pointer-events: none; }
+      #boot.error { color: #ffb4b4; pointer-events: auto; }
+      #boot small { display: block; margin-top: 12px; font-weight: 400; font-size: 13px; opacity: .6; }
     </style>
   </head>
   <body>
     <canvas id="game"></canvas>
+    <div id="boot">Loading…</div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
