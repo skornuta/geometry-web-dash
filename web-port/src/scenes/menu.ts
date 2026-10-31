@@ -40,6 +40,7 @@ import {
 import { MenuHost, MenuItem, UiMenu } from "../ui/controls.ts";
 import { AlertLayer, LEVEL_STATS_TITLE, LEVEL_STATS_WIDTH, levelStatsText } from "../ui/alertLayer.ts";
 import { ASSET } from "../assetBase.ts";
+import { hash01 } from "../gd/objectAnim.ts";
 
 /* ---------------- LevelSelectLayer::init, m1 0x3a40ac ---------------- */
 
@@ -250,12 +251,13 @@ export async function startMenu(renderer: Renderer) {
     ["GJ_GameSheet03-hd", "GJ_GameSheet02-hd", "GJ_GameSheet04-hd"]);
   sprites.requireAll(PAGE_FRAMES);
 
-  const [gradient, ground, barTex, panelTex, dotTex] = await Promise.all([
+  const [gradient, ground, barTex, panelTex, dotTex, squareTex] = await Promise.all([
     loadLoose(renderer, `${ASSET}GJ_gradientBG-hd.png`),
     loadLoose(renderer, `${ASSET}groundSquare_01_001-hd.png`),
     loadLoose(renderer, `${ASSET}GJ_progressBar_001-hd.png`),
     loadLoose(renderer, `${ASSET}square02_001-hd.png`),
     loadLoose(renderer, `${ASSET}smallDot-hd.png`),
+    loadLoose(renderer, `${ASSET}square.png`),
   ]);
   const font = await LoadedFont.load(renderer, `${ASSET}bigFont-hd.fnt`, `${ASSET}bigFont-hd.png`);
   const audio = new AudioEngine(save.settings());
@@ -533,6 +535,24 @@ export async function startMenu(renderer: Renderer) {
     drawUiSprite(renderer, door, c.x, c.y + bob);
     const doorH = door.frame.sourceH * HD;
     drawUiSprite(renderer, label, c.x, c.y + bob + doorH / 2 + TOWER_LABEL_DY);
+    // The door's floating blue sparkles (native-level-select-page22: small blue
+    // squares drifting up in and around the portal). APPROXIMATION: the game's
+    // three emitters are not decoded (REFERENCE.md §19.4), so this is a seeded
+    // field of squares that fade in and out while they rise.
+    const SPARKLES = 28;
+    for (let k = 0; k < SPARKLES; k++) {
+      const period = 2.4 + (k % 5) * 0.5;
+      const u = ((towerT + hash01(k, 21) * period) % period) / period;
+      const cycle = Math.floor((towerT + hash01(k, 21) * period) / period);
+      const px = (hash01(k + cycle * 31, 22) - 0.5) * 100;
+      const py = (hash01(k + cycle * 31, 23) - 0.5) * 100 + u * 16;
+      const size = 2.2 + hash01(k, 24) * 2.6;
+      const a = Math.sin(Math.PI * u) * 0.9;
+      const cyan = hash01(k, 25) < 0.35;
+      renderer.draw(squareTex.tex, squareTex.texW, squareTex.texH, squareTex.frame,
+        c.x + px, c.y + bob + 8 + py, size, size, (hash01(k, 26) - 0.5) * 1.2,
+        cyan ? 0.3 : 0.15, cyan ? 0.8 : 0.45, 1, a);
+    }
   }
 
   function drawComingSoonPage(offX: number, viewW: number, viewH: number) {
