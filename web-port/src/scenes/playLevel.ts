@@ -94,6 +94,11 @@ import { ASSET, BASE } from "../assetBase.ts";
 
 /** how long the cube stays dead before the level restarts */
 const RESPAWN_DELAY = 0.8;
+/** practice mode's on-screen checkpoint buttons, in design units from the screen's centre (see the HUD block) */
+const CHECKPOINT_BTN_Y = -120.6;
+const CHECKPOINT_PLACE_X = -28.2;
+const CHECKPOINT_REMOVE_X = 41.6;
+const CHECKPOINT_LABEL_DY = -24.4;
 /** the view a Camera Static holds this frame, written by `stepViewStatic` (reused, no per-frame allocation) */
 const VIEW_OUT = { x: 0, y: 0 };
 /** the ball's roll, degrees per world unit travelled (native macros, see the "ball" case) */
@@ -2092,6 +2097,31 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
           font.draw(renderer, text, camX - viewW / 2 + 3.4,
             camCentreY + viewH / 2 - 9.1 - i * 12.3, 0.15, 1, 1, 1, 0.55, -1);
         });
+      }
+      // Practice mode's two on-screen buttons, place and remove a checkpoint
+      // (`docs/ui-parity/reference/native-hud-practice-*`: 73 x 48 and 46.5 x 48
+      // units, centred 120.6 below the screen's middle at x -28.2 and +41.6, the
+      // key's letter under each). The original also prints the gamepad glyph
+      // beside the letter; the web port has none. They are real buttons, so a
+      // tap or click works on a phone.
+      if (practice && !paused && hudSheet) {
+        const place = hudSheet.require("GJ_checkpointBtn_001.png");
+        const remove = hudSheet.require("GJ_removeCheckBtn_001.png");
+        const row = CHECKPOINT_BTN_Y;
+        const buttons: { id: string; frame: UiFrame; x: number; label: string; labelDx: number;
+          action: () => void }[] = [
+          { id: "placeCheckpoint", frame: place, x: CHECKPOINT_PLACE_X, label: "Z", labelDx: -8,
+            action: () => { if (!save.settings().disableCheckpoints && !sim.dead) checkpoints.place(sim, camY, true); } },
+          { id: "removeCheckpoint", frame: remove, x: CHECKPOINT_REMOVE_X, label: "X", labelDx: -6,
+            action: () => { if (!sim.dead) checkpoints.remove(); } },
+        ];
+        for (const b of buttons) {
+          drawUiSprite(renderer, b.frame, camX + b.x, camCentreY + row);
+          font.draw(renderer, b.label, camX + b.x + b.labelDx, camCentreY + row + CHECKPOINT_LABEL_DY,
+            0.34, 1, 1, 1, 1, 0);
+          uiButtons.push({ id: b.id, x: b.x, y: row, w: b.frame.frame.sourceW * HD, h: b.frame.frame.sourceH * HD,
+            action: b.action });
+        }
       }
       // The original shows **no** "Practice Mode" text during play — the mode is
       // read off the checkpoint buttons and the pause menu's `GJ_practiceTxt`.
