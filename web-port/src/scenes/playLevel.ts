@@ -2104,7 +2104,8 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       // key's letter under each). The original also prints the gamepad glyph
       // beside the letter; the web port has none. They are real buttons, so a
       // tap or click works on a phone.
-      if (practice && !paused && hudSheet) {
+      // they stay on screen, dimmed by the overlay, under the pause menu; only live while playing
+      if (practice && hudSheet) {
         const place = hudSheet.require("GJ_checkpointBtn_001.png");
         const remove = hudSheet.require("GJ_removeCheckBtn_001.png");
         const row = CHECKPOINT_BTN_Y;
@@ -2119,8 +2120,10 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
           drawUiSprite(renderer, b.frame, camX + b.x, camCentreY + row);
           font.draw(renderer, b.label, camX + b.x + b.labelDx, camCentreY + row + CHECKPOINT_LABEL_DY,
             0.34, 1, 1, 1, 1, 0);
-          uiButtons.push({ id: b.id, x: b.x, y: row, w: b.frame.frame.sourceW * HD, h: b.frame.frame.sourceH * HD,
-            action: b.action });
+          if (!paused) {
+            uiButtons.push({ id: b.id, x: b.x, y: row, w: b.frame.frame.sourceW * HD, h: b.frame.frame.sourceH * HD,
+              action: b.action });
+          }
         }
       }
       // The original shows **no** "Practice Mode" text during play — the mode is
