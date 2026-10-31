@@ -83,7 +83,7 @@ async function clientOf(page, id) {
     "discord hangs off youtube");
   // only in-scope destinations act
   const acting = it.filter((i) => i.acts).map((i) => i.id).sort();
-  check(JSON.stringify(acting) === JSON.stringify(["garage", "options", "play"]),
+  check(JSON.stringify(acting) === JSON.stringify(["garage", "options", "play", "stats"]),
     `exactly the in-scope controls act (${acting.join(", ")})`);
   await context.close();
 }

@@ -84,9 +84,11 @@ test("Dash free spider x 2185–2412: the view holds while the player moves up a
   const views = held.map((v) => v.view);
   const range = Math.max(...views) - Math.min(...views);
   assert.ok(range < 1, `the view moves ${range.toFixed(2)} while the y-hold is live`);
-  // the bottom, in game units (the view is 320 tall at zoom 1; native reads 32.9999 here, zoom 0.8333)
+  // the drawn bottom, in game units: the world is drawn about the centre at
+  // scale x zoom, so it is centre - 160/zoom (native reads 32.9999 here, zoom 0.8333
+  // = the guide's 225 - 192; the old un-zoomed `centre - 160` form encoded a doubled offset)
   for (const v of held) {
-    const bottom = v.view - DESIGN_H / 2 + GD_Y_OFFSET;
+    const bottom = v.view - DESIGN_H / 2 / v.rt.zoom + GD_Y_OFFSET;
     assert.ok(Math.abs(bottom - 33) < 0.5, `x ${v.x.toFixed(1)}: bottom ${bottom.toFixed(2)} is not native 32.9999`);
   }
 });

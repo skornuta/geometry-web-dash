@@ -674,7 +674,7 @@ test("the swing portal (1933) and spider orb (3004) are gameplay objects", async
   const { HITBOXES } = await import("../src/gd/hitboxes.ts");
   assert.equal(OBJECT_DEFS.get(1933)?.kind, "portal");
   assert.equal(OBJECT_DEFS.get(3004)?.kind, "orb");
-  assert.deepEqual(HITBOXES.get(1933), { w: 33.5, h: 86 });
+  assert.deepEqual(HITBOXES.get(1933), { w: 35, h: 86 });
   const s = playerAt("cube");
   applyPortal(1933, new Map(), s, { speed: SPEED, mirrored: false, coins: 0 });
   assert.equal(s.mode, "swing");
@@ -747,4 +747,47 @@ test("orbs in swing mode launch at 0.6 of the table value (ringJump +2668)", () 
   const mini = playerAt("swing", { mini: true });
   activateOrb(36, mini);
   assert.ok(Math.abs(mini.yVel - JUMP_VELOCITY * 0.8 * 0.6) < ORB_GRID, "mini swing");
+});
+
+test("a spider with nothing above it lands on the mode's ceiling, not the level's far top", async () => {
+  const { spiderTeleport } = await import("../src/gd/interactives.ts");
+  const { bandFor } = await import("../src/gd/camera.ts");
+  // an empty column: no solid anywhere
+  const world = { near: () => [] } as never;
+  const band = bandFor("spider", false)!;
+  assert.ok(band, "the spider has a floor and ceiling band like the ball");
+  // measured from Fingerdash's real run: the spider rests exactly 106.5 from the camera centre
+  // (a 120 edge less its half-size 13.5)
+  assert.equal(band.above, 106.5);
+  assert.equal(band.below, 106.5);
+  const up = playerAt("spider", { y: 240, cameraYCenter: 240 });
+  spiderTeleport(up, world);
+  assert.equal(up.gravityFlipped, true);
+  assert.equal(up.y, 240 + 106.5, "teleport up with no ceiling stops at the band's top");
+  const down = playerAt("spider", { y: 300, cameraYCenter: 240, gravityFlipped: true });
+  spiderTeleport(down, world);
+  assert.equal(down.gravityFlipped, false);
+  assert.equal(down.y, 240 - 106.5, "teleport down with no floor stops at the band's bottom");
+  // a free-mode spider has no band: it keeps the old far fallbacks rather than sticking
+  const free = playerAt("spider", { y: 240, cameraYCenter: 240, freeMode: true });
+  spiderTeleport(free, world);
+  assert.ok(free.y > 240 + 106.5, "a free spider is unconfined");
+});
+
+test("a free-mode portal's camera settings (112 / 113 / 114) stay until another portal edits them", () => {
+  const run = { speed: 1, mirrored: false } as Parameters<typeof applyPortal>[2];
+  const p = playerAt("cube", {});
+  // Dash's swing portal at x 4641: free mode, edit settings, easing 30, padding 0.804447
+  applyPortal(1933, new Map([[111, "1"], [112, "1"], [113, "30"], [114, "0.804447"]]), p, run as never);
+  assert.equal(p.freeMode, true);
+  assert.equal(p.camEasing, 30);
+  assert.ok(Math.abs((p.camPadding ?? 0) - 0.804447) < 1e-9);
+  // a later free-mode portal without the edit flag leaves them alone (Dash's swing at x 9315)
+  applyPortal(1933, new Map([[111, "1"]]), p, run as never);
+  assert.equal(p.freeMode, true);
+  assert.equal(p.camEasing, 30);
+  // a portal without free mode drops free mode but keeps the settings
+  applyPortal(12, new Map(), p, run as never);
+  assert.equal(p.freeMode, false);
+  assert.equal(p.camEasing, 30);
 });

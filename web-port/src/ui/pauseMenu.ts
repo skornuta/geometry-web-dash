@@ -38,8 +38,15 @@ export const PANEL_INSET = 20;
  */
 export const NAME_TOP_INSET = 30;
 export const NAME_SCALE = 1;
-/** the button row: `alignItemsHorizontallyWithPadding(15)` at `(winW*0.5, winH*0.5 - 30)` */
-export const ROW_PADDING = 15;
+/**
+ * the button row, aligned at `(winW*0.5, winH*0.5 - 30)`. The source reads
+ * `alignItemsHorizontallyWithPadding(15)`, but against the game's own pause
+ * screenshot (`docs/ui-parity/reference/native-pause-normal-*`) the four
+ * centres sit at -116.9 / -35.6 / 44.2 / 116.3 units, which the sprites' source
+ * widths (61.5 / 78.5 / 61.5 / 61.5) give with a padding of 10.6 (15 puts them
+ * at -123 / -38 / 47 / 123, 5 % too wide). Fitted, not decoded.
+ */
+export const ROW_PADDING = 10.6;
 export const ROW_Y = -30;
 /** the normal progress bar sits at `(winW*0.5, winH*0.5 + 80)` — setupProgressBars +380 */
 export const BAR_NORMAL_Y = 80;

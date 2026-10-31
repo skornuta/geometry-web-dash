@@ -55,6 +55,8 @@ const KIND_BY_TYPE = {
   39: "solid", 40: "deco",
   // 2.2 (Geode Enums.hpp `GameObjectType`): 41 SwingPortal, 43 SpiderOrb
   41: "portal", 43: "orb",
+  // 44 SpiderPad .. 47 AnimatedHazard: the monsters (GJBeast01-04) are hazards
+  47: "hazard",
 };
 
 // Ids the source table omits but that the 22 main levels need drawn.
@@ -381,6 +383,44 @@ async function main() {
       zOrder: o.default_z_order ?? 0,
       children: untinted(id, convertChildren(o.children, f, frames, warn)),
     });
+  }
+
+  // Object types read from the game itself where OpenGD's table has them as
+  // decoration: the native level dumps (gdphysicsreader level-N-*.jsonl, the
+  // game's own `m_objectType` after load) give the GJBeast monsters 918, 1327,
+  // 1328 and 1584 type 47 (AnimatedHazard) and the black sludge 919 type 2
+  // (Hazard), all with deco = 0 and noTouch = 0 — 854 instances in levels
+  // 19-22 that the port drew but never collided with. `hitboxes.ts` already has
+  // their boxes. Tested against every macro: the real runs never touch them,
+  // so they stay frame-exact.
+  const NATIVE_TYPE = { 918: 47, 1327: 47, 1328: 47, 1584: 47, 919: 2 };
+  for (const d of defs) {
+    const nt = NATIVE_TYPE[d.id];
+    if (nt === undefined) continue;
+    d.type = nt;
+    d.kind = KIND_BY_TYPE[nt];
+  }
+
+  // Default z orders read from the game itself where OpenGD's table (2.1 data)
+  // is wrong or missing: `data/native-geometry.jsonl` (the game's own capture of
+  // a fresh object per id) gives each visible object's node z, and the running
+  // game's sprite dumps (captures-2026-09-29/visual/sprites-l*.txt, `self ... z=`)
+  // confirm 7 of the 8 ids they cover (2597 -> 10; 2596, 2593, 2538, 2360, 2315
+  // -> 9; 918 -> 2) and add 2550/2548/2546/2542/2540/2600/2601/2602/2620 -> 9,
+  // 2557/2543/2541/2547 -> 10, 2549 -> 8, 1936/2042 -> 2 and the portals 10 and
+  // 13 -> 13. A level's own key 25 still wins. Held back: the orbs 36/84/1333 (12
+  // against 10, no running-game check yet) and 504 (the capture shows -20 and 9).
+  // The full comparison is docs/fidelity/zorder-mismatch-2026-10-29.txt.
+  const NATIVE_Z_ORDER = {
+    408: 3, 414: 3, 407: 3, 902: -10, 907: -12, 579: -10, 578: -10, 513: -8, 583: -10,
+    918: 2, 1617: -2, 1654: 7, 1653: 7, 2598: 2, 2315: 9, 2316: 9, 2603: 9, 1939: 2,
+    2032: 2, 2047: 2, 2538: 9, 2593: 9, 2597: 10, 2596: 9, 2360: 9, 2031: 2, 2864: 2,
+    2550: 9, 2548: 9, 2546: 9, 2542: 9, 2540: 9, 2600: 9, 2601: 9, 2602: 9, 2620: 9,
+    2557: 10, 2543: 10, 2541: 10, 2547: 10, 2549: 8, 1936: 2, 2042: 2, 10: 13, 13: 13,
+  };
+  for (const d of defs) {
+    const z = NATIVE_Z_ORDER[d.id];
+    if (z !== undefined) d.zOrder = z;
   }
 
   // Default channels read from the game itself where OpenGD's table is wrong:

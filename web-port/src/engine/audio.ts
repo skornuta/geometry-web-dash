@@ -1,4 +1,11 @@
+import { ASSET } from "../assetBase.ts";
 // WebAudio: music (streamed, one at a time) + sfx (decoded buffers).
+/** the menu song and where its place is kept between page loads */
+const MENU_TRACK = `${ASSET}menuLoop.mp3`;
+const MENU_KEY = "gd-menu-music";
+/** a screen change reloads the page in well under this; later than that the song restarts */
+const MENU_RESUME_MS = 6000;
+
 export class AudioEngine {
   ctx: AudioContext | null = null;
   private musicSource: AudioBufferSourceNode | null = null;
@@ -49,22 +56,84 @@ export class AudioEngine {
     this.ensure();
     const cached = this.buffers.get(url);
     if (cached) return cached;
-    const data = await fetch(url).then((r) => r.arrayBuffer());
+    const res = await fetch(url);
+    // a missing file must not reach the decoder: the dev server answers an unknown
+    // path with index.html (200), which would only fail later as a decode error
+    if (!res.ok) throw new Error(`audio ${url}: HTTP ${res.status}`);
+    const data = await res.arrayBuffer();
     const buf = await this.ctx!.decodeAudioData(data);
     this.buffers.set(url, buf);
     return buf;
   }
 
-  async playMusic(url: string, startAt: number | (() => number) = 0) {
+  private musicUrl: string | null = null;
+
+  /**
+   * The menu song (`menuLoop.mp3`) loops, and carries on across the menu screens.
+   * Every screen is its own page load here, so leaving one writes where the song
+   * had got to (`leaveMenuMusic`) and the next picks it up at that point plus the
+   * wall-clock time since — as if it had never stopped, even when the browser makes
+   * it wait for the first click before any sound can start.
+   */
+  playMenuMusic(url = MENU_TRACK): Promise<void> {
+    let at = 0;
+    try {
+      const s = JSON.parse(sessionStorage.getItem(MENU_KEY) ?? "null") as { url: string; pos: number; at: number } | null;
+      const gap = s ? Date.now() - s.at : Infinity;
+      if (s && s.url === url && gap >= 0 && gap < MENU_RESUME_MS) at = s.pos + gap / 1000;
+    } catch { /* no storage: start from the top */ }
+    // the offset is read once the track has decoded, so the decode time counts too
+    const t0 = Date.now();
+    return this.playMusic(url, () => at + (Date.now() - t0) / 1000, true);
+  }
+
+  /**
+   * leaving a menu screen: remember the song's place, then stop it. Going into a
+   * level (`keep = false`) forgets it instead — coming back to the menus starts the
+   * song again from the top, as the game does after a level.
+   */
+  leaveMenuMusic(keep = true) {
+    try {
+      if (!keep) sessionStorage.removeItem(MENU_KEY);
+      else if (this.ctx && this.musicSource && this.musicUrl) {
+        const dur = this.buffers.get(this.musicUrl)?.duration ?? 0;
+        let pos = this.ctx.currentTime - this.musicStartedAt;
+        if (dur > 0) pos %= dur;
+        sessionStorage.setItem(MENU_KEY, JSON.stringify({ url: this.musicUrl, pos, at: Date.now() }));
+      }
+    } catch { /* storage unavailable */ }
+    this.stopMusic();
+  }
+
+  /** URLs that already logged a load failure, so a missing file warns once, not per call */
+  private failed = new Set<string>();
+  private warnOnce(url: string, e: unknown) {
+    if (this.failed.has(url)) return;
+    this.failed.add(url);
+    console.warn(`audio: could not load ${url}`, e);
+  }
+
+  async playMusic(url: string, startAt: number | (() => number) = 0, loop = false) {
     this.ensure();
     this.stopMusic();
     const request = this.musicRequest;
-    const buf = await this.load(url);
+    let buf: AudioBuffer;
+    try {
+      buf = await this.load(url);
+    } catch (e) {
+      // a failed track leaves silence (the previous one was already stopped); say so once
+      this.warnOnce(url, e);
+      return;
+    }
     // A restart or stop while decoding invalidates this request.
     if (request !== this.musicRequest) return;
-    const offset = Math.max(0, typeof startAt === "function" ? startAt() : startAt);
+    let offset = Math.max(0, typeof startAt === "function" ? startAt() : startAt);
+    // a looping track picks up wherever the wall clock says it has got to
+    if (loop && buf.duration > 0) offset %= buf.duration;
     const src = this.ctx!.createBufferSource();
     src.buffer = buf;
+    src.loop = loop;
+    this.musicUrl = url;
     src.connect(this.musicGain!);
     src.connect(this.meter!);
     src.start(0, offset);
@@ -126,7 +195,13 @@ export class AudioEngine {
 
   async playSfx(url: string, volume = 1) {
     this.ensure();
-    const buf = await this.load(url);
+    let buf: AudioBuffer;
+    try {
+      buf = await this.load(url);
+    } catch (e) {
+      this.warnOnce(url, e);
+      return;
+    }
     const src = this.ctx!.createBufferSource();
     src.buffer = buf;
     const g = this.ctx!.createGain();

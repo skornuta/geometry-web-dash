@@ -80,6 +80,15 @@ export interface PlayerState extends CubeState {
   dualEdge?: number;
   /** 2.2 free-mode camera (portal property 111): follow in every mode, no fly band */
   freeMode?: boolean;
+  /**
+   * Free-mode camera settings from a portal with "Edit Camera Settings" (keys
+   * 112 / 113 / 114): the layer keeps them until another portal sets them
+   * (`updateCameraMode`, m1 0xfd518). Unset until a portal edits them.
+   */
+  camEasing?: number;
+  camPadding?: number;
+  /** the camera centre a ball portal set while a dual was active (`cameraCenterForDualBall`) */
+  dualCamCentre?: number;
   /** the level sets header key kA32 (see `stepShip`) */
   kA32?: boolean;
   /** the level sets Fix Robot Jump (header kA34) — see `activatePad` */

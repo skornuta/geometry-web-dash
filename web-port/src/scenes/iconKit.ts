@@ -35,6 +35,7 @@ import {
   ICON_TABS, ICON_COUNTS, PLAYER_COLORS, iconFrames, playerColor, clampIcon,
 } from "../gd/icons.ts";
 import * as save from "../gd/save.ts";
+import { ASSET } from "../assetBase.ts";
 
 /** icons per row / rows per page in the selection grid */
 const COLS = 10;
@@ -65,8 +66,8 @@ export async function startIconKit(renderer: Renderer, panel: Panel = "icons") {
   /** `CCTransitionFade` in and out of this scene */
   const fade = new SceneFade(renderer);
   const icons = await loadAtlas(renderer,
-    "/assets/GJ_GameSheetIcons-hd.plist", "/assets/GJ_GameSheetIcons-hd.png").catch(() => null);
-  const font = await LoadedFont.load(renderer, "/assets/bigFont-hd.fnt", "/assets/bigFont-hd.png")
+    `${ASSET}GJ_GameSheetIcons-hd.plist`, `${ASSET}GJ_GameSheetIcons-hd.png`).catch(() => null);
+  const font = await LoadedFont.load(renderer, `${ASSET}bigFont-hd.fnt`, `${ASSET}bigFont-hd.png`)
     .catch(() => null);
   const white = whiteTexture(renderer);
   const audio = new AudioEngine();
@@ -88,11 +89,11 @@ export async function startIconKit(renderer: Renderer, panel: Panel = "icons") {
   const startMusic = () => {
     if (musicStarted) return;
     musicStarted = true;
-    void audio.playMusic("/assets/menuLoop.mp3", 0);
+    void audio.playMenuMusic();
   };
 
   const back = () => {
-    fade.go(() => { audio.stopMusic(); location.search = ""; });
+    fade.go(() => { audio.leaveMenuMusic(); location.search = ""; });
   };
 
   /** keep the selected icon on the visible page */

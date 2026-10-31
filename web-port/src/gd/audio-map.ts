@@ -1,3 +1,4 @@
+import { ASSET } from "../assetBase.ts";
 // Which music each main level plays, and the handful of gameplay sounds.
 //
 // The header key kA1 (audio track) is **absent from all 22 main levels** — they
@@ -33,7 +34,7 @@ export const LEVEL_MUSIC: Record<number, string> = {
 
 export function musicUrl(levelNum: number): string | null {
   const name = LEVEL_MUSIC[levelNum];
-  return name ? `/assets/${name}.mp3` : null;
+  return name ? `${ASSET}${name}.mp3` : null;
 }
 
 /**
@@ -45,8 +46,8 @@ export function musicUrl(levelNum: number): string | null {
  * a jump sfx "for feel"; it is wrong.
  */
 export const SFX = {
-  death: "/assets/explode_11.ogg",
-  complete: "/assets/endStart_02.ogg",
+  death: `${ASSET}explode_11.ogg`,
+  complete: `${ASSET}endStart_02.ogg`,
 } as const;
 
 /**

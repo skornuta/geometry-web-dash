@@ -39,6 +39,7 @@ import {
 } from "../ui/sprites.ts";
 import { MenuHost, MenuItem, UiMenu } from "../ui/controls.ts";
 import { AlertLayer, LEVEL_STATS_TITLE, LEVEL_STATS_WIDTH, levelStatsText } from "../ui/alertLayer.ts";
+import { ASSET } from "../assetBase.ts";
 
 /* ---------------- LevelSelectLayer::init, m1 0x3a40ac ---------------- */
 
@@ -250,21 +251,21 @@ export async function startMenu(renderer: Renderer) {
   sprites.requireAll(PAGE_FRAMES);
 
   const [gradient, ground, barTex, panelTex, dotTex] = await Promise.all([
-    loadLoose(renderer, "/assets/GJ_gradientBG-hd.png"),
-    loadLoose(renderer, "/assets/groundSquare_01_001-hd.png"),
-    loadLoose(renderer, "/assets/GJ_progressBar_001-hd.png"),
-    loadLoose(renderer, "/assets/square02_001-hd.png"),
-    loadLoose(renderer, "/assets/smallDot-hd.png"),
+    loadLoose(renderer, `${ASSET}GJ_gradientBG-hd.png`),
+    loadLoose(renderer, `${ASSET}groundSquare_01_001-hd.png`),
+    loadLoose(renderer, `${ASSET}GJ_progressBar_001-hd.png`),
+    loadLoose(renderer, `${ASSET}square02_001-hd.png`),
+    loadLoose(renderer, `${ASSET}smallDot-hd.png`),
   ]);
-  const font = await LoadedFont.load(renderer, "/assets/bigFont-hd.fnt", "/assets/bigFont-hd.png");
+  const font = await LoadedFont.load(renderer, `${ASSET}bigFont-hd.fnt`, `${ASSET}bigFont-hd.png`);
   const audio = new AudioEngine(save.settings());
   // `FLAlertLayer`'s own art: goldFont title and button caption, chatFont text,
   // the `square01_001` panel and `GJ_button_01` behind the button
   const [goldFont, chatFont, alertPanel, buttonBg] = await Promise.all([
-    LoadedFont.load(renderer, "/assets/goldFont-hd.fnt", "/assets/goldFont-hd.png"),
-    LoadedFont.load(renderer, "/assets/chatFont-hd.fnt", "/assets/chatFont-hd.png"),
-    loadLoose(renderer, "/assets/square01_001-hd.png"),
-    loadLoose(renderer, "/assets/GJ_button_01-hd.png"),
+    LoadedFont.load(renderer, `${ASSET}goldFont-hd.fnt`, `${ASSET}goldFont-hd.png`),
+    LoadedFont.load(renderer, `${ASSET}chatFont-hd.fnt`, `${ASSET}chatFont-hd.png`),
+    loadLoose(renderer, `${ASSET}square01_001-hd.png`),
+    loadLoose(renderer, `${ASSET}GJ_button_01-hd.png`),
   ]);
   const whiteCanvas = document.createElement("canvas");
   whiteCanvas.width = whiteCanvas.height = 2;
@@ -339,19 +340,19 @@ export async function startMenu(renderer: Renderer) {
     if (musicStarted) return;
     musicStarted = true;
     audio.ensure();
-    void audio.playMusic("/assets/menuLoop.mp3", 0);
+    void audio.playMenuMusic();
   };
 
   const play = () => {
     // only the 22 level pages play; The Tower and "Coming Soon!" do not
     if (sel >= LEVELS.length) return;
     const n = LEVELS[sel].n;
-    fade.go(() => { audio.stopMusic(); location.search = `?level=${n}`; });
+    fade.go(() => { audio.leaveMenuMusic(false); location.search = `?level=${n}`; });
   };
 
   /** the original's back destination from LevelSelectLayer is MenuLayer */
   const back = () => {
-    fade.go(() => { audio.stopMusic(); location.search = ""; });
+    fade.go(() => { audio.leaveMenuMusic(); location.search = ""; });
   };
 
   const move = (d: number) => scrollBy(d);
@@ -450,8 +451,8 @@ export async function startMenu(renderer: Renderer) {
       case "Home": e.preventDefault(); moveToPage(0); break;
       case "End": e.preventDefault(); moveToPage(PAGE_COUNT - 1); break;
       case "Escape": e.preventDefault(); back(); break;
-      case "KeyI": e.preventDefault(); fade.go(() => { audio.stopMusic(); location.search = "?icons=1"; }); break;
-      case "KeyO": e.preventDefault(); fade.go(() => { audio.stopMusic(); location.search = "?settings=1"; }); break;
+      case "KeyI": e.preventDefault(); fade.go(() => { audio.leaveMenuMusic(); location.search = "?icons=1"; }); break;
+      case "KeyO": e.preventDefault(); fade.go(() => { audio.leaveMenuMusic(); location.search = "?settings=1"; }); break;
     }
   });
 
@@ -484,9 +485,11 @@ export async function startMenu(renderer: Renderer) {
       }
     }
     const line = sprites.require("floorLine_01_001.png");
-    const lh = line.frame.h * HD;
+    // the sprite at 1.5x both ways, as the in-level ground (levelScene `line`)
+    const sc = Math.max(1.5, (viewW + 8) / (line.frame.w * HD));
+    const lh = line.frame.h * HD * sc;
     renderer.draw(line.sheet.tex, line.sheet.texW, line.sheet.texH, line.frame,
-      0, surface + lh / 2, viewW + 8, lh, 0, 1, 1, 1, 1);
+      0, surface + lh / 2, line.frame.w * HD * sc, lh, 0, 1, 1, 1, 1);
     return surface;
   }
 

@@ -38,6 +38,7 @@ import { MenuHost, MenuItem, UiMenu } from "../ui/controls.ts";
 import { OPTIONS_FRAMES, OptionsOverlay, type OptionsTextures } from "../ui/optionsOverlay.ts";
 import { StatsLayer } from "../ui/statsLayer.ts";
 import { SLIDER_BAR, SLIDER_GROOVE, SLIDER_THUMB, SLIDER_THUMB_SEL } from "../ui/optionsMenu.ts";
+import { ASSET } from "../assetBase.ts";
 
 /* ------------------------------------------------------------------ *
  * Sourced constants. Each names the offset in MenuLayer::init it came
@@ -191,8 +192,8 @@ export async function startMainMenu(renderer: Renderer) {
   const iconSheets = new IconSheets(renderer, sprites);
 
   const [bgTex, groundTex] = await Promise.all([
-    loadLooseTexture(renderer, "/assets/game_bg_01_001-hd.png"),
-    loadLooseTexture(renderer, "/assets/groundSquare_01_001-hd.png"),
+    loadLooseTexture(renderer, `${ASSET}game_bg_01_001-hd.png`),
+    loadLooseTexture(renderer, `${ASSET}groundSquare_01_001-hd.png`),
   ]);
 
   const white = whiteTexture(renderer);
@@ -200,21 +201,21 @@ export async function startMainMenu(renderer: Renderer) {
   /* ---------------- settings drop-down assets ---------------- */
 
   const [buttonTex, square01, square02, groove, bar, thumb, thumbSel] = await Promise.all([
-    loadLooseTexture(renderer, "/assets/GJ_button_01-hd.png"),
-    loadLooseTexture(renderer, "/assets/GJ_square01-hd.png"),
-    loadLooseTexture(renderer, "/assets/GJ_square02-hd.png"),
-    loadLooseTexture(renderer, `/assets/${SLIDER_GROOVE.replace(".png", "-hd.png")}`),
-    loadLooseTexture(renderer, `/assets/${SLIDER_BAR.replace(".png", "-hd.png")}`, true),
-    loadLooseTexture(renderer, `/assets/${SLIDER_THUMB.replace(".png", "-hd.png")}`),
-    loadLooseTexture(renderer, `/assets/${SLIDER_THUMB_SEL.replace(".png", "-hd.png")}`),
+    loadLooseTexture(renderer, `${ASSET}GJ_button_01-hd.png`),
+    loadLooseTexture(renderer, `${ASSET}GJ_square01-hd.png`),
+    loadLooseTexture(renderer, `${ASSET}GJ_square02-hd.png`),
+    loadLooseTexture(renderer, `${ASSET}${SLIDER_GROOVE.replace(".png", "-hd.png")}`),
+    loadLooseTexture(renderer, `${ASSET}${SLIDER_BAR.replace(".png", "-hd.png")}`, true),
+    loadLooseTexture(renderer, `${ASSET}${SLIDER_THUMB.replace(".png", "-hd.png")}`),
+    loadLooseTexture(renderer, `${ASSET}${SLIDER_THUMB_SEL.replace(".png", "-hd.png")}`),
   ]);
   const optionsTextures: OptionsTextures = {
     button: buttonTex, square01, square02, white,
     slider: { groove, bar, thumb, thumbSel },
   };
   const [font, goldFont] = await Promise.all([
-    LoadedFont.load(renderer, "/assets/bigFont-hd.fnt", "/assets/bigFont-hd.png"),
-    LoadedFont.load(renderer, "/assets/goldFont-hd.fnt", "/assets/goldFont-hd.png"),
+    LoadedFont.load(renderer, `${ASSET}bigFont-hd.fnt`, `${ASSET}bigFont-hd.png`),
+    LoadedFont.load(renderer, `${ASSET}goldFont-hd.fnt`, `${ASSET}goldFont-hd.png`),
   ]);
   const audio = new AudioEngine(save.settings());
   const kit = save.icons();
@@ -224,11 +225,11 @@ export async function startMainMenu(renderer: Renderer) {
   /** `CCTransitionFade` in and out of this scene (see engine/transition.ts) */
   const fade = new SceneFade(renderer);
   const navigate = (go: () => void) => fade.go(go);
-  const goPlay = () => navigate(() => { audio.stopMusic(); location.search = "?levels=1"; });
+  const goPlay = () => navigate(() => { audio.leaveMenuMusic(); location.search = "?levels=1"; });
   const goGarage = () => navigate(() => {
     // `onGarage` sets GameManager+0x377, which is what removes the GJ_chrSel flag
     save.setSettings({ seenGarage: true });
-    audio.stopMusic();
+    audio.leaveMenuMusic();
     location.search = "?icons=1";
   });
   /**
@@ -250,7 +251,7 @@ export async function startMainMenu(renderer: Renderer) {
   const loadOptionsArt = async () => {
     if (optionsArtLoaded) return;
     const sheet = await loadAtlas(renderer,
-      "/assets/GJ_GameSheet-hd.plist", "/assets/GJ_GameSheet-hd.png");
+      `${ASSET}GJ_GameSheet-hd.plist`, `${ASSET}GJ_GameSheet-hd.png`);
     sprites.add({ name: "GJ_GameSheet-hd", ...sheet });
     sprites.requireAll(OPTIONS_FRAMES);
     optionsArtLoaded = true;
@@ -396,7 +397,7 @@ export async function startMainMenu(renderer: Renderer) {
     if (musicStarted) return;
     musicStarted = true;
     audio.ensure();
-    void audio.playMusic("/assets/menuLoop.mp3", 0);
+    void audio.playMenuMusic();
   };
 
   /* ---------------- input ---------------- */
@@ -489,9 +490,11 @@ export async function startMainMenu(renderer: Renderer) {
     // cocos default white. Stretched across the view exactly as the level
     // scene does, since the original scales the same sprite to the win size.
     const line = sprites.require("floorLine_01_001.png");
-    const lh = line.frame.h * HD;
+    // the sprite at 1.5x both ways, as the in-level ground (levelScene `line`)
+    const sc = Math.max(1.5, (viewW + 8) / (line.frame.w * HD));
+    const lh = line.frame.h * HD * sc;
     renderer.draw(line.sheet.tex, line.sheet.texW, line.sheet.texH, line.frame,
-      0, surface + lh / 2, viewW + 8, lh, 0, 1, 1, 1, 1);
+      0, surface + lh / 2, line.frame.w * HD * sc, lh, 0, 1, 1, 1, 1);
   }
 
   function drawCube(viewW: number, viewH: number) {

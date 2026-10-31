@@ -28,6 +28,7 @@ import {
   type Atlas, type SpriteFrame,
 } from "../engine/atlas.ts";
 import { HD } from "../gd/sheets.ts";
+import { ASSET } from "../assetBase.ts";
 
 export interface UiSheet {
   name: string;
@@ -70,7 +71,7 @@ export class UiSprites {
   static async load(renderer: Renderer, basenames: readonly string[]): Promise<UiSprites> {
     const sprites = new UiSprites();
     for (const base of basenames) {
-      const loaded = await loadAtlas(renderer, `/assets/${base}.plist`, `/assets/${base}.png`);
+      const loaded = await loadAtlas(renderer, `${ASSET}${base}.plist`, `${ASSET}${base}.png`);
       sprites.add({ name: base, ...loaded });
     }
     return sprites;

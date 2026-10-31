@@ -489,41 +489,26 @@ export interface GameOption {
 }
 
 export const GAME_OPTIONS: readonly GameOption[] = [
-  {
-    label: "Auto-Retry", gameVariable: "0026", setting: null,
-    note: "the port always retries on the death animation's own timer",
-  },
+  { label: "Auto-Retry", gameVariable: "0026", setting: "autoRetry" },
   {
     label: "Auto-Checkpoints", gameVariable: "0027", setting: "autoCheckpoints",
   },
   { label: "Show Progress Bar", gameVariable: "GameManager+0x374", setting: "showProgressBar" },
   { label: "Show Percentage", gameVariable: "0040", setting: "showPercentage" },
-  {
-    label: "Show Time", gameVariable: "0145", setting: null,
-    note: "the port does not track a per-attempt clock",
-  },
+  { label: "Show Time", gameVariable: "0145", setting: "showTime" },
   {
     label: "Audio Visualizer", gameVariable: "0144", setting: null,
     note: "needs FMOD's spectrum data; the port streams decoded buffers",
   },
+  { label: "Show Info Label", gameVariable: "0109", setting: "showInfoLabel" },
+  { label: "Disable Checkpoints", gameVariable: "0146", setting: "disableCheckpoints" },
   {
-    label: "Show Info Label", gameVariable: "0109", setting: null,
-    note: "the editor/start-position label, outside the locked scope",
-  },
-  {
-    label: "Disable Checkpoints", gameVariable: "0146", setting: null,
-    note: "an anti-cheat rule for online levels",
-  },
-  {
-    label: "Show Hitboxes", gameVariable: "0166", setting: null,
+    label: "Show Hitboxes", gameVariable: "0166", setting: "showHitboxes",
     info: "Shows hitboxes while in practice mode.",
-    note: "the port has its own `?hitboxes=1` debug view, which is not this option",
   },
   {
-    label: "Hitbox On Death", gameVariable: "0179", setting: null,
+    label: "Hitbox On Death", gameVariable: "0179", setting: "hitboxOnDeath",
     info: "Shows hitboxes upon death in both normal and practice mode.",
-    note: "same as `Show Hitboxes`: the port's hitbox view is a debug route, "
-      + "not a saved gameplay option",
   },
 ];
 
@@ -555,6 +540,31 @@ export interface MoreOptionsPage {
  * original's page count.
  */
 export const MORE_OPTIONS_PAGES: readonly MoreOptionsPage[] = [
+  {
+    // the first page, "Gameplay" (docs/ui-parity/reference/native-more-options-*): its
+    // Auto-Retry is the same game variable as the pause gear's; the rest are input
+    // and controller options this port has nothing behind
+    page: 0, title: MORE_OPTIONS_PAGE_TITLES[0],
+    options: [
+      { label: "Auto-Retry", gameVariable: "0026", setting: "autoRetry" },
+      { label: "Enable Faster Reset", gameVariable: "(not decoded)", setting: null,
+        note: "the death-to-restart delay is the port's own and has no faster setting" },
+      { label: "Click Between Steps", gameVariable: "(not decoded)", setting: null,
+        note: "input is applied once a frame; there is no sub-step clicking mode" },
+      { label: "Click On Steps", gameVariable: "(not decoded)", setting: null,
+        note: "see Click Between Steps" },
+      { label: "Lock Cursor In-Game", gameVariable: "(not decoded)", setting: null,
+        note: "a desktop-only pointer option" },
+      { label: "Flip 2-Player Controls", gameVariable: "(not decoded)", setting: null,
+        note: "two-player controls are not exposed" },
+      { label: "Always Limit Controls", gameVariable: "(not decoded)", setting: null,
+        note: "a controller option" },
+      { label: "Disable Thumbstick", gameVariable: "(not decoded)", setting: null,
+        note: "a controller option" },
+      { label: "Enable Quick Keys", gameVariable: "(not decoded)", setting: null,
+        note: "an editor shortcut option" },
+    ],
+  },
   {
     // the start of the first "Visual" page, `init` +892..988
     page: 1, title: MORE_OPTIONS_PAGE_TITLES[1],

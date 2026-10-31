@@ -171,10 +171,15 @@ async function clickOption(page, id) {
   const inPopup = await menuInfo(page);
   check(inPopup.options.popup === true, "the Options button opens MoreOptionsLayer");
   const ids = inPopup.options.controls.map((c) => c.id);
-  check(ids.includes("showPauseButton") && ids.includes("pauseButtonOnLeft"),
-    `the popup carries the supported rows (${ids.join(", ")})`);
+  // it opens on the Gameplay page, whose one honoured row is Auto-Retry
+  check(ids.includes("autoRetry") && ids.includes("next-page"),
+    `the popup opens on the Gameplay page (${ids.join(", ")})`);
   check(ids.includes("close"), "and its close button");
   await page.screenshot({ path: fileURLToPath(new URL("settings-more-options.png", shots)) });
+  await clickOption(page, "next-page");
+  const ids2 = (await menuInfo(page)).options.controls.map((c) => c.id);
+  check(ids2.includes("showPauseButton") && ids2.includes("pauseButtonOnLeft"),
+    `the next page carries the Visual rows (${ids2.join(", ")})`);
 
   await clickOption(page, "pauseButtonOnLeft");
   const flipped = await page.evaluate(() =>

@@ -39,6 +39,7 @@ import {
   type LooseTexture, type UiFrame,
 } from "../ui/sprites.ts";
 import { MenuHost, MenuItem, UiMenu } from "../ui/controls.ts";
+import { ASSET } from "../assetBase.ts";
 
 /* ---------------- GJGarageLayer::init, m1 0x2f34d8 ---------------- */
 
@@ -152,6 +153,16 @@ const GRID_ICON_COLOR2: readonly [number, number, number] = [255, 255, 255];
  * a page overflow their 30-unit cells.
  */
 const GRID_ICON_SCALE = (tab: GarageTab): number => gridScale(tab);
+/**
+ * The grid icons are drawn at the sourced per-type scale with no shrink: against
+ * the game's own garage screenshot (`docs/ui-parity/reference/native-garage-*`)
+ * a cube is 82 px of a 105 px cell pitch, 0.78, which is the table's 0.8 of the
+ * 30-unit cell. What made them look too large for their boxes was the white
+ * `playerSquare_001` the port drew behind every icon: the game draws none —
+ * the icons sit straight on the dark panel (the square only gives the cell its
+ * hit area).
+ */
+const GRID_ICON_FIT = 1;
 
 /** off/on toggler art per supported gamemode — setupIconSelect +464..1352 */
 const TAB_FRAMES: Record<GarageTab, [string, string]> = {
@@ -177,6 +188,9 @@ const POPUP_H = 300;
 const POPUP_CLOSE_INSET = 10;
 const POPUP_CLOSE_SCALE = 0.8;
 const POPUP_CLOSE_SIZE_MULT = 1.6;
+/** the live preview inside the colour popup: centred above the swatches (units above the popup centre) */
+const POPUP_PREVIEW_DY = 78;
+const POPUP_PREVIEW_SCALE = 1.4;
 /** swatch grid: 18 per row, step (24, -24), base `(winW/2 - 204 + 6, winH/2 - 59 + 96)` */
 const SWATCH_COLS = 18;
 const SWATCH_STEP_X = 24;
@@ -189,6 +203,8 @@ const SWATCH_SCALE = 0.65;
 const SWATCH_STAGGER = 12;
 /** Col1 / Col2 / Glow run right to left from the panel's right edge — init +1620.. */
 const MODE_BUTTON_DX = -137;
+/** Gap between neighbouring mode buttons; the sourced -137 pitch pushed Glow under the close button at this panel width. */
+const MODE_BUTTON_STEP = -112;
 const MODE_BUTTON_DY = -17;
 const MODE_BUTTON_SCALE = 0.85;
 /** `ButtonSprite::create(caption, 40, 0, 0.4, false, "bigFont.fnt", "GJ_button_01.png", 20)` */
@@ -294,12 +310,12 @@ export async function startGarage(renderer: Renderer) {
   };
 
   const [gradient, panelTex, popupTex, buttonTex] = await Promise.all([
-    loadLoose(renderer, "/assets/GJ_gradientBG-hd.png"),
-    loadLoose(renderer, "/assets/square02_001-hd.png"),
-    loadLoose(renderer, "/assets/GJ_square05-hd.png"),
-    loadLoose(renderer, "/assets/GJ_button_01-hd.png"),
+    loadLoose(renderer, `${ASSET}GJ_gradientBG-hd.png`),
+    loadLoose(renderer, `${ASSET}square02_001-hd.png`),
+    loadLoose(renderer, `${ASSET}GJ_square05-hd.png`),
+    loadLoose(renderer, `${ASSET}GJ_button_01-hd.png`),
   ]);
-  const font = await LoadedFont.load(renderer, "/assets/bigFont-hd.fnt", "/assets/bigFont-hd.png");
+  const font = await LoadedFont.load(renderer, `${ASSET}bigFont-hd.fnt`, `${ASSET}bigFont-hd.png`);
   const white = whiteTexture(renderer);
   const audio = new AudioEngine(save.settings());
 
@@ -339,12 +355,12 @@ export async function startGarage(renderer: Renderer) {
     if (musicStarted) return;
     musicStarted = true;
     audio.ensure();
-    void audio.playMusic("/assets/menuLoop.mp3", 0);
+    void audio.playMenuMusic();
   };
 
   const back = () => {
     if (popup) { popup = null; rebuild(); return; }
-    fade.go(() => { audio.stopMusic(); location.search = ""; });
+    fade.go(() => { audio.leaveMenuMusic(); location.search = ""; });
   };
 
   const setIcon = (n: number) => {
@@ -585,8 +601,8 @@ export async function startGarage(renderer: Renderer) {
         const right = c.x + POPUP_W / 2;
         const top = c.y + POPUP_H / 2;
         mm.items[0].x = right + MODE_BUTTON_DX; mm.items[0].y = top + MODE_BUTTON_DY;
-        mm.items[1].x = right + MODE_BUTTON_DX * 2; mm.items[1].y = top + MODE_BUTTON_DY;
-        mm.items[2].x = right + MODE_BUTTON_DX * 3; mm.items[2].y = top + MODE_BUTTON_DY;
+        mm.items[1].x = right + MODE_BUTTON_DX + MODE_BUTTON_STEP; mm.items[1].y = top + MODE_BUTTON_DY;
+        mm.items[2].x = right + MODE_BUTTON_DX + MODE_BUTTON_STEP * 2; mm.items[2].y = top + MODE_BUTTON_DY;
         mm.items[3].x = c.x - POPUP_W / 2 + POPUP_CLOSE_INSET;
         mm.items[3].y = top - POPUP_CLOSE_INSET;
       }
@@ -682,10 +698,8 @@ export async function startGarage(renderer: Renderer) {
     const first = page * PER_PAGE + 1;
     grid?.items.forEach((item, i) => {
       const n = first + i;
-      drawUiSprite(renderer, sprites.require("playerSquare_001.png"), item.x, item.y,
-        { scale: item.scale });
       const m = mode();
-      const scale = GRID_ICON_SCALE(m) * item.scale;
+      const scale = GRID_ICON_SCALE(m) * GRID_ICON_FIT * item.scale;
       if (m === "trail" || m === "deathEffect") {
         // single frames, drawn as they are (`GJItemIcon::init` unlock types 10 and 11)
         const name = m === "trail" ? trailIconFrame(n) : deathEffectIconFrame(n);
@@ -735,6 +749,11 @@ export async function startGarage(renderer: Renderer) {
       renderer.draw(white.tex, white.texW, white.texH, white.frame,
         0, 0, viewW, viewH, 0, 0, 0, 0, 0.5);
       drawNineSlice(renderer, popupTex, c.x, c.y, POPUP_W, POPUP_H);
+      // the live preview inside the popup, in the empty band between the mode
+      // buttons and the swatches: the popup covers the garage's own preview, so
+      // without this a colour change could not be seen until the popup closed
+      const pv = gd(viewW * 0.5, viewH * 0.5 + POPUP_PREVIEW_DY);
+      drawIcon(previewMode, previewSelected(), pv.x, pv.y, POPUP_PREVIEW_SCALE);
 
       const sw = menus.find((m) => m.id === "swatches");
       let n = 0;

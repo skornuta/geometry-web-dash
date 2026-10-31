@@ -73,7 +73,7 @@ import { COINS_PER_LEVEL, LEVELS } from "../gd/levels.ts";
 import { BACK_LIMB_TINT } from "../gd/anim.ts";
 import { animFrame, createAnimPlayer, stepAnim, type LimbMode } from "../gd/player-anim.ts";
 import {
-  CAMERA_LEAD, GD_Y_OFFSET, VIEW_H, cameraBottomTarget, cameraLeftFor, dualCameraBottom, resolveView, setLevelHeightCap,
+  CAMERA_LEAD, CAM_MIN_Y, GD_Y_OFFSET, VIEW_H, cameraBottomTarget, cameraLeftFor, followRate, dualCameraBottom, resolveView, setLevelHeightCap,
 } from "../gd/camera.ts";
 import { toWorld } from "../game/frame.ts";
 import {
@@ -90,6 +90,7 @@ import {
   createEndViewTextures, drawEndFlash, drawEndGhosts, drawEndPortal, drawEndScreen, drawEndWorld,
   drawWave,
 } from "./levelEndView.ts";
+import { ASSET, BASE } from "../assetBase.ts";
 
 /** how long the cube stays dead before the level restarts */
 const RESPAWN_DELAY = 0.8;
@@ -149,12 +150,12 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   const endTex = createEndViewTextures(renderer, white);
   // bigFont is the one the game uses for the attempt/percent HUD
   const font = await LoadedFont.load(
-    renderer, "/assets/bigFont-hd.fnt", "/assets/bigFont-hd.png").catch(() => null);
+    renderer, `${ASSET}bigFont-hd.fnt`, `${ASSET}bigFont-hd.png`).catch(() => null);
   // The HUD's bar is two **loose** textures (`slidergroove2` / `sliderBar2`),
   // which is what `PlayLayer::setupHasCompleted` loads — not an atlas frame.
   const hudTex = {
-    groove: await loadHudTexture(renderer, "/assets/slidergroove2-hd.png"),
-    fill: await loadHudTexture(renderer, "/assets/sliderBar2-hd.png", true),
+    groove: await loadHudTexture(renderer, `${ASSET}slidergroove2-hd.png`),
+    fill: await loadHudTexture(renderer, `${ASSET}sliderBar2-hd.png`, true),
   };
   // the pause button lives in GJ_GameSheet03 with the rest of the menu art;
   // GJ_GameSheet02 is here for the results screen's blank coin and its chains
@@ -166,7 +167,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   // a second time.
   const gameSheet = scene.sheet("game");
   /** `GravityEffectSprite`'s line art (a standalone 1 x 76 texture) */
-  const gravLine = await loadHudTexture(renderer, "/assets/gravityLine_001.png").catch(() => null);
+  const gravLine = await loadHudTexture(renderer, `${ASSET}gravityLine_001.png`).catch(() => null);
   /**
    * `PlayLayer::playGravityEffect(flip)` (m1 0xa6b00): on a gravity flip a
    * `GravityEffectSprite` sweeps the screen in 0.4 s (`CCMoveTo`, linear),
@@ -200,21 +201,21 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   hudSheet?.requireAll([...END_LEVEL_FRAMES, "chain_01_001.png"]);
   // `EndLevelLayer` writes its statistics in goldFont, as every ButtonSprite does
   const goldFont = await LoadedFont.load(
-    renderer, "/assets/goldFont-hd.fnt", "/assets/goldFont-hd.png").catch(() => null);
+    renderer, `${ASSET}goldFont-hd.fnt`, `${ASSET}goldFont-hd.png`).catch(() => null);
   // the pause menu's panel and its bar are loose textures, as in the original
   const pauseTex = {
-    panel: await loadHudTexture(renderer, "/assets/square04_001-hd.png"),
-    bar: await loadHudTexture(renderer, "/assets/GJ_progressBar_001-hd.png"),
+    panel: await loadHudTexture(renderer, `${ASSET}square04_001-hd.png`),
+    bar: await loadHudTexture(renderer, `${ASSET}GJ_progressBar_001-hd.png`),
     // `GameOptionsLayer`'s own panel, which the pause gear opens over the level
-    options: await loadHudTexture(renderer, "/assets/GJ_square02-hd.png"),
+    options: await loadHudTexture(renderer, `${ASSET}GJ_square02-hd.png`),
   };
   // the pause menu's own `Slider` pair — the same loose art `OptionsLayer` uses
   const sliderTex = {
-    groove: await loadHudTexture(renderer, `/assets/${SLIDER_GROOVE.replace(".png", "-hd.png")}`),
-    bar: await loadHudTexture(renderer, `/assets/${SLIDER_BAR.replace(".png", "-hd.png")}`, true),
-    thumb: await loadHudTexture(renderer, `/assets/${SLIDER_THUMB.replace(".png", "-hd.png")}`),
+    groove: await loadHudTexture(renderer, `${ASSET}${SLIDER_GROOVE.replace(".png", "-hd.png")}`),
+    bar: await loadHudTexture(renderer, `${ASSET}${SLIDER_BAR.replace(".png", "-hd.png")}`, true),
+    thumb: await loadHudTexture(renderer, `${ASSET}${SLIDER_THUMB.replace(".png", "-hd.png")}`),
     thumbSel: await loadHudTexture(renderer,
-      `/assets/${SLIDER_THUMB_SEL.replace(".png", "-hd.png")}`),
+      `${ASSET}${SLIDER_THUMB_SEL.replace(".png", "-hd.png")}`),
   };
   // every level this port plays is classic, so the row never has the
   // platformer-only full restart (see `pauseRow`)
@@ -236,7 +237,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   // The death explosion is a 12-frame sprite *animation*, not a particle config —
   // `PlayerExplosion_NN-hd.plist` are frame atlases. 01 is the classic one.
   const boom = await loadAtlas(renderer,
-    "/assets/PlayerExplosion_01-hd.plist", "/assets/PlayerExplosion_01-hd.png")
+    `${ASSET}PlayerExplosion_01-hd.plist`, `${ASSET}PlayerExplosion_01-hd.png`)
     .catch(() => null);
   const boomFrames = boom
     ? Array.from({ length: 12 }, (_, i) =>
@@ -249,9 +250,9 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     return null;
   });
   const fxTex = {
-    square: await loadHudTexture(renderer, "/assets/square.png"),
-    circle: await loadHudTexture(renderer, "/assets/circle.png"),
-    streak: await loadHudTexture(renderer, "/assets/streak_01_001.png", true),
+    square: await loadHudTexture(renderer, `${ASSET}square.png`),
+    circle: await loadHudTexture(renderer, `${ASSET}circle.png`),
+    streak: await loadHudTexture(renderer, `${ASSET}streak_01_001.png`, true),
   };
   // --- the icon kit (M7) ---
   // Which icon each gamemode wears, and the two player colours, now come from
@@ -309,6 +310,14 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
 
   /** replay mode: time does not advance the sim, __play.stepTick() does */
   const manual = params.get("manual") === "1";
+  /**
+   * replay only: the frame rate a smooth static's start speed is measured at (see
+   * `viewVel`). 240 makes it the true speed, which reproduces the native Dash log
+   * everywhere but E3 (x 11385), where that run was at about 130 fps (`?fps=130`
+   * closes it: 12 -> 9) - and 7500-9000 / 19500-21000 get worse with it, so the
+   * capture's frame rate was not constant.
+   */
+  const virtualFps = Math.max(10, Number(params.get("fps")) || 240);
   /** `?debug=1` draws every collider on top of the art, to catch misplacement */
   const debug = params.get("debug") === "1";
   const startSpeed = startSpeed0, startX = startX0;
@@ -369,12 +378,24 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   /** the results layer's slide-in progress, 0..1 */
   let endT = 0;
   let best = 0;
-  /** view *bottom* edge, matching the original's `m_obCamPos.y` */
-  let camY = 0;
+  /**
+   * view *bottom* edge, matching the original's `m_obCamPos.y`. A run starts with the
+   * camera on its floor (GD 0, `CAM_MIN_Y`) — the real Dash run reads `camY 0.0` from
+   * frame 1 — not at 0 (GD 90), which eased down for the first second (+32.7 at frame 40).
+   */
+  let camY = CAM_MIN_Y;
   /** sideways play: the camera centre along the player's ground axis (see `travel`) */
   let offC: number | null = null;
   /** tooling: the last rendered view centre, world units */
   let lastView = { x: 0, y: 0 };
+  /** the view's centre as drawn: `lastView` plus the camera offset (1916); what the harnesses read */
+  let drawnView = { x: 0, y: 0 };
+  /** the follow camera's centre y this frame (what a static's exit eases to), for the harnesses */
+  let followCentre = 0;
+  /** the view's velocity (units/s) over the last drawn frame: a smooth-velocity static starts from it */
+  let viewVel = { x: 0, y: 0 };
+  let viewSteps = 0;
+  let camSteps = 0;
   /**
    * One 240 Hz step of the camera's vertical follow. Native Stereo Madness,
    * frame by frame (x 1650-1950, 3850-4500; docs/fidelity/traces): every step
@@ -382,14 +403,30 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
    * wants it, in both directions (312 of 313 frames). Stepping it here rather
    * than once per drawn frame keeps it identical at 60, 120 or 240 fps.
    */
+  /** the free camera's padding and the zoom, once a portal has set the padding */
+  const freeCam = () => player.freeMode && player.camPadding !== undefined
+    ? { padding: player.camPadding, zoom: sim.triggers?.rt.zoom ?? 1 } : null;
+  /**
+   * A live Camera Static owns the view's y. The game keeps one camera state: a
+   * static overwrites it, the follow resumes from wherever the view is, and an
+   * exit eases to the deadzone target measured from the view — so under a
+   * static the follow camera sits on the view instead of chasing the player on
+   * its own (Dash x 3072-3815: the held view, then the 0.5 s exit).
+   */
+  const yStaticLive = () => {
+    const r = sim.triggers?.rt;
+    const own = (v: { axis: number } | null | undefined) => !!v && (v.axis === 0 || v.axis === 2);
+    return !!r && (own(r.viewStatic) || own(r.viewStaticOther));
+  };
   const stepCameraY = () => {
     const { viewH: vh } = resolveView(renderer.canvas.width, renderer.canvas.height);
+    if (yStaticLive()) { camY = lastView.y - vh / 2; return; }
     const partner = sim.dual?.player;
     const target = partner
-      ? dualCameraBottom((player.cameraYCenter + partner.cameraYCenter) / 2, vh)
+      ? dualCameraBottom(player.dualCamCentre ?? (player.cameraYCenter + partner.cameraYCenter) / 2, vh)
       : cameraBottomTarget(player.mode, player.y,
-        player.gravityFlipped, player.cameraYCenter, camY, vh, player.freeMode);
-    camY += (target - camY) * STEP * 6;
+        player.gravityFlipped, player.cameraYCenter, camY, vh, player.freeMode, freeCam());
+    camY += (target - camY) * STEP * followRate(!!player.freeMode, player.camEasing);
   };
   /** World-space label: placed once at the start of each attempt. */
   let attemptLabel: { x: number; y: number } | undefined;
@@ -422,7 +459,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   // `Auto-Checkpoints` is game variable "0027", which the original reads from
   // the save rather than defaulting per level — so the pause gear's toggle
   // survives a reload here too.
-  checkpoints.auto = save.settings().autoCheckpoints;
+  checkpoints.auto = save.settings().autoCheckpoints && !save.settings().disableCheckpoints;
 
   // --- particles, streaks, screen shake (gd/effects.ts) ---
   const kitCol1 = kitColor(kit.col1);
@@ -547,6 +584,11 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   const L = sim.levelLength;
   /** best percent reached this attempt, written to the save when the attempt ends */
   const percentNow = () => Math.min(100, (best / L) * 100);
+  /** `Show Info Label`: the session's best run (start %, end %), clicks, and a smoothed FPS */
+  const info = { runFrom: 0, runTo: 0, clicks: [] as number[], maxCps: 0, totalClicks: 0, fps: 60 };
+  const startPercentNow = () => Math.min(100, (startX / L) * 100);
+  /** `Auto-Retry` off: the press that restarts after a death */
+  let retryRequested = false;
   /**
    * The x the percentage reads: the player's own, or — for a level with a
    * timestamp (Dash) — the elapsed level time's share of it, put on the same
@@ -572,6 +614,11 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
    */
   const bankProgress = () => {
     if (scored) save.recordProgress(levelNum, percentNow(), practice);
+    // the session's best run, as the info label shows it: the longest start-to-death stretch
+    const from = checkpoints.last && practice ? Math.min(100, (checkpoints.last.x / L) * 100) : startPercentNow();
+    const to = percentNow();
+    if (to - from > info.runTo - info.runFrom) { info.runFrom = from; info.runTo = to; }
+    info.totalClicks = 0;
   };
 
   const reset = () => {
@@ -596,7 +643,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     coinsSeen.clear();
     pending.clear();
     restartMusic();
-    camY = 0;
+    camY = CAM_MIN_Y;
     attemptLabel = undefined;
     retryLabel = true;
     for (const a of iconAnim) { a.tilt = 0; a.roll = 0; }
@@ -644,6 +691,11 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   /** which pause-menu entry is highlighted */
   let menuIndex = 0;
   /**
+   * the highlight (a 1.1 bounce) is only drawn once the keyboard has moved it:
+   * the game's pause menu is mouse-driven and shows nothing enlarged at rest
+   */
+  let menuKeys = false;
+  /**
    * The auto-checkpoint toggle only exists while practice mode is on, which is
    * where the original puts it too — so the menu is built per open, not fixed.
    */
@@ -683,9 +735,13 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       panel: pauseTex.options, white,
       // `GameOptionsLayer` has no title label and one page — see `TogglePopupDeps.pages`
       pages: [{ options: GAME_OPTIONS }],
+      infoIcons: true,
       yOffset: GAME_OPTIONS_Y_OFFSET,
       onChange: (key, value) => {
-        if (key === "autoCheckpoints") checkpoints.auto = value;
+        if (key === "autoCheckpoints" || key === "disableCheckpoints") {
+          const st = save.settings();
+          checkpoints.auto = st.autoCheckpoints && !st.disableCheckpoints;
+        }
       },
       onClose: closeGameOptions,
     });
@@ -718,6 +774,12 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   let pressUnseen = false;
   let releaseAfterStep = false;
   const press = () => {
+    if (sim.dead && deadFor >= RESPAWN_DELAY) retryRequested = true;
+    if (!sim.dead && !paused && !completed) {
+      const nowMs = performance.now();
+      info.clicks.push(nowMs);
+      info.totalClicks++;
+    }
     // `EndPortalObject::triggerObject` disables the UI menu and
     // `lockPlayer` stops the player, so input does nothing from the trigger on
     if (paused || completed || sim.ended) return;
@@ -784,7 +846,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     }
     if (pick === "quit") {
       bankProgress();
-      fade.go(() => { audio.stopMusic(); location.href = custom ? "/" : `?levels=1&sel=${levelNum}`; });
+      fade.go(() => { audio.stopMusic(); location.href = custom ? BASE : `?levels=1&sel=${levelNum}`; });
       return;
     }
     // --- the sourced results row ---
@@ -816,6 +878,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       setPaused(!paused);
       // the cursor starts on Resume, which is the middle of the sourced row
       menuIndex = PAUSE_ROW.findIndex((r) => r.id === "resume");
+      menuKeys = false;
       return;
     }
     if (paused || completed) {
@@ -825,10 +888,12 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       // the completion menu's vertical list keep working too.
       if (e.code === "ArrowUp" || e.code === "KeyW" || e.code === "ArrowLeft" || e.code === "KeyA") {
         e.preventDefault();
+        menuKeys = true;
         menuIndex = (menuIndex + n - 1) % n;
       } else if (e.code === "ArrowDown" || e.code === "KeyS"
         || e.code === "ArrowRight" || e.code === "KeyD") {
         e.preventDefault();
+        menuKeys = true;
         menuIndex = (menuIndex + 1) % n;
       } else if (e.code === "Enter" || e.code === "Space") {
         e.preventDefault();
@@ -841,7 +906,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     if (practice && !sim.dead && (e.code === "KeyZ" || e.code === "KeyX")) {
       e.preventDefault();
       if (e.repeat) return;
-      if (e.code === "KeyZ") checkpoints.place(sim, camY, true);
+      if (e.code === "KeyZ" && !save.settings().disableCheckpoints) checkpoints.place(sim, camY, true);
       else checkpoints.remove();
       return;
     }
@@ -952,6 +1017,13 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     let frame = (now - last) / 1000;
     last = now;
     if (frame > MAX_FRAME) frame = MAX_FRAME;
+    if (frame > 0) info.fps += (1 / frame - info.fps) * 0.1;
+    // the camera's per-frame eases (a static's follow, the sideways chase) run on
+    // the time the simulation covered: the wall-clock frame in play, but in a
+    // replay (`?manual=1`) the browser's frame time has nothing to do with the
+    // four steps each `stepTick` / `followTrace` call advances
+    const camFrame = manual ? Math.max(0, runSteps - camSteps) * STEP : frame;
+    camSteps = runSteps;
     {
       const target = sim.run.mirrored ? 1 : 0;
       // a restart (or checkpoint load) resets it with `noEffects`: no ease
@@ -973,7 +1045,9 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       // the headless search. Rendering still runs every frame.
     } else if (sim.dead) {
       deadFor += frame;
-      if (deadFor >= RESPAWN_DELAY) {
+      // `Auto-Retry` off: the player restarts with a press once the death has played out
+      if (deadFor >= RESPAWN_DELAY && (save.settings().autoRetry || retryRequested)) {
+        retryRequested = false;
         if (practice && checkpoints.length) respawnAtCheckpoint();
         else reset();
       }
@@ -1164,6 +1238,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
           endText = randomEndText();
           endT = 0;
           menuIndex = 0;
+          menuKeys = false;
         }
       }
     }
@@ -1215,7 +1290,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     const camPartner = sim.dual?.player;
     const camTrackY = camPartner ? (player.y + camPartner.y) / 2 : player.y;
     const camAnchor = camPartner
-      ? (player.cameraYCenter + camPartner.cameraYCenter) / 2
+      ? player.dualCamCentre ?? (player.cameraYCenter + camPartner.cameraYCenter) / 2
       : player.cameraYCenter;
     // camY here is the view's bottom edge, as in the original; the renderer
     // wants the centre, so VIEW_H/2 is added when the camera is handed over.
@@ -1224,7 +1299,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     const targetBottom = camPartner
       ? dualCameraBottom(camAnchor, viewH)
       : cameraBottomTarget(
-        player.mode, camTrackY, player.gravityFlipped, camAnchor, camY, viewH, player.freeMode);
+        player.mode, camTrackY, player.gravityFlipped, camAnchor, camY, viewH, player.freeMode, freeCam());
     if (!attemptLabel) {
       // PlayLayer init (m1 0x9d1d4) places the label at the starting camera
       // centre +85 Y; updateAttempts (0xabb14) adds +50 X on retries.
@@ -1241,7 +1316,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       camY = endCamY0 + (target - endCamY0)
         * easedValue(k, CAMERA_SETTLE_EASING, CAMERA_SETTLE_RATE);
     } else if (travel) {
-      const k = Math.min(1, frame * 6);
+      const k = Math.min(1, camFrame * 6);
       if (down && offC !== null) {
         const z = leadZoom > 0 ? leadZoom : 1;
         const u = drawX * down.x + player.y * down.y;
@@ -1260,6 +1335,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       // no steps ran this frame (or the tooling steps it): hold still
     }
     const camCentreY = camY + viewH / 2;
+    followCentre = camCentreY;
     // `EndPortalObject::setVisible(true)` → `updateEndPos`: the portal takes its
     // height the first time it comes into view
     if (portalY === null && L - camLeft <= viewW + 60) {
@@ -1298,8 +1374,8 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       const tgO = vo ? groupAnchor(sim.triggers.level, rtc, vo.group) : null;
       if (tgS || tgO) {
         // an exit releases only its own axes, inside `stepViewStatic`
-        const live = stepViewStaticPair(vo, tgO, vs, tgS, camX, camCentreY, lastView.x, lastView.y,
-          frame, paused, zoom, viewW, VIEW_OUT);
+        const live = stepViewStaticPair(vo, tgO, vs, tgS, camX, yStaticLive() && !travel ? targetBottom + viewH / 2 : camCentreY, lastView.x, lastView.y,
+          camFrame, paused, zoom, viewW, VIEW_OUT, viewVel.x, viewVel.y, !!travel);
         if (!live.second) rtc!.viewStatic = null;
         if (!live.first) rtc!.viewStaticOther = null;
         sX = VIEW_OUT.x; sY = VIEW_OUT.y;
@@ -1318,8 +1394,26 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       if (R) sX = Math.min(sX, R.x - zvW0 / 2);
       if (L) sX = Math.max(sX, L.x + zvW0 / 2);
     }
+    // over the simulated time the frame covered (a replay steps 4 ticks per drawn frame)
+    const dtView = (runSteps - viewSteps) * STEP;
+    viewSteps = runSteps;
+    if (dtView > 1e-4 && !paused) {
+      // the speed of the view as drawn, with the camera offset's own ramp (1916)
+      const vx = (sX + offX - drawnView.x) / dtView, vy = (sY + offY - drawnView.y) / dtView;
+      // a respawn or a teleport is a jump, not a speed
+      // What `updateCamera` hands a smooth static (m1 0x124838, installed build
+      // 0x109e24-0x109e48): `(position now - position last call) * 240`, once per
+      // *frame* - so the start speed is the true speed times 240 x the frame time,
+      // 4x at 60 fps and 1.85x on the ~130 fps run the native Dash log came from
+      // (E3, x 11385: fitted 1.7-2.0x). In a replay the frame time is the virtual
+      // `?fps=` one (60 by default).
+      const frameDt = manual ? 1 / virtualFps : dtView;
+      viewVel = Math.abs(vx) < 3000 && Math.abs(vy) < 3000
+        ? { x: vx * frameDt * 240, y: vy * frameDt * 240 } : { x: 0, y: 0 };
+    }
     lastView = { x: sX, y: sY };
     const vX = sX + offX, vY = sY + offY;
+    drawnView = { x: vX, y: vY };
     renderer.camera = { x: vX + shake.x, y: vY + shake.y, scale: scale * zoom,
       mirrorX: run.mirrored, flipScale: 1 - 2 * flipK, rotation: angle };
     // the screen shaders (2919–2923) post-process the world, not the HUD
@@ -1846,7 +1940,8 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     // one is wrong. Green = solid, red = hazard, cyan = slope surface,
     // yellow = interactive, white = the player's box (the one hazards test),
     // magenta = the player's inner box (the one solids kill with).
-    if (debug) {
+    const hbSettings = save.settings();
+    if (debug || (hbSettings.showHitboxes && practice) || (hbSettings.hitboxOnDeath && sim.dead)) {
       const box = (x: number, y: number, hw: number, hh: number,
                    r: number, gg: number, bb: number, rotation = 0) => {
         const t = 1.2;
@@ -1973,6 +2068,31 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
         fillColor: P1,
         pauseFrame, pauseScale: 1,
       });
+      // `Show Time` (0145): the attempt's clock under the bar. APPROXIMATION: the
+      // label's format and place are not decoded; m:ss.cc, centred below the bar.
+      if (st.showTime) {
+        const t = runSteps * STEP;
+        const m = Math.floor(t / 60), sec = t - m * 60;
+        const text = `${m}:${sec < 10 ? "0" : ""}${sec.toFixed(2)}`;
+        font.draw(renderer, text, camX, camCentreY + geometry.barY - 20, 0.2, 1, 1, 1, 0.9, 0);
+      }
+      // `Show Info Label` (0109): FPS, the session's best run and clicks per second,
+      // three lines at the top left (docs/ui-parity/reference/native-hud-*)
+      if (st.showInfoLabel) {
+        const nowMs = performance.now();
+        while (info.clicks.length && nowMs - info.clicks[0] > 1000) info.clicks.shift();
+        const cps = info.clicks.length;
+        if (cps > info.maxCps) info.maxCps = cps;
+        const lines = [
+          `FPS: ${Math.round(info.fps)}`,
+          `Best Run: ${info.runFrom.toFixed(2)}-${info.runTo.toFixed(2)}%`,
+          `${cps}/${info.maxCps}/${info.totalClicks} CPS`,
+        ];
+        lines.forEach((text, i) => {
+          font.draw(renderer, text, camX - viewW / 2 + 3.4,
+            camCentreY + viewH / 2 - 9.1 - i * 12.3, 0.15, 1, 1, 1, 0.55, -1);
+        });
+      }
       // The original shows **no** "Practice Mode" text during play — the mode is
       // read off the checkpoint buttons and the pause menu's `GJ_practiceTxt`.
       // The label that used to sit here was the port's own development hint.
@@ -2061,7 +2181,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
         const frame = hudSheet.require(
           entry.id === "practice" && practice ? PRACTICE_OFF_FRAME : entry.frame);
         const h = frame.frame.sourceH * HD;
-        const on = i === menuIndex;
+        const on = i === menuIndex && menuKeys;
         drawUiSprite(renderer, frame, camX + x, camCentreY + L.rowY,
           { scale: on ? 1.1 : 1 });
         uiButtons.push({
@@ -2143,7 +2263,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       buttons.forEach((b, i) => {
         const f = hudSheet.require(b.frame);
         const y = endLayout.buttonRowY + slide;
-        drawUiSprite(renderer, f, b.x, y, { scale: i === menuIndex ? 1.1 : 1 });
+        drawUiSprite(renderer, f, b.x, y, { scale: i === menuIndex && menuKeys ? 1.1 : 1 });
         uiButtons.push({
           id: b.id, x: b.x, y,
           w: f.frame.sourceW * HD, h: f.frame.sourceH * HD,
@@ -2207,7 +2327,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     get info() {
       return {
         attempts, dead: sim.dead, x: player.x, y: player.y,
-        view: lastView,
+        view: drawnView, followCentre,
         loopMs: (() => { const a = [...loopMs].filter((v) => v > 0).sort((x, y) => x - y);
           return a.length ? { p50: a[a.length >> 1], p95: a[Math.floor(a.length * 0.95)], max: a[a.length - 1] } : null; })(),
         percent: (best / L) * 100, maxX: scene.maxX, levelLength: L,
@@ -2329,6 +2449,9 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
         player.y = ny;
         sim.dead = false;
         simStep(sim, world, STEP, holding, warnDual);
+        // count the step like `stepTick` does: the view's speed (a smooth-velocity
+        // static's start) is measured over the simulated time
+        if (!sim.ended) runSteps++;
         // The game moves its camera every step, and the cube deadzone depends
         // on where the camera already is — so ease it here too, with the render
         // loop's own rule, or a capture lands with the camera wherever it
@@ -2336,10 +2459,11 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
         const { viewH: vh } = resolveView(renderer.canvas.width, renderer.canvas.height);
         const partner = sim.dual?.player;
         const target = partner
-          ? dualCameraBottom((player.cameraYCenter + partner.cameraYCenter) / 2, vh)
+          ? dualCameraBottom(player.dualCamCentre ?? (player.cameraYCenter + partner.cameraYCenter) / 2, vh)
           : cameraBottomTarget(player.mode, player.y, player.gravityFlipped,
-            player.cameraYCenter, camY, vh, player.freeMode);
-        camY += (target - camY) * Math.min(1, STEP * 6);
+            player.cameraYCenter, camY, vh, player.freeMode, freeCam());
+        if (yStaticLive()) camY = lastView.y - vh / 2;
+        else camY += (target - camY) * Math.min(1, STEP * followRate(!!player.freeMode, player.camEasing));
       }
       sim.dead = false;
       best = player.x;

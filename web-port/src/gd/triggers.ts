@@ -255,6 +255,16 @@ export interface Pulse {
   fadeIn: number; hold: number; fadeOut: number;
   /** seconds since it started */
   t: number;
+  /**
+   * This pulse's place in `rt.pulses` order — 1-based and increasing.
+   *
+   * Pulses stack: each mixes over what the previous one left, so *order*
+   * decides the result when two cover the same target. The per-target lookups
+   * (`pulseIndex` / `groupPulseIndex`) are keyed by target and would lose it,
+   * so the merge in `applyGroupPulses` sorts on this. Assigned in `fire` from
+   * the last live pulse.
+   */
+  seq: number;
   /** HSV mode (key 48): bend the target's own colour rather than replace it */
   hsv: HSV | null;
   r: number; g: number; b: number;
@@ -469,6 +479,15 @@ export interface TriggerRuntime {
   shake: { strength: number; remaining: number };
   /** pulse triggers still running, oldest first */
   pulses: Pulse[];
+  /**
+   * `pulses` by target, so resolving one sprite's colour is a keyed get rather
+   * than a scan of every live pulse. Channel pulses are keyed by colour channel
+   * here, group pulses by group in `groupPulseIndex`; both are *derived* from
+   * `pulses` and rebuilt by `reindexPulses` wherever that array changes, so
+   * neither needs its own clone/restore entry — only `pulses` is state.
+   */
+  pulseIndex: Map<number, Pulse[]>;
+  groupPulseIndex: Map<number, Pulse[]>;
   /** item counters (`GJEffectManager::countForItem` / `updateCountForItem`) */
   items: Map<number, number>;
   /** count triggers (1611) that have been armed */
@@ -757,7 +776,7 @@ export function createRuntime(level: Level): TriggerRuntime {
     colors: new Map(), groups: new Map(), next: 0, tweens: [], pending: [], time: 0,
     channel: 0, dir: 4, fired: new Set(), rotations: [], timeWarp: 1, cameraStatic: null, viewStatic: null, viewStaticOther: null, endHit: false, controlsOff: [false, false], bgIndex: null, mgOffsetY: 0, camEdges: [0, 0, 0, 0], particleSpawns: [], areaTints: [], zoom: 1, camOffset: { x: 0, y: 0 }, camAngle: 0, camAngleTarget: 0, gradients: new Map(), shader: freshShaderState(), shaderZ: [1, 15], ghost: false,
     playerColors: [{ r: 125, g: 255, b: 0 }, { r: 0, g: 255, b: 255 }],
-    shake: { strength: 0, remaining: 0 }, pulses: [],
+    shake: { strength: 0, remaining: 0 }, pulses: [], pulseIndex: new Map(), groupPulseIndex: new Map(),
     items: new Map(), counters: [], collisions: [], collidingPairs: new Set(),
     onDeath: [], touched: new Set(), animated: new Map(),
   };
@@ -797,6 +816,8 @@ export function resetRuntime(rt: TriggerRuntime, level: Level) {
   rt.shake.strength = 0;
   rt.shake.remaining = 0;
   rt.pulses.length = 0;
+  rt.pulseIndex.clear();
+  rt.groupPulseIndex.clear();
   rt.items.clear();
   rt.counters.length = 0;
   rt.collisions.length = 0;
@@ -861,6 +882,8 @@ export function restoreRuntime(rt: TriggerRuntime, snap: TriggerRuntime) {
   rt.shake.remaining = snap.shake.remaining;
   rt.pulses.length = 0;
   for (const p of snap.pulses) rt.pulses.push({ ...p });
+  // the lookups are derived: a restored `pulses` must not leave a stale index
+  reindexPulses(rt);
   rt.items.clear();
   for (const [k, v] of snap.items) rt.items.set(k, v);
   rt.counters.length = 0;
@@ -883,7 +906,7 @@ export function cloneRuntime(rt: TriggerRuntime): TriggerRuntime {
   for (const [k, v] of rt.colors) colors.set(k, { ...v });
   const groups = new Map<number, GroupState>();
   for (const [k, v] of rt.groups) groups.set(k, { ...v });
-  return {
+  const out: TriggerRuntime = {
     colors, groups, next: rt.next, time: rt.time,
     channel: rt.channel, dir: rt.dir, fired: new Set(rt.fired),
     rotations: rt.rotations.map((r) => ({ ...r })), timeWarp: rt.timeWarp,
@@ -898,6 +921,8 @@ export function cloneRuntime(rt: TriggerRuntime): TriggerRuntime {
       ? { ...w, from: { ...w.from }, to: { ...w.to } } : { ...w })),
     pending: rt.pending.map((p) => ({ ...p })),
     pulses: rt.pulses.map((p) => ({ ...p })),
+    pulseIndex: new Map(),
+    groupPulseIndex: new Map(),
     items: new Map(rt.items),
     counters: rt.counters.map((c) => ({ ...c })),
     collisions: rt.collisions.map((c) => ({ ...c })),
@@ -906,6 +931,9 @@ export function cloneRuntime(rt: TriggerRuntime): TriggerRuntime {
     touched: new Set(rt.touched),
     animated: new Map(rt.animated),
   };
+  // the copies above, not the originals, are what the clone resolves against
+  reindexPulses(out);
+  return out;
 }
 
 export function groupState(rt: TriggerRuntime, group: number): GroupState {
@@ -959,28 +987,51 @@ function mixChannel(a: number, b: number, ratio: number): number {
 const MAX_COPY_DEPTH = 8;
 
 /**
+ * Rebuild `pulseIndex` / `groupPulseIndex` from `pulses`.
+ *
+ * Called wherever `rt.pulses` changes — a pulse firing, one expiring, a
+ * snapshot being restored, a clone being made. It is O(pulses) once per
+ * change, which is the whole point: the alternative is the O(visible objects ×
+ * live pulses) scan that made Deadlocked 46 % slower per frame than it needs
+ * to be (G1), since every sprite of every object resolved its colour that way
+ * once a frame. Fingerdash has 652 pulses live over its course and Deadlocked
+ * 173 against ~20-27 k objects.
+ */
+export function reindexPulses(rt: TriggerRuntime) {
+  rt.pulseIndex.clear();
+  rt.groupPulseIndex.clear();
+  for (const p of rt.pulses) {
+    const m = p.isGroup ? rt.groupPulseIndex : rt.pulseIndex;
+    let l = m.get(p.target);
+    if (!l) m.set(p.target, (l = []));
+    l.push(p);
+  }
+}
+
+/**
  * The colour to actually draw a channel with, following its copy source.
  *
  * `activeColorForIndex` (m1 0x278138) resolves 0 and 1011 to white and 1010 to
  * black before it looks a channel up at all, so those three are answered here
  * too. Everything else follows `copyChannel` — live, because the source is
- * still being animated by its own triggers.
+ * still being animated by its own triggers — and every live pulse on the
+ * channel then lays over the result.
  */
 export function resolveColor(rt: TriggerRuntime, ch: number): ColorState {
   const base = resolveChannel(rt, ch);
-  if (!rt.pulses.length) return base;
+  const list = rt.pulseIndex.get(ch);
+  if (!list) return base;
   let out = base;
-  for (const p of rt.pulses) {
-    if (p.isGroup || p.target !== ch) continue;
+  for (const p of list) {
     const v = pulseValue(p.t, p.fadeIn, p.hold, p.fadeOut);
     if (v <= 0) continue;
+    // one copy for the whole stack: `base` is the live channel state the
+    // tweens write to, so it must not be mixed into in place
+    if (out === base) out = { ...base };
     const to = pulseColor(rt, p, out);
-    out = {
-      ...out,
-      r: mixChannel(to.r, out.r, v),
-      g: mixChannel(to.g, out.g, v),
-      b: mixChannel(to.b, out.b, v),
-    };
+    out.r = mixChannel(to.r, out.r, v);
+    out.g = mixChannel(to.g, out.g, v);
+    out.b = mixChannel(to.b, out.b, v);
   }
   return out;
 }
@@ -1002,6 +1053,13 @@ export function pulseColor(
 }
 
 /**
+ * `applyGroupPulses`' work list, reused so a per-sprite call allocates nothing.
+ * A group pulse never resolves another colour (see `pulseColor`), so this
+ * function cannot re-enter itself.
+ */
+const GROUP_HITS: Pulse[] = [];
+
+/**
  * Every live group pulse laid over a colour, in 0..255.
  *
  * `mainOnly` (key 65) and `detailOnly` (key 66) choose which of an object's two
@@ -1014,19 +1072,36 @@ export function applyGroupPulses(
   c: { r: number; g: number; b: number },
 ): { r: number; g: number; b: number } {
   if (!rt.pulses.length || !groups.length) return c;
+  // The object's pulses, gathered from the per-group lookup and put back into
+  // `rt.pulses` order (`seq`) — an object in two pulsed groups has to mix them
+  // in the order the game applies them, not in group order.
+  let n = 0;
+  for (const g of groups) {
+    const l = rt.groupPulseIndex.get(g);
+    if (!l) continue;
+    for (const p of l) {
+      // a group id repeated in the object's list must not apply the pulse twice
+      let dup = false;
+      for (let k = 0; k < n; k++) if (GROUP_HITS[k] === p) { dup = true; break; }
+      if (dup) continue;
+      let k = n;
+      while (k > 0 && GROUP_HITS[k - 1].seq > p.seq) { GROUP_HITS[k] = GROUP_HITS[k - 1]; k--; }
+      GROUP_HITS[k] = p;
+      n++;
+    }
+  }
   let out = c;
-  for (const p of rt.pulses) {
-    if (!p.isGroup || !groups.includes(p.target)) continue;
+  for (let i = 0; i < n; i++) {
+    const p = GROUP_HITS[i];
     if (p.mainOnly && detail) continue;
     if (p.detailOnly && !detail) continue;
     const v = pulseValue(p.t, p.fadeIn, p.hold, p.fadeOut);
     if (v <= 0) continue;
+    if (out === c) out = { ...c };
     const to = pulseColor(rt, p, out);
-    out = {
-      r: mixChannel(to.r, out.r, v),
-      g: mixChannel(to.g, out.g, v),
-      b: mixChannel(to.b, out.b, v),
-    };
+    out.r = mixChannel(to.r, out.r, v);
+    out.g = mixChannel(to.g, out.g, v);
+    out.b = mixChannel(to.b, out.b, v);
   }
   return out;
 }
@@ -1284,11 +1359,14 @@ function fire(rt: TriggerRuntime, t: Trigger, playerX: number, playerY: number) 
       const instant = propBool(t.props, 465);
       if (rt.viewStatic) {
         rt.viewStatic = { ...rt.viewStatic, ...ease, dur: instant ? 0 : dur, t: 0, exit: true,
-          exitAxis: rt.viewStatic.exitAxis | mask, fromX: null, fromY: null };
+          exitAxis: rt.viewStatic.exitAxis | mask, fromX: null, fromY: null,
+          // the exit's own smooth velocity (453): the release is a Bezier from the view's speed
+          smooth: propBool(t.props, 453), velMod: propFloat(t.props, 454, 0), vx: undefined, vy: undefined, gx: undefined, gy: undefined };
       }
       if (rt.viewStaticOther && (rt.viewStaticOther.axis & mask) !== 0) {
         rt.viewStaticOther = { ...rt.viewStaticOther, ...ease, dur: instant ? 0 : dur, t: 0, exit: true,
-          exitAxis: rt.viewStaticOther.exitAxis | mask, fromX: null, fromY: null };
+          exitAxis: rt.viewStaticOther.exitAxis | mask, fromX: null, fromY: null,
+          smooth: propBool(t.props, 453), velMod: propFloat(t.props, 454, 0), vx: undefined, vy: undefined, gx: undefined, gy: undefined };
       }
       return;
     }
@@ -1302,7 +1380,8 @@ function fire(rt: TriggerRuntime, t: Trigger, playerX: number, playerY: number) 
         : rt.viewStaticOther && rt.viewStaticOther.axis !== axis && axis !== 0 ? rt.viewStaticOther : null;
       rt.viewStatic = { group: vGroup, axis, dur, ...ease, t: 0,
         exit: false, exitAxis: 0, fromX: null, fromY: null,
-        follow: propBool(t.props, 212) ? Math.max(1, propFloat(t.props, 213, 1)) : 0 };
+        follow: propBool(t.props, 212) ? Math.max(1, propFloat(t.props, 213, 1)) : 0,
+        smooth: propBool(t.props, 453), velMod: propFloat(t.props, 454, 0) };
     }
     const group = propInt(t.props, P.SECONDARY_GROUP_ID, -1);
     if (group <= 0 || propInt(t.props, P.CAMERA_AXIS, 0) !== 2) return;
@@ -1494,13 +1573,21 @@ function fire(rt: TriggerRuntime, t: Trigger, playerX: number, playerY: number) 
       copyChannel: propInt(t.props, P.COPIED_COLOR_ID, 0),
       mainOnly: propBool(t.props, P.PULSE_MAIN_ONLY),
       detailOnly: propBool(t.props, P.PULSE_DETAIL_ONLY),
+      // filled in below, once the exclusive filter has settled the array
+      seq: 0,
     };
     if (!p.target) return;
     // key 86: an exclusive pulse replaces whatever is already on this target
     if (propBool(t.props, P.PULSE_EXCLUSIVE)) {
       rt.pulses = rt.pulses.filter((o) => o.isGroup !== p.isGroup || o.target !== p.target);
     }
+    // the array is only ever appended to and filtered, never reordered, so the
+    // last live pulse carries the highest `seq`
+    p.seq = rt.pulses.length ? rt.pulses[rt.pulses.length - 1].seq + 1 : 1;
     rt.pulses.push(p);
+    // the lookups are rebuilt rather than appended to: an exclusive pulse has
+    // just removed entries, and this runs once per pulse, not per frame
+    reindexPulses(rt);
     return;
   }
 
@@ -2004,7 +2091,11 @@ export function updateTriggers(
   // pulses in flight age; a finished one stops overlaying its target
   if (rt.pulses.length) {
     for (const p of rt.pulses) p.t += dt;
-    rt.pulses = rt.pulses.filter((p) => p.t <= pulseDuration(p));
+    const live = rt.pulses.filter((p) => p.t <= pulseDuration(p));
+    if (live.length !== rt.pulses.length) {
+      rt.pulses = live;
+      reindexPulses(rt);
+    }
   }
 
   // a shake in flight runs down; the scene reads `strength` while it lasts

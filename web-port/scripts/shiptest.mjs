@@ -66,3 +66,13 @@ console.log("attempts:", samples[samples.length - 1].attempts, "| dead at end:",
 console.log("last samples:", samples.slice(-5));
 console.log("console errors:", errors.length ? errors : "none");
 await browser.close();
+
+// What this checks: the ship portal switches the gamemode, the ship then flies
+// (the altitude moves) and the page raises no errors. The bang-bang controller
+// is crude, so a death in the corridor is reported above but is not a failure.
+const fail = [];
+if (!modes.some((m) => m.mode === "ship")) fail.push("the ship portal did not switch the gamemode");
+if (!(maxY - minY > 20)) fail.push(`the ship did not fly (y range ${minY} - ${maxY})`);
+if (errors.length) fail.push(`${errors.length} console error(s)`);
+if (fail.length) { console.log("FAIL —", fail.join("; ")); process.exit(1); }
+console.log("PASS — ship portal, ship flight, no console errors");

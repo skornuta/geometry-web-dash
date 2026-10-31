@@ -6,7 +6,7 @@
 import { P, propBool, propFloat, propInt } from "./props.ts";
 import { SPEEDS, MINI_SCALE, gravitySign, flipGravity, speedConstants, quantizeVelocity } from "./physics.ts";
 import { setGamemode, type Gamemode, type PlayerState } from "./gamemodes.ts";
-import { cameraCenterForPortal } from "./camera.ts";
+import { bandFor, cameraCenterForPortal } from "./camera.ts";
 import type { TriggerRuntime } from "./triggers.ts";
 import type { WorldView } from "../game/frame.ts";
 import { PLAYER_HALF, type Box } from "../game/collision.ts";
@@ -72,6 +72,13 @@ export function applyPortal(
     // Dash's ball (7635) and swing (9315) portals set it: natively the camera
     // then follows the player like a cube's instead of locking to the centre.
     p.freeMode = propBool(props, 111);
+    // "Edit Camera Settings" (112) carries the free camera's easing (113, the
+    // divisor of its catch-up) and padding (114, how close to the view's edge
+    // the player may go); a portal without it leaves the last ones in place.
+    if (propBool(props, 112)) {
+      p.camEasing = Math.max(1, propFloat(props, 113, 10));
+      p.camPadding = propFloat(props, 114, 0.5);
+    }
     return;
   }
   const speedIdx = SPEED_PORTALS[id];
@@ -476,7 +483,18 @@ export function spiderTeleport(p: PlayerState, world: WorldView, rt?: TriggerRun
       landY = land;
     }
   }
-  if (best === Infinity) landY = g > 0 ? LEVEL_CEILING - half : half;
+  if (best === Infinity) {
+    // **Nothing to land on: the mode's own ceiling or floor.** Outside a free
+    // section the spider is confined to the same kind of band as the ball —
+    // measured from Fingerdash's real run, it rests exactly 106.5 from the
+    // camera centre (a 120 edge less its half-size 13.5) — so a press with no
+    // block above lands on the band's top, not far over the level. A free
+    // spider (portal key 111) and a player outside any band keep the far
+    // fallbacks.
+    const band = p.freeMode || p.bandless ? null : bandFor(p.mode, p.mini, rt?.zoom ?? 1);
+    if (band) landY = g > 0 ? p.cameraYCenter + band.above : p.cameraYCenter - band.below;
+    else landY = g > 0 ? LEVEL_CEILING - half : half;
+  }
 
   p.y = landY;
   flipGravity(p, !p.gravityFlipped);

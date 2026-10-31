@@ -22,7 +22,9 @@ const res = join(root, "..", "steam-gd", "Resources");
 const read = (name) => parsePlist(readFileSync(join(res, name), "utf8").trimStart());
 
 /** object id -> the monster it is (the id table's main frames) */
-const IDS = { 918: "GJBeast01", 1327: "GJBeast02", 1328: "GJBeast03", 1584: "GJBeast04", 2012: "GJBeast05" };
+const IDS = { 918: "GJBeast01", 1327: "GJBeast02", 1328: "GJBeast03", 1584: "GJBeast04", 2012: "GJBeast05", 919: "BlackSludge" };
+/** the sheet each one's frames are in (everything but the black sludge is in FireSheet_01) */
+const SHEET = { BlackSludge: "game" };
 
 const pair = (s) => {
   const m = /^\{\s*([-\d.eE]+)\s*,\s*([-\d.eE]+)\s*\}$/.exec(String(s));
@@ -31,8 +33,11 @@ const pair = (s) => {
 };
 const round = (n) => Math.round(n * 1e4) / 1e4;
 
-const sheet = readFileSync(join(root, "public", "assets", "FireSheet_01-hd.plist"), "utf8");
-const hasFrame = (f) => sheet.includes(`<key>${f}</key>`);
+const sheets = {
+  fire: readFileSync(join(root, "public", "assets", "FireSheet_01-hd.plist"), "utf8"),
+  game: readFileSync(join(root, "public", "assets", "GJ_GameSheet-hd.plist"), "utf8"),
+};
+const hasFrame = (f, sh = "fire") => sheets[sh].includes(`<key>${f}</key>`);
 
 const defs = read("objectDefinitions.plist");
 const out = {};
@@ -52,8 +57,10 @@ for (const [id, name] of Object.entries(IDS)) {
       const [sx, sy] = pair(s.scale);
       const [flx, fly] = pair(s.flipped);
       const glow = s.texture.replace(/_001\.png$/, "_glow_001.png");
+      const sh = SHEET[name] ?? "fire";
       return {
-        frame: s.texture, glow: hasFrame(glow) ? glow : null,
+        frame: s.texture, glow: hasFrame(glow, sh) ? glow : null,
+        ...(sh !== "fire" ? { sheet: sh } : {}),
         x: round(x), y: round(y), sx: round(sx), sy: round(sy),
         rot: round(Number(s.rotation)), flipX: flx !== 0, flipY: fly !== 0, z: Number(s.zValue),
       };
@@ -70,6 +77,8 @@ export interface BeastPart {
   frame: string;
   /** the part's \`_glow\` frame, when the sheet has one */
   glow: string | null;
+  /** the sheet the frame is in, when it is not FireSheet_01 */
+  sheet?: "game";
   /** world units from the object's centre */
   x: number; y: number;
   sx: number; sy: number;

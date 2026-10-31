@@ -25,7 +25,7 @@ import {
 import {
   PLAYER_SIZE, MINI_SCALE, KILL_HEIGHT, snapRotation, gravitySign, flipGravity,
 } from "../gd/physics.ts";
-import { bandFor, cameraCenterForPortal } from "../gd/camera.ts";
+import { bandFor, cameraCenterForDualBall, cameraCenterForPortal } from "../gd/camera.ts";
 import { hitboxScale, speedConstants, SPEED_PHYSICS, SPEEDS, RAW_VELOCITY } from "../gd/physics.ts";
 import { freshPlayer, stepPlayer, stopDash, type Gamemode, type PlayerState, type StepInput } from "../gd/gamemodes.ts";
 import {
@@ -1790,6 +1790,13 @@ function stepCore(
           // Taking each portal's own centre put player 2's floor 60 units low
           // and its ceiling in the middle of the corridor.
           if (s.dual || root !== s) player.cameraYCenter = anchor;
+          // the view's centre inside a dual: a ball portal sets it with the dual's 270 height
+          // (`cameraCenterForDualBall`); any other mode change returns it to the dual's anchor
+          if (s === root && s.dual && GAMEMODE_PORTALS[it.id]) {
+            player.dualCamCentre = GAMEMODE_PORTALS[it.id] === "ball"
+              ? cameraCenterForDualBall(propFloat(it.props, P.Y, player.y)) : undefined;
+          }
+          if (it.id === 287) player.dualCamCentre = undefined;
           note(s, `portal ${it.id}`
             + (Math.abs(player.y - before) > 1 ? ` y${before.toFixed(0)}->${player.y.toFixed(0)}` : ""));
         }

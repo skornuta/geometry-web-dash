@@ -18,6 +18,7 @@ import {
 } from "../engine/ccparticles.ts";
 import { MotionStreak } from "../engine/streak.ts";
 import type { Gamemode } from "./gamemodes.ts";
+import { ASSET } from "../assetBase.ts";
 
 export type Rgb = { r: number; g: number; b: number };
 
@@ -35,7 +36,7 @@ export type EffectName = typeof EFFECT_PLISTS[number];
 export type EffectLibrary = ReadonlyMap<EffectName, ParticleConfig>;
 
 /** fetch and parse every effect plist the scene needs */
-export async function loadEffectLibrary(base = "/assets/"): Promise<EffectLibrary> {
+export async function loadEffectLibrary(base = `${ASSET}`): Promise<EffectLibrary> {
   const out = new Map<EffectName, ParticleConfig>();
   await Promise.all(EFFECT_PLISTS.map(async (n) => {
     const xml = await fetch(`${base}${n}.plist`).then((r) => {

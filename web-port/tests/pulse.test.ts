@@ -18,8 +18,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { type Level } from "../src/gd/level.ts";
 import {
-  buildTriggers, cloneRuntime, createRuntime, pulseValue, resetRuntime,
-  resolveColor, restoreRuntime, updateTriggers, applyGroupPulses,
+  buildTriggers, cloneRuntime, createRuntime, pulseValue, reindexPulses, resetRuntime,
+  resolveColor, restoreRuntime, updateTriggers, applyGroupPulses, type Pulse,
 } from "../src/gd/triggers.ts";
 
 function fakeLevel(objs: { id: number; x: number; props: Record<number, string> }[]): Level {
@@ -198,4 +198,90 @@ test("a channel pulse never leaks onto a group with the same number", () => {
   const rt = createRuntime(level);
   updateTriggers(rt, buildTriggers(level), 150, 0);
   assert.deepEqual(pick(applyGroupPulses(rt, [9], false, { r: 255, g: 0, b: 0 })), [255, 0, 0]);
+});
+
+// --- the per-target lookups (`pulseIndex` / `groupPulseIndex`) ---
+
+/**
+ * An object can sit in two pulsed groups, and the two pulses have to mix in
+ * **`rt.pulses` order**, not in group order — the lookups are keyed by target,
+ * so the order has to be put back (`Pulse.seq`). The later pulse here sits on
+ * the *earlier* group number, which is the case a group-ordered merge gets
+ * wrong: it would give (0,0,255), the first pulse alone at full strength.
+ */
+test("two group pulses on one object mix in pulse order, not group order", () => {
+  const level = fakeLevel([
+    // fires first (x 100) but names the *later* group 10
+    { id: 1006, x: 100, props: { 51: "10", 52: "1", 46: "10", 7: "0", 8: "255", 9: "0" } },
+    // fires second (x 200), names group 9, and fades in over 2 s
+    { id: 1006, x: 200, props: { 51: "9", 52: "1", 45: "2", 46: "10", 7: "0", 8: "0", 9: "255" } },
+  ]);
+  const rt = createRuntime(level);
+  const triggers = buildTriggers(level);
+  updateTriggers(rt, triggers, 100, 0);   // the group-10 pulse starts
+  updateTriggers(rt, triggers, 200, 1);   // 1 s on; the group-9 pulse starts
+  updateTriggers(rt, triggers, 200, 1);   // both are 1 s old: 1.0 and 0.5 strength
+  assert.deepEqual(rt.pulses.map((p) => [p.target, p.seq]), [[10, 1], [9, 2]]);
+  const red = { r: 255, g: 0, b: 0 };
+  // green at full strength, then blue at half: (0, 127, 127)
+  assert.deepEqual(pick(applyGroupPulses(rt, [9, 10], false, red)), [0, 127, 127]);
+});
+
+/**
+ * The lookups are derived from `pulses`, so anything that replaces the array
+ * has to rebuild them — a stale one shows up as a pulse that has expired (or
+ * was never fired) still tinting its target after a checkpoint restore.
+ */
+test("the pulse lookups follow a restore, in both directions", () => {
+  const level = fakeLevel([{ id: 1006, x: 100,
+    props: { 51: "7", 46: "1", 7: "0", 8: "0", 9: "255" } }]);
+  const rt = createRuntime(level);
+  base(rt, 7, 255, 0, 0);
+  const triggers = buildTriggers(level);
+
+  const before = cloneRuntime(rt);          // nothing has fired yet
+  updateTriggers(rt, triggers, 150, 0);
+  assert.deepEqual(pick(resolveColor(rt, 7)), [0, 0, 255]);
+  // a clone made while the pulse is live resolves it against its own copy
+  const withPulse = cloneRuntime(rt);
+  assert.deepEqual(pick(resolveColor(withPulse, 7)), [0, 0, 255]);
+
+  // rewinding past the trigger must drop the pulse, not leave it indexed
+  restoreRuntime(rt, before);
+  assert.equal(rt.pulses.length, 0);
+  assert.equal(rt.pulseIndex.size, 0);
+  assert.deepEqual(pick(resolveColor(rt, 7)), [255, 0, 0]);
+
+  // and restoring a snapshot that has it brings it back
+  restoreRuntime(rt, withPulse);
+  assert.deepEqual(pick(resolveColor(rt, 7)), [0, 0, 255]);
+});
+
+/**
+ * The index is the whole point of G1: `resolveColor` used to walk every live
+ * pulse on every call, which on Deadlocked (173 live pulses against ~19,500
+ * objects) was 46 % of the frame's CPU. A ratio against the same work with no
+ * pulses live, so the assertion does not depend on the machine's speed.
+ */
+test("resolving a colour does not walk the whole pulse list", () => {
+  const rt = createRuntime(fakeLevel([]));
+  base(rt, 7, 255, 0, 0);
+  const time = (live: number) => {
+    rt.pulses.length = 0;
+    for (let i = 0; i < live; i++) {
+      rt.pulses.push({
+        target: 2000 + i, isGroup: false, fadeIn: 0, hold: 100, fadeOut: 0, t: 0, seq: i + 1,
+        hsv: null, r: 0, g: 0, b: 0, copyChannel: 0, mainOnly: false, detailOnly: false,
+      } as Pulse);
+    }
+    reindexPulses(rt);
+    for (let i = 0; i < 4000; i++) resolveColor(rt, 7);   // let the JIT settle
+    const t0 = performance.now();
+    for (let i = 0; i < 20000; i++) resolveColor(rt, 7);
+    return performance.now() - t0;
+  };
+  const none = Math.max(time(0), 0.5);
+  const many = time(400);
+  assert.ok(many < none * 6,
+    `400 live pulses cost ${many.toFixed(2)} ms for 20,000 lookups, against ${none.toFixed(2)} ms with none`);
 });

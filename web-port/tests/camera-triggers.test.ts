@@ -77,8 +77,8 @@ test("a both-axis exit releases both axes and the view goes home", async () => {
 // The native pin: Dash's view bottom settles at 390.927 (zoom 0.6, x 15001–17001;
 // docs/fidelity/captures-2026-10-03/dash-full.txt rows 14960–15472). Replays the
 // Dash macro through the sim, which is the real route — the channel-10 exit at
-// x 15767 fires on it. The bottom is the zoomed one the scene hands over
-// (`stepViewStaticPair` with the live zoom) in the game's own y (port + 90).
+// x 15767 fires on it. The bottom is the drawn one — centre - 160/zoom — in the
+// game's own y (port + 90); the game's `cam.y` is that visible edge.
 const DASH_MACRO = join(root, "..", "macros-main", "Dash.gdr.json");
 type ViewSample = { frame: number; x: number; centreY: number; bottomGd: number };
 let dashViews: ViewSample[] | null = null;
@@ -116,7 +116,7 @@ async function dashViewRun(): Promise<ViewSample[]> {
     const zoom = rt.zoom;
     stepViewStaticPair(null, null, vs, tg, s.player.x, camY, last.x || s.player.x, last.y || camY, 1 / 60, false, zoom, 571, out);
     last.x = out.x; last.y = out.y;
-    samples.push({ frame: f, x: s.player.x, centreY: out.y, bottomGd: out.y - VIEW_H / 2 + GD_Y_OFFSET });
+    samples.push({ frame: f, x: s.player.x, centreY: out.y, bottomGd: out.y - VIEW_H / 2 / zoom + GD_Y_OFFSET });
   }
   dashViews = samples;
   return samples;
@@ -126,9 +126,9 @@ test("Dash: after the x-only exit at x 15767 the view stays on group 304's guide
   const samples = await dashViewRun();
   const late = samples.filter((v) => v.frame >= 15080 && v.frame <= 15472);
   assert.ok(late.length > 0, "the static is still set after the exit");
-  // the guide sits at 555 + 12.6 (its lock-to-player climb); the centre is that
-  // plus the zoom offset 160 * (1 - 1/0.6)
-  const centre = 555 + 12.6 + 160 * (1 - 1 / 0.6);
+  // the guide sits at 555 + 12.6 (its lock-to-player climb); the view is centred
+  // exactly on it (the drawn bottom is then centre - 160/zoom, see the next test)
+  const centre = 555 + 12.6;
   for (const v of late) {
     assert.ok(Math.abs(v.centreY - centre) < 0.5, `frame ${v.frame}: y ${v.centreY.toFixed(2)} is not the guide's ${centre.toFixed(2)}`);
   }

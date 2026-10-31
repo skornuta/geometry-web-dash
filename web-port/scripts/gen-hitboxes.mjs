@@ -60,13 +60,15 @@ if (boxes.length < 400 || radii.length < 30) {
 
 // 2.2 objects the 2.1-era table does not have, each pinned by a native run
 // (otherwise they fall back to their sprite's size, which is not the hitbox):
-//   1933 swing portal — Dash f3878-3879: the real player's box reaches it
-//        between x = 4624.09 and 4624.41, so it is 33.2-33.8 wide; 33.5 (the
-//        middle) keeps the run frame-exact through the portal to f4375. Height
-//        as every other gamemode portal (the sprite would give 44.5 x 85.5).
+//   1933 swing portal — 35 x 86: the game's own live getObjectRect() (the
+//        capture mod's hitboxes.jsonl, three scales). Dash's real run stays
+//        frame-exact for any width in [~32, 35] and drifts outside it (35.25
+//        at f4243, 31.5 at f4363), so 35 is the top of the replay band, not a
+//        conflict with it. Height as every other gamemode portal (the sprite
+//        would give 44.5 x 85.5).
 //   3004 spider orb — 36 x 36 like every other orb (not yet pinned by a run).
 const EXTRA_22 = [
-  { id: 1933, w: 33.5, h: 86, x: -16.75, y: -43 },
+  { id: 1933, w: 35, h: 86, x: -17.5, y: -43 },
   { id: 3004, w: 36, h: 36, x: -18, y: -18 },
   // APPROXIMATION: 747's box (same TeleportPortalObject class; the table has
   // no row for 2902)

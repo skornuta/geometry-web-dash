@@ -103,6 +103,22 @@ export interface Settings {
    * snaps it, REFERENCE.md §16.1). Off by default, so the animation plays.
    */
   fastMenu: boolean;
+  /**
+   * The rest of `GameOptionsLayer`'s toggles (REFERENCE.md §16.2). The defaults
+   * are the port's own, not decoded ones.
+   * `Auto-Retry` ("0026"): off, a death waits for a press before restarting.
+   */
+  autoRetry: boolean;
+  /** `Show Time` ("0145"): the attempt's clock under the percentage */
+  showTime: boolean;
+  /** `Show Info Label` ("0109"): FPS, the session's best run and clicks per second */
+  showInfoLabel: boolean;
+  /** `Disable Checkpoints` ("0146"): practice mode places none */
+  disableCheckpoints: boolean;
+  /** `Show Hitboxes` ("0166"): the collision boxes while in practice mode */
+  showHitboxes: boolean;
+  /** `Hitbox On Death` ("0179"): the collision boxes once the player has died */
+  hitboxOnDeath: boolean;
 }
 
 /**
@@ -114,7 +130,8 @@ export const SETTINGS_KEYS = [
   "musicVolume", "sfxVolume", "seenGarage",
   "showProgressBar", "showPercentage", "showPauseButton", "pauseButtonOnLeft",
   "menuMusic", "autoCheckpoints", "hideAttempts", "percentageDecimals", "clickedPractice",
-  "fastMenu",
+  "fastMenu", "autoRetry", "showTime", "showInfoLabel", "disableCheckpoints",
+  "showHitboxes", "hitboxOnDeath",
 ] as const satisfies readonly (keyof Settings)[];
 
 /** the icon kit selection; indices are 1-based frame numbers as in the game */
@@ -162,6 +179,8 @@ function defaults(): SaveData {
       showPauseButton: true, pauseButtonOnLeft: false,
       menuMusic: true, autoCheckpoints: true, hideAttempts: false,
       percentageDecimals: false, clickedPractice: false, fastMenu: false,
+      autoRetry: true, showTime: false, showInfoLabel: false, disableCheckpoints: false,
+      showHitboxes: false, hitboxOnDeath: false,
     },
     // the game's own starting kit: cube 1, default green/white, no glow
     icons: {
@@ -185,7 +204,8 @@ function migrate(raw: unknown): SaveData {
     if (typeof s.seenGarage === "boolean") out.settings.seenGarage = s.seenGarage;
     for (const k of ["showProgressBar", "showPercentage", "showPauseButton",
       "pauseButtonOnLeft", "menuMusic", "autoCheckpoints", "hideAttempts",
-      "percentageDecimals", "clickedPractice", "fastMenu"] as const) {
+      "percentageDecimals", "clickedPractice", "fastMenu", "autoRetry", "showTime",
+      "showInfoLabel", "disableCheckpoints", "showHitboxes", "hitboxOnDeath"] as const) {
       if (typeof s[k] === "boolean") out.settings[k] = s[k];
     }
   }

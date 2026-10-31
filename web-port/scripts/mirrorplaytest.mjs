@@ -20,6 +20,8 @@ try {
     assert.equal(alive, true, "the manually played route must remain alive");
   };
   const checkView = async mirrored => {
+    // the screen flip eases over 0.4 s of wall clock (toggleFlipped), so let it settle
+    await page.waitForTimeout(600);
     const result = await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => {
       // Read after the game's frame draws. Ignore the progress bar and count
       // the default green icon in its normal (40%) and mirrored (60%) lanes.

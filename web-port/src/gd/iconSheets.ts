@@ -16,6 +16,7 @@ import type { Renderer } from "../engine/renderer.ts";
 import { loadAtlas } from "../engine/atlas.ts";
 import type { IconMode } from "./icons.ts";
 import type { UiSheet, UiSprites } from "../ui/sprites.ts";
+import { ASSET } from "../assetBase.ts";
 
 /** the file prefix each gamemode's sheets use */
 export const ICON_SHEET_PREFIX: Record<IconMode, string> = {
@@ -60,7 +61,7 @@ export class IconSheets {
     const base = iconSheetBase(mode, idx);
     let p = this.pending.get(base);
     if (!p) {
-      p = loadAtlas(this.renderer, `/assets/icons/${base}.plist`, `/assets/icons/${base}.png`)
+      p = loadAtlas(this.renderer, `${ASSET}icons/${base}.plist`, `${ASSET}icons/${base}.png`)
         .then((sheet) => {
           const ui: UiSheet = { name: base, ...sheet };
           this.sprites.add(ui);

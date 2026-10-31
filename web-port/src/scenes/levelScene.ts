@@ -20,6 +20,8 @@ import { invisibleFade } from "../gd/invisible.ts";
 import { AUDIO_SCALE, KEY_NO_AUDIO_SCALE, audioScaleFactor } from "../gd/audioPulse.ts";
 import { CCEmitter } from "../engine/ccparticles.ts";
 import { portalBackId } from "../gd/portalBacks.ts";
+import { rodBallFor, rodBallFrame } from "../gd/rodBalls.ts";
+import { pitFrames } from "../gd/pits.ts";
 import { BEASTS, beastFrameIndex } from "../gd/beasts.ts";
 import {
   CUSTOM_PARTICLE_ID, KEY_ANIMATE_ON_TRIGGER, KEY_PARTICLE_DATA, KEY_QUICK_START, KEY_UNIFORM_OBJECT_COLOR, KEY_USE_OBJECT_COLOR,
@@ -38,6 +40,7 @@ import {
 import {
   animationFor, frameIndexAt, rotationFor, type AnimTiming,
 } from "../gd/objectAnim.ts";
+import { ASSET } from "../assetBase.ts";
 
 /** hd art is 2x the world unit scale (1 block = 30 world units = 60 hd px) */
 export { HD };
@@ -211,6 +214,8 @@ interface DrawItem {
   /** a GJBeast part: re-posed every frame from its animation (`beastPose`) */
   beast?: {
     anim: import("../gd/beasts.ts").BeastAnim; part: string; glow: boolean;
+    /** which of the frame's same-named parts this is (the sludge has two of one frame) */
+    nth: number;
     objX: number; objY: number; rot: number; scale: number; fx: number; fy: number;
   };
   /**
@@ -477,7 +482,7 @@ export class LevelScene {
     s.renderer = renderer;
     // a custom level (.gmd, `?custom=1`) brings its own encoded string
     const text: string = customData !== undefined ? customData
-      : await fetch(`/assets/levels/${levelNum}.txt`).then((r) => {
+      : await fetch(`${ASSET}levels/${levelNum}.txt`).then((r) => {
         if (!r.ok) throw new Error(`level ${levelNum} not found (${r.status})`);
         return r.text();
       });
@@ -508,11 +513,11 @@ export class LevelScene {
       (o) => o.id === TEXT_OBJECT_ID || o.id === COUNTER_OBJECT_ID);
     const [loaded, bgTex, groundTex, font] = await Promise.all([
       Promise.all(names.map((n) =>
-        loadAtlas(renderer, `/assets/${SHEET_FILES[n]}.plist`, `/assets/${SHEET_FILES[n]}.png`))),
-      loadLooseTexture(renderer, `/assets/game_bg_${pad2(bgId)}_001-hd.png`),
-      loadLooseTexture(renderer, `/assets/groundSquare_${pad2(groundId)}_001-hd.png`),
+        loadAtlas(renderer, `${ASSET}${SHEET_FILES[n]}.plist`, `${ASSET}${SHEET_FILES[n]}.png`))),
+      loadLooseTexture(renderer, `${ASSET}game_bg_${pad2(bgId)}_001-hd.png`),
+      loadLooseTexture(renderer, `${ASSET}groundSquare_${pad2(groundId)}_001-hd.png`),
       wantsFont
-        ? LoadedFont.load(renderer, "/assets/bigFont-hd.fnt", "/assets/bigFont-hd.png")
+        ? LoadedFont.load(renderer, `${ASSET}bigFont-hd.fnt`, `${ASSET}bigFont-hd.png`)
             .catch(() => null)
         : Promise.resolve(null),
     ]);
@@ -520,14 +525,14 @@ export class LevelScene {
     names.forEach((n, i) => s.sheets.set(n, loaded[i]));
     s.bgTex = bgTex;
     s.bgTexes.set(bgId, bgTex);
-    s.ground2Tex = await loadLooseTexture(renderer, `/assets/groundSquare_${pad2(groundId)}_2_001-hd.png`)
+    s.ground2Tex = await loadLooseTexture(renderer, `${ASSET}groundSquare_${pad2(groundId)}_2_001-hd.png`)
       .catch(() => null);
     if (s.level.mgStyle > 0) {
       const n = pad2(s.level.mgStyle);
       try {
         const [a, b] = await Promise.all([
-          loadLooseTexture(renderer, `/assets/fg_${n}_001-hd.png`),
-          loadLooseTexture(renderer, `/assets/fg_${n}_2_001-hd.png`).catch(() => null),
+          loadLooseTexture(renderer, `${ASSET}fg_${n}_001-hd.png`),
+          loadLooseTexture(renderer, `${ASSET}fg_${n}_2_001-hd.png`).catch(() => null),
         ]);
         s.mgTex = [a, b];
       } catch { /* no art: no middle ground */ }
@@ -537,7 +542,7 @@ export class LevelScene {
     const swaps = new Set(s.level.objects.filter((o) => o.id === 3029)
       .map((o) => propInt(o.props, 533, 0)).filter((n) => n > 0 && n !== bgId));
     await Promise.all([...swaps].map(async (n) => {
-      try { s.bgTexes.set(n, await loadLooseTexture(renderer, `/assets/game_bg_${pad2(n)}_001-hd.png`)); }
+      try { s.bgTexes.set(n, await loadLooseTexture(renderer, `${ASSET}game_bg_${pad2(n)}_001-hd.png`)); }
       catch { /* missing art: keep the level's own */ }
     }));
     s.groundTex = groundTex;
@@ -571,6 +576,18 @@ export class LevelScene {
   audioPulse: number | null = null;
   /** level object index -> its audio-scale range (null: the plain pulse) and whether it is a ring (orb) */
   private audioObjs = new Map<number, { range: readonly [number, number] | null; ring: boolean }>();
+  /**
+   * Objects the game builds that the level file does not hold (the rods' tip
+   * balls, `gd/rodBalls.ts`), indexed after the level's own: `level.objects.length + k`.
+   */
+  private synth: LevelObject[] = [];
+  /** the frame each ground pit was given at load (`gd/pits.ts`), by object index */
+  private pits = new Map<number, string>();
+  /** a level object or one of `synth`, by the index a draw item carries */
+  private objAt(i: number): LevelObject | undefined {
+    const n = this.level.objects.length;
+    return i < n ? this.level.objects[i] : this.synth[i - n];
+  }
   /**
    * The custom particle objects (2065), one `CCParticleSystemQuad` each while
    * their object is in view — see `gd/customParticles.ts` and `stepParticles`.
@@ -810,9 +827,22 @@ export class LevelScene {
         backs.push({ o: { ...o, id: portalBackId(749)!, y: o.y + dy, props: ep }, i });
       }
     });
+    // each rod's tip ball (`gd/rodBalls.ts`): an object of its own, indexed after
+    // the level's, carrying the rod's groups
+    const nObj = this.level.objects.length;
+    this.pits = pitFrames(this.level.objects);
+    const ballFrame = rodBallFrame(nObj);
+    this.synth = [];
+    const balls: { o: LevelObject; i: number }[] = [];
+    for (const o of this.level.objects) {
+      if (propBool(o.props, GLOW_OFF_KEYS.NO_GLOW_135)) continue;
+      const b = rodBallFor(o, ballFrame);
+      if (b) { balls.push({ o: b, i: nObj + this.synth.length }); this.synth.push(b); }
+    }
     const ordered = this.level.objects
       .map((o, i) => ({ o, i }))
       .concat(backs)
+      .concat(balls)
       .sort((a, b) => {
         const la = layerOf(a.o), lb = layerOf(b.o);
         if (la !== lb) return la - lb;
@@ -843,6 +873,9 @@ export class LevelScene {
         this.audioObjs.set(i, { range: AUDIO_SCALE.get(o.id)!, ring: OBJECT_DEFS.get(o.id)?.kind === "orb" });
       }
     });
+    // the balls beat with the music: drawn at the rest scale 0.25, the pulse p
+    // takes them to 0.5 p + 0.2, which the range [1, 3] gives (1 + (p - 0.1) * 2, x 0.25)
+    this.synth.forEach((_, k) => this.audioObjs.set(nObj + k, { range: [1, 3], ring: false }));
   }
 
   /**
@@ -1016,12 +1049,12 @@ export class LevelScene {
     if (beast) {
       const parts = beast.frames[0];
       const glowCol = this.resolveColor(o.props, "detail", def.primaryCh, def.secondaryCh);
-      const part = (frame: string, q: typeof parts[number], c: Rgba) => {
+      const part = (frame: string, q: typeof parts[number], c: Rgba, nth = 0) => {
         const n = this.items.length;
-        this.emit("fire", frame, q.x, q.y, o.x, o.y, objRotCCW, scale, fx, fy,
+        this.emit(q.sheet ?? "fire", frame, q.x, q.y, o.x, o.y, objRotCCW, scale, fx, fy,
           objRotCCW - q.rot * DEG * fx * fy, flipX !== q.flipX, flipY !== q.flipY, c, q.sx, q.sy, groups);
         if (this.items.length > n) {
-          this.items[n].beast = { anim: beast, part: q.frame, glow: frame !== q.frame,
+          this.items[n].beast = { anim: beast, part: q.frame, glow: frame !== q.frame, nth,
             objX: o.x, objY: o.y, rot: objRotCCW, scale, fx, fy };
         }
       };
@@ -1030,13 +1063,15 @@ export class LevelScene {
       for (const q of parts) if (q.glow) part(q.glow, q, glowAdd);
       parts.forEach((q, k) => {
         this.curMain = k === parts.length - 1;
-        part(q.frame, q, col);
+        // the nth part of this frame name (the black sludge draws one frame twice)
+        part(q.frame, q, col, parts.slice(0, k).filter((p) => p.frame === q.frame).length);
       });
       this.curMain = false;
       // the eye (\`<name>_03\`) is not an AnimDesc part: it rides on the head
       // (the part that comes first in the texture list), in the detail colour
       const head = parts.find((q) => q.frame.endsWith("_01_001.png"));
-      if (head) part(`${beast.name}_03_001.png`, head, glowCol);
+      // only the monsters have one (`GJBeast0N_03`); the sludge has no eye
+      if (head && beast.name.startsWith("GJBeast")) part(`${beast.name}_03_001.png`, head, glowCol);
       this.curMain = false;
       this.curSpin = 0;
       this.curAnim = null;
@@ -1050,7 +1085,7 @@ export class LevelScene {
       o.x, o.y, objRotCCW, scale, fx, fy, flipX, flipY, groups, kidOffset, def.opacity);
     if (!RAMP_STRIP_ONLY.has(o.id)) {
       this.curMain = true;
-      this.emit(def.sheet, def.frame, mx, my, o.x, o.y, objRotCCW, scale, fx, fy,
+      this.emit(def.sheet, this.pits.get(i) ?? def.frame, mx, my, o.x, o.y, objRotCCW, scale, fx, fy,
         objRotCCW, flipX, flipY, col, 1, 1, groups);
       this.curMain = false;
     }
@@ -1485,7 +1520,7 @@ export class LevelScene {
       }
       // Scale trigger (2067): about the centre group, or the object's own spot
       if (gsx !== 1 || gsy !== 1) {
-        const ob = this.level.objects[it.obj];
+        const ob = this.objAt(it.obj);
         const ax = scaleOwn ? (ob?.x ?? ix) : scx, ay = scaleOwn ? (ob?.y ?? iy) : scy;
         ix = ax + (ix - ax) * gsx;
         iy = ay + (iy - ay) * gsy;
@@ -1507,7 +1542,7 @@ export class LevelScene {
       let edgeA = 1, ey = iy + dy, ew = iw, eh = ih;
       // a custom enter tint (3021): toward channel `tintCh` by `tintK`
       let tintK = 0, tintCh = 0;
-      const o = this.level.objects[it.obj];
+      const o = this.objAt(it.obj);
       // invisible blocks fade through their own rule (`updateInvisibleBlock`)
       if (o && it.invisibleHW === undefined) {
         const ox = o.x + dx;
@@ -1789,9 +1824,14 @@ export class LevelScene {
     const lc = this.liveRgba(1002, this.lineCol);
     const line = (y: number, flip: boolean) => {
       if (!this.lineFrame || !this.lineSheet) return;
-      const h = this.lineFrame.h * HD;
+      // The native line is the sprite at 1.5x in both directions: 14 px tall at 2x
+      // on the 1768-wide captures (native-hud, native-level-select) = 2.26 units,
+      // and 666 wide, overhanging the 570-unit screen so its fade reaches the
+      // edges. A wider window stretches it to cover.
+      const sc = Math.max(1.5, (viewW + 8) / (this.lineFrame.w * HD));
+      const h = this.lineFrame.h * HD * sc;
       r.draw(this.lineSheet.tex, this.lineSheet.texW, this.lineSheet.texH, this.lineFrame,
-        camX, flip ? y - h / 2 : y + h / 2, viewW + 8, h, 0,
+        camX, flip ? y - h / 2 : y + h / 2, this.lineFrame.w * HD * sc, h, 0,
         lc.r, lc.g, lc.b, lc.a, lc.blend, false, flip);
     };
     if (floor > bottom - h1 - drop1) {
@@ -1858,7 +1898,7 @@ function beastPose(
   b: NonNullable<DrawItem["beast"]>, frame: SpriteFrame, t: number,
 ): { x: number; y: number; w: number; h: number; rot: number } | null {
   const a = b.anim;
-  const q = a.frames[beastFrameIndex(a, t)].find((p) => p.frame === b.part);
+  const q = a.frames[beastFrameIndex(a, t)].filter((p) => p.frame === b.part)[b.nth];
   if (!q) return null;
   const lx = q.x * b.fx * b.scale, ly = q.y * b.fy * b.scale;
   const cos = Math.cos(b.rot), sin = Math.sin(b.rot);

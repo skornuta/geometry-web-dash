@@ -83,7 +83,7 @@ export const DEFAULT_CAMERA_Y_CENTER = 240 - GD_Y_OFFSET;
  * flying modes, 120 for the ball. The player's centre stops that edge minus its
  * own half-size short of it.
  */
-const BAND_EDGE: Partial<Record<Gamemode, number>> = { ship: 150, ufo: 150, wave: 150, ball: 120 };
+const BAND_EDGE: Partial<Record<Gamemode, number>> = { ship: 150, ufo: 150, wave: 150, ball: 120, spider: 120 };
 
 /**
  * Half-size the band measures the player by. 15 for the 30-unit player and 9
@@ -91,7 +91,7 @@ const BAND_EDGE: Partial<Record<Gamemode, number>> = { ship: 150, ufo: 150, wave
  * edge — its solid box is a third of the icon.
  */
 function bandHalf(mode: Gamemode, mini: boolean): number {
-  const half = mode === "wave" ? 10 : 15;
+  const half = mode === "wave" ? 10 : mode === "spider" ? 13.5 : 15;
   return mini ? half * 0.6 : half;
 }
 
@@ -114,7 +114,12 @@ function bandHalf(mode: Gamemode, mini: boolean): number {
  * player — whose gravity side is the *top* — rested one unit into the ceiling
  * (L9 x=9297, the flipped ball rolls at exactly +105, not +106).
  *
- * Cube, robot, spider and swing are unconfined. For the robot this is checked,
+ * **The spider has the ball's kind of band** (edge 120, half-size 13.5, so ±106.5): Fingerdash's real run rests on exactly that, every macro still replays
+ * frame-exact with it, and without it a press with no block above sent the spider
+ * to y 1500, out through the top of the level (`spiderTeleport`'s fallback).
+ * A free-mode spider (portal key 111) is unconfined, as before.
+ *
+ * Cube, robot and swing are unconfined. For the robot this is checked,
  * not assumed: real runs go from 225 below to 364 above the centre (L19/L20),
  * and giving it the ship's band ends L19's replay 1950 units early.
  */
@@ -165,6 +170,21 @@ export function cameraCenterForPortal(mode: Gamemode, portalY: number): number |
 }
 
 /**
+ * The camera centre the game computes for a mode change (`setupCameraMode`,
+ * installed build 0x1000e0fa0-0x1000e104c): `H / 2 + max(floor((y - H / 2) / 30) * 30, 90)`
+ * for the mode's height H. H is 300 flying, 240 for a ball and 270 otherwise
+ * (the threshold function at 0x1000dea80); **with two players active the
+ * ball's 240 becomes 270**, so a ball portal at GD y 554 centres the view at
+ * 135 + floor(419 / 30) * 30 = 525 instead of the single player's 540 - the
+ * real level-16 camera at x 19894 (grace-16.txt: bottom 365 = centre 525).
+ */
+export function cameraCenterForDualBall(portalY: number): number {
+  const half = 270 / 2;
+  const gdY = portalY + GD_Y_OFFSET;
+  return half + Math.max(Math.floor((gdY - half) / 30) * 30, 90) - GD_Y_OFFSET;
+}
+
+/**
  * Target position of the **bottom edge** of the view.
  *
  * Cube uses a deadzone: while the player stays between `DEAD_BOTTOM` above the
@@ -177,7 +197,7 @@ export function cameraCenterForPortal(mode: Gamemode, portalY: number): number |
 export function cameraBottomTarget(
   mode: Gamemode, playerY: number, gravityFlipped: boolean,
   cameraYCenter: number, current: number, viewH: number = DESIGN_H,
-  freeMode = false,
+  freeMode = false, free: FreeCamera | null = null,
 ): number {
   let camY: number;
   if (freeMode) mode = "cube";
@@ -193,19 +213,26 @@ export function cameraBottomTarget(
     // `cam.y = winSize.height * -0.5 + cameraYCenter`, floored at 0 in GD space
     camY = Math.max(0 - GD_Y_OFFSET, cameraYCenter - viewH / 2);
   } else {
-    // The margins do **not** swap with gravity. Native Dash (traces/
-    // native-camera-l22.txt, 425 samples) is matched to within a unit by
-    // this deadzone — 70 above / 40 below the view centre, eased 1/40 a step,
-    // floored at 0 — in every mode, at every zoom, and through both flips the
-    // run makes: the blue orb at x 855 turns the cube over (f634) and the
-    // camera stays put with it 45–60 above the centre; the spider rests 70
-    // above it on the ceiling at x 1007–1250. A swapped deadzone (what the
-    // port did) lifts the view 10–30 there. `updateCamera` does exchange
-    // its 70/40 pair by `m_isUpsideDown` (m1 0x124d58), so some other state
-    // must undo it; until that is decoded the captures win (FIDELITY A54).
-    void gravityFlipped;
-    const top = DEAD_TOP;
-    const bottom = DEAD_BOTTOM;
+    // **The margins swap with gravity**: 70 above / 40 below the view centre
+    // upright, 40 above / 70 below while the player is upside down
+    // (`updateCamera` exchanges its pair by `m_isUpsideDown`, m1 0x124d58).
+    // Fitted from the real Dash run (`captures-2026-10-03/dash-full.txt`, per
+    // frame, centre = camY + 160/zoom, static-free cube stretches): upright, the
+    // centre chases the player at ~1/39 a frame once it is more than 70 above or
+    // 40 below it, at zoom 1.0 and 0.91 alike; upside down the up margin reads
+    // 39.3. Electroman Adventures x 20183 (`grace-13.txt`, an upside-down cube)
+    // draws 99.6 without the swap and the game's 117.3 with it. An earlier
+    // version kept the upright margins on a flip because the `seek`-made native
+    // log showed the camera 45-60 above centre after the blue orb at Dash x 855
+    // — seek captures do not run the camera as the game does, and the real
+    // run's camera is moving by then (gap 55 at x 841, 43.1 -> 50.5 by x 853).
+    const edgeTop = DEAD_TOP, edgeBottom = DEAD_BOTTOM;
+    let top = gravityFlipped ? edgeBottom : edgeTop;
+    let bottom = gravityFlipped ? edgeTop : edgeBottom;
+    if (freeMode && free) {
+      // symmetric about the centre, from the portal's padding and the zoom
+      top = bottom = viewH / 2 - freeMargin(free.padding, free.zoom, viewH);
+    }
     camY = current;
     if (playerY <= viewH + camY - top) {
       if (playerY < bottom + camY) camY = playerY - bottom;
@@ -285,6 +312,56 @@ export interface ViewStatic {
   exit: boolean; exitAxis: number; fromX: number | null; fromY: number | null;
   /** key 212 (follow) with key 213 easing: the view chases the target, 1/easing a frame */
   follow: number;
+  /**
+   * key 453 (smooth velocity): the view travels a cubic Bezier that leaves its
+   * start with the speed the view already had (`smoothBezier`)
+   */
+  smooth?: boolean;
+  /** key 454, the velocity modifier (`updateStaticCameraPosToGroup` arg 2, stored at +0x268) */
+  velMod?: number;
+  /** the view's velocity (units/s) when the static began; set on the first frame */
+  vx?: number; vy?: number;
+  /** the plain ease's start offset from its target (`easeOffset`), set on the first frame */
+  gx?: number; gy?: number;
+}
+
+/**
+ * The plain (not smooth) ease toward a target that may move: the view's offset
+ * from the target eases to zero, `view = target(t) + (from - target(0)) * (1 - p)`.
+ * For a fixed target this is the from-to lerp; for a moving one that does not
+ * depend on the view (turned play's lead on the player) the view is dragged along at the target's own speed from the first frame (a lerp between
+ * the two end points would only follow it in proportion to p). Dash x 20775
+ * (rows 17094-17330, a robot rising 2 a row, the exit's 1 s in-out ease to the
+ * follow camera, which leads the player by 75 / zoom): the real view is
+ * reproduced to rmse 0.26 over 340 rows. (`updateCamera` 0x1092c0 writes the
+ * same thing as an increment, `pos += (T - pos)(p - p_prev)/(1 - p_prev)`; the
+ * increment reading did *not* match the rows against a moving target.)
+ */
+export function easeOffset(offset0: number, target: number, p: number): number {
+  return p >= 1 ? target : target + offset0 * (1 - p);
+}
+
+
+/**
+ * One axis of a smooth-velocity static (`updateCamera` m1 0x124838, the branch
+ * taken while the ease progress is below 1 and +0x260 is set — the installed
+ * build's copy is at 0x100108ef0): a cubic Bezier with control points
+ * P0 (the view at the static's start), P1 = P0 + v * dur / 3 (v the view's
+ * velocity then; the game reads it from +0x200 / +0x204 scaled by +0x208 /
+ * +0x20c), P2 = T + (P1 - T) * modifier and P3 = T (the guide), evaluated at
+ * the ease progress `p`. A zero modifier ends the curve at rest on T.
+ *
+ * Checked on the real Dash run (dash-full.txt, x 11385, spider): with P1 from
+ * the view's own speed at the trigger (0.725 a step), solving the curve at
+ * p = 0.21 / 0.5 / 0.63 / 0.71 for P2 gives 827 / 837 / 815 / 806 against the
+ * guide's 825. The modifier's default when key 454 is absent is therefore 0
+ * (APPROXIMATION: the value the game passes is not read from the binary).
+ */
+export function smoothBezier(p0: number, v: number, dur: number, t: number, p: number, mod: number): number {
+  const p1 = p0 + (v * dur) / 3;
+  const p2 = t + (p1 - t) * mod;
+  const u = 1 - p;
+  return u * u * u * p0 + 3 * p * u * u * p1 + 3 * p * p * u * p2 + p * p * p * t;
 }
 
 /**
@@ -303,6 +380,7 @@ export function stepViewStatic(
   vs: ViewStatic, tgX: number, tgY: number, camX: number, camY: number,
   lastX: number, lastY: number, frame: number, paused: boolean,
   out: { x: number; y: number }, offX = 0, offY = 0, lastOffX = offX, lastOffY = offY,
+  velX = 0, velY = 0, trackTarget = false,
 ): boolean {
   const hold = vs.axis === 0 ? 3 : vs.axis;
   const rel = vs.exitAxis & hold;
@@ -322,23 +400,38 @@ export function stepViewStatic(
     vs.fromY = chase ? lastY - lastOffY : lastY;
   }
   const k = vs.dur > 0 ? easedValue(Math.min(1, vs.t / vs.dur), vs.type, vs.rate) : 1;
+  if (vs.smooth && vs.vx === undefined) { vs.vx = velX; vs.vy = velY; }
+  const smooth = !!vs.smooth && !chase && vs.dur > 0 && k < 1;
   out.x = camX; out.y = camY;
   if (holdX && chase) {
     // follow: chase the (moving) target by 1/easing of the gap a 60 Hz frame
     const f = paused ? 0 : Math.min(1, (frame * 60) / vs.follow);
     vs.fromX += (tgX - vs.fromX) * f;
     out.x = vs.fromX + offX;
+  } else if (smooth && holdX && !relX) {
+    out.x = smoothBezier(vs.fromX, vs.vx ?? 0, vs.dur, tgX + offX, k, vs.velMod ?? 0);
+  } else if (smooth && relX) {
+    // the exit's release (`updateCamera` 0x109a54): the same Bezier, to the follow camera
+    out.x = smoothBezier(vs.fromX, vs.vx ?? 0, vs.dur, camX, k, vs.velMod ?? 0);
   } else if (holdX || relX) {
     const from = chase ? vs.fromX + offX : vs.fromX;
-    out.x = from + ((relX ? camX : tgX + (chase ? 0 : offX)) - from) * k;
+    const target = relX ? camX : tgX + (chase ? 0 : offX);
+    if (trackTarget) { vs.gx ??= from - target; out.x = easeOffset(vs.gx, target, k); }
+    else out.x = from + (target - from) * k;
   }
   if (holdY && chase) {
     const f = paused ? 0 : Math.min(1, (frame * 60) / vs.follow);
     vs.fromY += (tgY - vs.fromY) * f;
     out.y = vs.fromY + offY;
+  } else if (smooth && holdY && !relY) {
+    out.y = smoothBezier(vs.fromY, vs.vy ?? 0, vs.dur, tgY + offY, k, vs.velMod ?? 0);
+  } else if (smooth && relY) {
+    out.y = smoothBezier(vs.fromY, vs.vy ?? 0, vs.dur, camY, k, vs.velMod ?? 0);
   } else if (holdY || relY) {
     const from = chase ? vs.fromY + offY : vs.fromY;
-    out.y = from + ((relY ? camY : tgY + (chase ? 0 : offY)) - from) * k;
+    const target = relY ? camY : tgY + (chase ? 0 : offY);
+    if (trackTarget) { vs.gy ??= from - target; out.y = easeOffset(vs.gy, target, k); }
+    else out.y = from + (target - from) * k;
   }
   return holdX || holdY || k < 1;
 }
@@ -355,16 +448,22 @@ function ownedAxes(vs: ViewStatic | null): number {
 }
 
 /**
- * The offset a zoomed view puts on a static's centre: the group's point is where
- * the view's edge sits at zoom 1, and the zoom scales the half-window about it
- * (native Dash 2185–2412, zoom 0.8333: the bottom is 135 − (320/2)/0.8333 + 90 =
- * 33.0 and the left edge is 2311 − (571/2)/0.8333 = 1968.4). So the centre moves
- * by half·(1 − 1/zoom), zero at zoom 1.
+ * The offset a zoomed view puts on a static's centre: **none.** The game's view
+ * is centred exactly on the guide object and drawn at scale x zoom about that
+ * centre, so its visible bottom is the guide's y less (320/2)/zoom — the
+ * native `cam.y` of the real Dash run is that visible edge (x 2200: guide at GD
+ * 225, zoom 0.8333, 225 - 192 = 33.0; x 3300: 255 - 160 = 95.0; x 15200: 645 -
+ * 266.7 = 378.3, all to the digit). This function used to move the centre by
+ * half·(1 − 1/zoom) to make the *un-zoomed* bottom (centre - 160) equal that
+ * number; the renderer then zoomed about the displaced centre as well, so the
+ * drawn view sat 160·(1/zoom − 1) low (32 at zoom 0.8333, 107 at 0.6) —
+ * compared against the game's own screenshot at Dash x 2300 the floor sat at
+ * 0.77 of the frame height against the game's 0.84, and 0.85 once this was
+ * removed. Kept as the single place the offset would go.
  */
-function zoomOffset(zoom: number, viewW: number, out: { x: number; y: number }) {
-  const zc = 1 - 1 / (zoom > 0 ? zoom : 1);
-  out.x = (viewW / 2) * zc;
-  out.y = (DESIGN_H / 2) * zc;
+function zoomOffset(_zoom: number, _viewW: number, out: { x: number; y: number }) {
+  out.x = 0;
+  out.y = 0;
 }
 
 /**
@@ -380,6 +479,7 @@ export function stepViewStaticPair(
   camX: number, camY: number, lastX: number, lastY: number, frame: number, paused: boolean,
   zoom: number, viewW: number,
   out: { x: number; y: number },
+  velX = 0, velY = 0, trackTarget = false,
 ): { first: boolean; second: boolean } {
   let aliveFirst = true, aliveSecond = true;
   zoomOffset(zoom, viewW, PAIR_OFF);
@@ -387,10 +487,10 @@ export function stepViewStaticPair(
   const fromPairX = lastX === pairLast.x, fromPairY = lastY === pairLast.y;
   const lox = fromPairX ? pairLast.offX : 0, loy = fromPairY ? pairLast.offY : 0;
   if (first && firstTg) {
-    aliveFirst = stepViewStatic(first, firstTg.x, firstTg.y, camX, camY, lastX, lastY, frame, paused, PAIR_FIRST, PAIR_OFF.x, PAIR_OFF.y, lox, loy);
+    aliveFirst = stepViewStatic(first, firstTg.x, firstTg.y, camX, camY, lastX, lastY, frame, paused, PAIR_FIRST, PAIR_OFF.x, PAIR_OFF.y, lox, loy, velX, velY, trackTarget);
   }
   if (second && secondTg) {
-    aliveSecond = stepViewStatic(second, secondTg.x, secondTg.y, camX, camY, lastX, lastY, frame, paused, PAIR_SECOND, PAIR_OFF.x, PAIR_OFF.y, lox, loy);
+    aliveSecond = stepViewStatic(second, secondTg.x, secondTg.y, camX, camY, lastX, lastY, frame, paused, PAIR_SECOND, PAIR_OFF.x, PAIR_OFF.y, lox, loy, velX, velY, trackTarget);
   }
   const ownFirst = first && firstTg ? ownedAxes(first) : 0;
   const ownSecond = second && secondTg ? ownedAxes(second) : 0;
@@ -398,4 +498,29 @@ export function stepViewStaticPair(
   out.y = (ownSecond & 2) ? PAIR_SECOND.y : (ownFirst & 2) ? PAIR_FIRST.y : camY;
   pairLast.x = out.x; pairLast.y = out.y; pairLast.offX = PAIR_OFF.x; pairLast.offY = PAIR_OFF.y;
   return { first: aliveFirst, second: aliveSecond };
+}
+
+
+/** a free camera's settings: the portal's padding (key 114) and the current zoom */
+export interface FreeCamera { padding: number; zoom: number }
+
+/**
+ * How far above and below the view's centre the free camera lets the player go
+ * (`updateCamera` m1 0x124838, installed build 0x1001089a0): each side is
+ * `half - (30 + padding * (half - 2 - 30))`, scaled by 1 / zoom, with `half`
+ * the view's half height. Padding 0.8044 at zoom 0.6 on Dash gives 45, which is
+ * what the real swing rows fit (x 7560-8100: margins 45 / 45, D 30).
+ */
+export function freeMargin(padding: number, zoom: number, viewH: number = DESIGN_H): number {
+  const half = viewH / 2;
+  return (half - (30 + padding * (half - 2 - 30))) / zoom;
+}
+
+/**
+ * The follow's pull a second: the game divides the gap by D each 60 Hz frame,
+ * D = 10 for the cube's fixed margins and the portal's easing (key 113) in free
+ * mode (`updateCamera` 0x1091dc: `[+0x2d0]`). The old fixed 6 is 60 / 10.
+ */
+export function followRate(freeMode: boolean, easing: number | undefined): number {
+  return freeMode && easing !== undefined ? 60 / easing : 6;
 }

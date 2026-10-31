@@ -50,3 +50,21 @@ test("every monster id has its parts", () => {
     assert.ok(b.frames.length > 0 && b.frames.every((f) => f.length >= 2), `id ${id}`);
   }
 });
+
+test("the black sludge (919) is a looped 11-frame parts animation like the monsters", () => {
+  const s = BEASTS.get(919)!;
+  assert.ok(s, "919 is built from its AnimDesc, not drawn as one static sprite");
+  assert.equal(s.name, "BlackSludge");
+  assert.equal(s.anim, "loop");
+  assert.equal(s.delay, 0.06);
+  assert.equal(s.looped, true);
+  assert.equal(s.frames.length, 11);
+  for (const f of s.frames) {
+    assert.equal(f.length, 3, "a base and two blobs per frame");
+    assert.equal(f.filter((p) => p.frame === "dA_blackSludge_02_001.png").length, 2);
+    for (const p of f) assert.equal(p.sheet, "game", "its frames are in GJ_GameSheet, not FireSheet_01");
+  }
+  // the first blob of frame 1 sits at (7.25, 6.875), scaled 1.0167 x 1.325
+  const blob = s.frames[0].find((p) => p.frame === "dA_blackSludge_02_001.png" && p.x === 7.25)!;
+  assert.ok(blob && blob.y === 6.875 && Math.abs(blob.sx - 1.0167) < 1e-3 && Math.abs(blob.sy - 1.325) < 1e-3);
+});
