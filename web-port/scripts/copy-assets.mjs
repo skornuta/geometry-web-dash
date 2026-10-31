@@ -33,7 +33,7 @@ const PARTICLE_FILES = new Set([
     "portalEffect04", "portalEffect08", "portalEffect09", "speedEffect_slow",
     "speedEffect_normal", "speedEffect_fast", "speedEffect_vfast", "speedEffect_vvfast",
     "coinPickupEffect", "endEffectPortal", "levelComplete01", "firework",
-    "boost_01_effect", "boost_02_effect", "boost_03_effect", "boost_04_effect", "glitterEffect"].map((n) => `${n}.plist`),
+    "boost_01_effect", "boost_02_effect", "boost_03_effect", "boost_04_effect", "glitterEffect", "dashEffect"].map((n) => `${n}.plist`),
   "square.png", "circle.png", "streak_01_001.png", "gravityLine_001.png",
 ]);
 

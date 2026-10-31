@@ -18,6 +18,7 @@ import {
 } from "../engine/ccparticles.ts";
 import { MotionStreak } from "../engine/streak.ts";
 import type { Gamemode } from "./gamemodes.ts";
+import { dashWorldDirection, type DashArtPlayer } from "./dashArt.ts";
 import { ASSET } from "../assetBase.ts";
 
 export type Rgb = { r: number; g: number; b: number };
@@ -30,7 +31,7 @@ export const EFFECT_PLISTS = [
   "speedEffect_normal", "speedEffect_fast", "speedEffect_vfast", "speedEffect_vvfast",
   "coinPickupEffect", "endEffectPortal", "levelComplete01", "firework",
   "boost_01_effect", "boost_02_effect", "boost_03_effect", "boost_04_effect",
-  "glitterEffect",
+  "glitterEffect", "dashEffect",
 ] as const;
 export type EffectName = typeof EFFECT_PLISTS[number];
 export type EffectLibrary = ReadonlyMap<EffectName, ParticleConfig>;
@@ -84,7 +85,7 @@ const rgba = (c: readonly [number, number, number], a = 1): [number, number, num
 
 const GROUND_MODES: ReadonlySet<Gamemode> = new Set<Gamemode>(["cube", "ball", "robot", "spider"]);
 
-export interface PlayerView {
+export interface PlayerView extends DashArtPlayer {
   x: number;
   y: number;
   mode: Gamemode;
@@ -113,6 +114,8 @@ export class PlayerEffects {
   readonly land: [CCEmitter, CCEmitter];
   /** `[0x890]` burstEffect2, relative — the robot's boost */
   readonly robotBurst: CCEmitter;
+  /** GD 2.209 `[0x8a0]`: dashEffect, relative, resumed only while dashing. */
+  readonly dash: CCEmitter;
   /** `setupStreak`: streak 1 = `CCMotionStreak(0.3, 5, 10, white, streak_01_001)` */
   readonly streak = new MotionStreak(0.3, 5, 10);
   readonly wave = new WaveTrail();
@@ -173,6 +176,12 @@ export class PlayerEffects {
     this.robotBurst = new CCEmitter(lib.get("burstEffect2")!);
     this.robotBurst.positionType = "relative";
     this.robotBurst.stop();
+
+    // GD 2.209 PlayerObject::init: dashEffect is relative and initially stopped.
+    this.dash = new CCEmitter(lib.get("dashEffect")!);
+    this.dash.positionType = "relative";
+    this.dash.stop();
+    this.setDashColor([255, 255, 255]);
   }
 
   /** `updateGlowColor`: tint the drag, landing and streak from the kit */
@@ -184,6 +193,22 @@ export class PlayerEffects {
       e.cfg.startColor = rgba(a, e.cfg.startColor[3]);
     }
     this.wave.color = [col1[0], col1[1], col1[2]];
+    // APPROXIMATION: the port has no m_switchDashFireColor setting yet. Use
+    // strong particle color A until the caller supplies its selected native
+    // color through setDashColor (after setColors).
+    this.dash.cfg.startColor = rgba(a);
+    this.dash.cfg.endColor = rgba(a, 0.5);
+  }
+
+  /**
+   * Native 2.209 updateGlowColor 0x381454..0x3814a0 selects a strong kit color
+   * via m_switchDashFireColor, overrides BOTH RGB endpoints, end alpha ×.5.
+   * The caller owns selection policy; pass unstrengthened 0..255 RGB here.
+   */
+  setDashColor(color: readonly [number, number, number]) {
+    const c = strongColor(color);
+    this.dash.cfg.startColor = rgba(c);
+    this.dash.cfg.endColor = rgba(c, 0.5);
   }
 
   /** `PlayerObject::stopParticles` / `playerDestroyed`: emission stops, live particles run out */
@@ -209,7 +234,7 @@ export class PlayerEffects {
   }
 
   emitters(): CCEmitter[] {
-    return [this.drag, this.flame, this.thrust, this.shipDrag, this.land[0], this.land[1], this.robotBurst];
+    return [this.drag, this.flame, this.thrust, this.shipDrag, this.land[0], this.land[1], this.robotBurst, this.dash];
   }
 
   /**
@@ -291,10 +316,25 @@ export class PlayerEffects {
     }
     this.wasGround = p.onGround;
 
+    // --- dash: native startDashing/resumeSystem, stopDashing/stopSystem ---
+    // p.x/y are already world coordinates. Transform only the local dash
+    // direction: dashSlope already encodes gravity, and must not be flipped
+    // a second time. The plist's 180° spray is relative to this node rotation.
+    if (p.dash) {
+      const d = dashWorldDirection(p);
+      this.dash.x = p.x;
+      this.dash.y = p.y;
+      this.dash.rotation = -Math.atan2(d.y, d.x) * 180 / Math.PI;
+      this.dash.scale = size;
+      if (!this.dash.active) this.dash.resume();
+      // startDashing deactivates the normal streak, even for flying modes.
+      this.streakOn = false;
+    } else if (this.dash.active) this.dash.stop();
+
     for (const e of this.emitters()) e.update(dt);
 
     // --- the streak ---
-    if (this.streakOn || flying) this.streak.setPosition(p.x, p.y);
+    if (!p.dash && (this.streakOn || flying)) this.streak.setPosition(p.x, p.y);
     this.streak.update(dt);
 
     // --- the wave trail ---

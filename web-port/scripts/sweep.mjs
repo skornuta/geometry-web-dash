@@ -9,6 +9,7 @@
 // **Read the beam-width warning in ARCHITECTURE-REFERENCE.md before calling
 // anything a regression** — a level that reads low at 128 is often solved at 256+.
 import { spawn } from "node:child_process";
+import { realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
 
@@ -41,8 +42,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 // Everything below is the command line. `classify` above is imported by
 // `tests/sweep.test.ts`, and without this guard that import would launch 22
 // searches as a side effect.
+// realpath both sides: a symlinked directory (macOS /var -> /private/var)
+// otherwise makes the script believe it was imported and exit silently.
 const isMain = process.argv[1]
-  && fileURLToPath(import.meta.url) === resolve(process.argv[1]);
+  && realpathSync(fileURLToPath(import.meta.url)) === realpathSync(resolve(process.argv[1]));
 if (isMain) {
 
 const args = process.argv.slice(2);

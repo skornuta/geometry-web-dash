@@ -9,8 +9,11 @@
  */
 
 import type { Renderer } from "../engine/renderer.ts";
-import type { SpriteFrame } from "../engine/atlas.ts";
-import type { LoadedFont } from "../engine/bmfont.ts";
+import { createTexture, loadImage, type SpriteFrame } from "../engine/atlas.ts";
+import { LoadedFont } from "../engine/bmfont.ts";
+import { ASSET } from "../assetBase.ts";
+import { AlertLayer } from "./alertLayer.ts";
+import { wrapLines } from "./endLevelMenu.ts";
 import { HD } from "../gd/sheets.ts";
 import * as save from "../gd/save.ts";
 import { MenuHost, MenuItem, UiMenu } from "./controls.ts";
@@ -73,6 +76,7 @@ export interface OptionsDeps {
   /** applied live as the sliders move, so you hear what you are setting */
   setMusicVolume(v: number): void;
   setSfxVolume(v: number): void;
+  setMenuMusic(): void;
   /** the back arrow and Escape */
   onClose(): void;
 }
@@ -134,7 +138,10 @@ export class OptionsOverlay {
       id: "menuMusic",
       frame: deps.sprites.require("GJ_checkOn_001.png"),
       spriteScale: MENU_MUSIC_BUTTON_SCALE,
-      onActivate: () => save.setSettings({ menuMusic: !save.settings().menuMusic }),
+      onActivate: () => {
+        save.setSettings({ menuMusic: !save.settings().menuMusic });
+        deps.setMenuMusic();
+      },
     }));
     this.menus.push(this.toggles);
 
@@ -210,6 +217,7 @@ export class OptionsOverlay {
   }
 
   closePopup() {
+    this.popup?.dispose();
     this.popup = null;
     this.rebuildHost();
   }
@@ -307,6 +315,7 @@ export class OptionsOverlay {
   }
 
   dispose() {
+    this.popup?.dispose();
     this.host?.dispose();
     for (const d of this.disposers) d();
     this.disposers.length = 0;
@@ -427,6 +436,18 @@ export class TogglePopup {
   private readonly close: MenuItem;
   private readonly arrows: [MenuItem, MenuItem] | null;
   private pageIndex = 0;
+  private infoAlert: AlertLayer | null = null;
+  private infoArt: ReturnType<typeof loadInfoArt> | null = null;
+  private infoRequest = 0;
+  private infoOpen = false;
+  private infoLastTime = 0;
+  private readonly infoKey = (e: KeyboardEvent) => {
+    // Capture before either scene's Escape handler: dismiss only the explanation,
+    // never the options popup (or the pause menu) beneath it.
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if (!e.repeat && ["Escape", "Enter", "Space"].includes(e.code)) this.closeInfo();
+  };
 
   constructor(deps: TogglePopupDeps) {
     this.deps = deps;
@@ -447,12 +468,12 @@ export class TogglePopup {
             deps.onChange?.(key, !cur);
           },
         });
-        // The info button opens an FLAlertLayer with the row's description in the
-        // original; that popup is not reproduced yet, so the button is inert.
+        // Use the same standard FLAlertLayer as the carousel's Level Stats.
         const info = deps.infoIcons && option.info
           ? new MenuItem({
               id: `info-${String(key)}`, frame: deps.sprites.require("GJ_infoIcon_001.png"),
               spriteScale: INFO_ICON_SCALE, sizeMult: INFO_ICON_SIZE_MULT,
+              onActivate: () => { void this.openInfo(option); },
             })
           : null;
         rows.push({ option, slot, item, info });
@@ -482,6 +503,46 @@ export class TogglePopup {
   }
 
   get page(): number { return this.pageIndex; }
+
+  private async openInfo(option: GameOption) {
+    if (this.infoOpen || !option.info) return;
+    this.infoOpen = true;
+    const request = ++this.infoRequest;
+    this.menu.items.length = 0;
+    addEventListener("keydown", this.infoKey, { capture: true });
+    try {
+      const art = await (this.infoArt ??= loadInfoArt(this.deps.renderer));
+      if (request !== this.infoRequest) return;
+      // APPROXIMATION: reuse Level Stats' standard alert width; the native
+      // option-info alert's exact width has not been decoded.
+      const width = 300;
+      this.infoAlert = new AlertLayer({
+        ...art, white: this.deps.white,
+        title: option.label.replace(/\n/g, " "),
+        desc: wrapLines(art.chatFont, option.info, width - 60).join("\n"),
+        width, button: "OK", onClose: () => this.closeInfo(),
+      });
+      this.infoLastTime = performance.now();
+      // Keep the caller's MenuHost and menu identity; only the alert's OK item
+      // may receive touches until it closes. This also serves the pause gear.
+      this.menu.items.push(...this.infoAlert.menu.items);
+    } catch (e) {
+      if (request !== this.infoRequest) return;
+      this.infoArt = null;
+      this.closeInfo();
+      console.error("option info alert failed to load:", e);
+    }
+  }
+
+  private closeInfo() {
+    this.infoRequest++;
+    this.infoOpen = false;
+    this.infoAlert = null;
+    removeEventListener("keydown", this.infoKey, { capture: true });
+    this.goToPage(this.pageIndex);
+  }
+
+  dispose() { this.closeInfo(); }
 
   /** `MoreOptionsLayer::goToPage`: wraps both ways, swaps the rows and the title */
   goToPage(page: number) {
@@ -562,5 +623,29 @@ export class TogglePopup {
       drawUiSprite(renderer, frame, this.menu.x + next.x, this.menu.y + next.y,
         { scale: next.scale, flipX: true });
     }
+    if (this.infoAlert) {
+      const now = performance.now();
+      this.infoAlert.update(Math.min(0.25, (now - this.infoLastTime) / 1000));
+      this.infoLastTime = now;
+      this.infoAlert.draw(renderer, viewW, viewH);
+    }
   }
+}
+
+/** The existing standard alert's fonts and nine-slices, loaded only on demand. */
+async function loadInfoArt(renderer: Renderer) {
+  const texture = async (name: string): Promise<Loose> => {
+    const img = await loadImage(`${ASSET}${name}-hd.png`);
+    return {
+      tex: createTexture(renderer.ctx, img), texW: img.width, texH: img.height,
+      frame: { x: 0, y: 0, w: img.width, h: img.height, rotated: false,
+        offsetX: 0, offsetY: 0, sourceW: img.width, sourceH: img.height },
+    };
+  };
+  const [goldFont, chatFont, panel, buttonBg] = await Promise.all([
+    LoadedFont.load(renderer, `${ASSET}goldFont-hd.fnt`, `${ASSET}goldFont-hd.png`),
+    LoadedFont.load(renderer, `${ASSET}chatFont-hd.fnt`, `${ASSET}chatFont-hd.png`),
+    texture("square01_001"), texture("GJ_button_01"),
+  ]);
+  return { goldFont, chatFont, panel, buttonBg };
 }

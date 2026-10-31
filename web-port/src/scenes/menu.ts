@@ -25,6 +25,7 @@ import { Renderer } from "../engine/renderer.ts";
 import { createTexture, loadImage, type SpriteFrame } from "../engine/atlas.ts";
 import { LoadedFont } from "../engine/bmfont.ts";
 import { AudioEngine } from "../engine/audio.ts";
+import { MenuMusic } from "../engine/menuMusic.ts";
 import { resolveView } from "../gd/camera.ts";
 import { HD } from "../gd/sheets.ts";
 import { LEVELS, COINS_PER_LEVEL, levelInfo } from "../gd/levels.ts";
@@ -261,6 +262,7 @@ export async function startMenu(renderer: Renderer) {
   ]);
   const font = await LoadedFont.load(renderer, `${ASSET}bigFont-hd.fnt`, `${ASSET}bigFont-hd.png`);
   const audio = new AudioEngine(save.settings());
+  const menuMusic = new MenuMusic(audio, () => save.settings().menuMusic);
   // `FLAlertLayer`'s own art: goldFont title and button caption, chatFont text,
   // the `square01_001` panel and `GJ_button_01` behind the button
   const [goldFont, chatFont, alertPanel, buttonBg] = await Promise.all([
@@ -337,13 +339,7 @@ export async function startMenu(renderer: Renderer) {
     scrollBy(d);
   };
 
-  let musicStarted = false;
-  const startMusic = () => {
-    if (musicStarted) return;
-    musicStarted = true;
-    audio.ensure();
-    void audio.playMenuMusic();
-  };
+  const startMusic = () => menuMusic.gesture();
 
   const play = () => {
     // only the 22 level pages play; The Tower and "Coming Soon!" do not

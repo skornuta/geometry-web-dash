@@ -12,6 +12,9 @@ import {
 import { CheckpointStack } from "../gd/checkpoints.ts";
 import * as save from "../gd/save.ts";
 import { PendingCoins } from "../gd/pendingCoins.ts";
+import { createCoinPickup, stepCoinPickup, coinPickupPose, type CoinPickup } from "../gd/coinPickup.ts";
+import { createDashArt, stepDashArt, dashArtSprites, nativeDashSpeed,
+  type DashArtPlayer, type DashArtState } from "../gd/dashArt.ts";
 import { ICON_TABS, iconFrames, playerColor, clampIcon, PLAYER_COLORS, playerGlow } from "../gd/icons.ts";
 import { IconSheets } from "../gd/iconSheets.ts";
 import type { CCEmitter } from "../engine/ccparticles.ts";
@@ -46,10 +49,10 @@ import { AudioEffects, newPulse, stepPulse } from "../gd/audioPulse.ts";
 import { AUDIO_STRINGS } from "../gd/audioStrings.ts";
 import { LoadedFont } from "../engine/bmfont.ts";
 import {
-  currentPercent, currentPercentInt, drawHud, hudGeometry, type HudSettings,
+  currentPercent, currentPercentInt, drawHud, hudGeometry, PAUSE_SIZE_MULT, type HudSettings,
 } from "../ui/gameplayHud.ts";
 import { UiSprites, contentSize, drawNineSlice, drawUiSprite, type UiFrame } from "../ui/sprites.ts";
-import { MenuHost } from "../ui/controls.ts";
+import { MenuHost, toDesignSpace } from "../ui/controls.ts";
 import { TogglePopup } from "../ui/optionsOverlay.ts";
 import {
   DROP_DIM_OPACITY, DROP_DURATION, GAME_OPTIONS, GAME_OPTIONS_Y_OFFSET,
@@ -234,6 +237,13 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     ? hudSheet.require("GJ_pauseBtn_clean_001.png")
     : null;
 
+  // Reuse level atlases where present; some early levels otherwise never load
+  // the glow/04 sheets that hold the player's dash art.
+  const dashSprites = new UiSprites();
+  for (const [key, name] of [["glow", "GJ_GameSheetGlow-hd"], ["game04", "GJ_GameSheet04-hd"]] as const) {
+    const sheet = scene.sheet(key) ?? await loadAtlas(renderer, `${ASSET}${name}.plist`, `${ASSET}${name}.png`);
+    dashSprites.add({ name, ...sheet });
+  }
   const icons = scene.sheet("icons");
   // the practice checkpoint gem — the game's own art, layered base + glow
   const gems = scene.sheet("game02");
@@ -484,11 +494,14 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   const objFx = new Map<number, CCEmitter>();
   /** circle waves outside the ending: the death's two, each orb's activation */
   const waves: { spec: CircleWaveSpec; x: number; y: number; t: number;
-    color: readonly [number, number, number]; alpha: number }[] = [];
+    color: readonly [number, number, number]; alpha: number; kind?: "coin" | "orb" }[] = [];
+  const coinPickups: CoinPickup[] = [];
+  const dashArt: [DashArtState, DashArtState] = [createDashArt(), createDashArt()];
+  const dashPlayers: [DashArtPlayer | null, DashArtPlayer | null] = [{ ...player }, null];
+  const effectEvents = { coin: 0, collect: 0, orb: [0, 0], dash: [0, 0] };
   /** what the scene saw last frame, to find pad activations and flips */
   const seenPads = new Set<number>();
-  /** the sim's effect events for this frame, collected inside the step loop */
-  const stepEffects: SimEffect[] = [];
+
   let seenFlip = false;
   let seenSpeed: number = startSpeed0;
   const shake = new Shake();
@@ -511,7 +524,17 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     glitter?.clear();
     scene.resetParticles();
     waves.length = 0;
-    stepEffects.length = 0;
+    coinPickups.length = 0;
+    sim.effects.length = 0;
+    if (sim.dual) sim.dual.effects.length = 0;
+    for (const slot of [0, 1] as const) {
+      dashArt[slot] = createDashArt(sim.steps * STEP);
+      dashPlayers[slot] = slot === 0 ? { ...player } : sim.dual ? { ...sim.dual.player } : null;
+      effectEvents.orb[slot] = effectEvents.dash[slot] = 0;
+    }
+    effectEvents.coin = effectEvents.collect = 0;
+    limbAnim.p1.name = limbAnim.p2.name = "idle";
+    limbAnim.p1.t = limbAnim.p2.t = 0;
     seenPads.clear();
     seenFlip = false;
     seenSpeed = sim.run.speed;
@@ -731,6 +754,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   const closeGameOptions = () => {
     gameOptionsHost?.dispose();
     gameOptionsHost = null;
+    gameOptions?.dispose();
     gameOptions = null;
   };
   const openGameOptions = () => {
@@ -768,6 +792,103 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       else { save.setSettings({ sfxVolume: v }); audio.setSfxVolume(v); }
     },
   });
+  /**
+   * All sim-produced presentation is consumed at its step/press boundary. Manual
+   * replay uses exactly the same path: no last-step queues and no render-clock
+   * aging of live gameplay effects. Existing particles outlive death/end.
+   */
+  const advancePresentation = (dt: number, events: readonly SimEffect[] = []) => {
+    for (let i = coinPickups.length - 1; i >= 0; i--) {
+      const next = stepCoinPickup(coinPickups[i], dt);
+      if (next) coinPickups[i] = next;
+      else coinPickups.splice(i, 1);
+    }
+    for (let i = waves.length - 1; i >= 0; i--) {
+      waves[i].t += dt;
+      if (waves[i].t >= waves[i].spec.duration) waves.splice(i, 1);
+    }
+    // Age existing bursts BEFORE adding this boundary's events.
+    oneShots.update(dt);
+    if (sim.dual && !pfx2) pfx2 = makePlayerFx();
+    for (const slot of [0, 1] as const) {
+      const who = slot === 0 ? player : sim.dual?.player;
+      const fx = slot === 0 ? pfx1 : pfx2;
+      const live = !!who && !sim.dead && !sim.ended;
+      const view = who ?? dashPlayers[slot];
+      const activation = events.find(e => e.kind === "orb" && e.player === slot && (e.id === 1704 || e.id === 1751));
+      if (view) {
+        // Orbs fire before movement. Observe the start explicitly so even a
+        // dash stopped by an S block/death in that SAME step gets its burst.
+        if (activation && !dashArt[slot].loop) dashArt[slot] = stepDashArt(dashArt[slot], 0,
+          { ...view, dash: activation.id === 1704 ? 1 : 2 }, nativeDashSpeed(run.speed), { entryPosition: activation });
+        dashArt[slot] = stepDashArt(dashArt[slot], dt, live ? view : { ...view, dash: 0 },
+          nativeDashSpeed(run.speed), { entryPosition: activation });
+        dashPlayers[slot] = { ...view };
+      }
+      if (fx) {
+        if (live) {
+          const p = who!;
+          fx.update(dt, p, holding, p.mode === "robot" && p.jumping && holding
+            && !p.onGround && p.holdTime < ROBOT_HOLD_MAX, run.speed);
+        } else { fx.stopAll(); fx.tick(dt); }
+      }
+      const anim = slot === 0 ? limbAnim.p1 : limbAnim.p2;
+      if (live && (who.mode === "robot" || who.mode === "spider")) {
+        if (dashArt[slot].loop?.playerAnimation === "fall_loop") {
+          if (anim.name !== "fall_loop") { anim.name = "fall_loop"; anim.t = 0; }
+          anim.t += dt;
+        } else stepAnim(anim, who.mode, who.onGround, who.yVel * gravitySign(who) > 0, dt);
+      }
+    }
+    for (const e of events) {
+      if (e.kind === "coin" || e.kind === "collect") {
+        if (coinsSeen.has(e.index)) continue;
+        coinsSeen.add(e.index);
+        effectEvents[e.kind]++;
+        const coinSfx = gameplaySfx("coin");
+        if (coinSfx) void audio.playSfx(coinSfx);
+        if (fxLib) oneShots.add(oneShot(fxLib, "coinPickupEffect", e.x, e.y));
+        if (e.kind === "coin") {
+          const object = scene.level.objects[e.obj];
+          coinPickups.push(createCoinPickup({ x: e.x, y: e.y,
+            outline: scene.collectedCoins?.has(e.obj) ?? false,
+            randomX: Math.random() * 2 - 1, randomY: Math.random(),
+            scale: object ? propFloat(object.props, P.SCALE, 1) : 1 }));
+          // GD 2.209 pickup routine 0x1f2414..0x1f2510: two .3s circles.
+          for (const [from, to] of [[25, 5], [5, 60]]) waves.push({
+            kind: "coin", spec: { from, to, duration: 0.3, fadeIn: false, outline: false, lineWidth: 4 },
+            x: e.x, y: e.y, t: 0, color: [255, 255, 255], alpha: 1,
+          });
+          const ord = coinOrdinal.get(e.index);
+          if (scored && ord !== undefined) pending.take(ord);
+        }
+        continue;
+      }
+      // Never feed pickup events through orb color/type/streak consumers.
+      if (e.kind !== "orb") continue;
+      effectEvents.orb[e.player]++;
+      const dash = e.id === 1704 || e.id === 1751;
+      if (dash) effectEvents.dash[e.player]++;
+      else (e.player === 0 ? pfx1 : pfx2)?.activateStreak();
+      const type = OBJECT_DEFS.get(e.id)?.type ?? 11;
+      const color = orbWaveColor(type)
+        ?? (sim.triggers ? channelRgb(sim.triggers.rt, 1007) : [255, 255, 255]);
+      waves.push({ kind: "orb", spec: { from: orbWaveFrom(type), to: ORB_WAVE_TO,
+        duration: ORB_WAVE_DURATION, fadeIn: true, outline: false, lineWidth: 4 },
+        x: e.x, y: e.y, t: 0, color, alpha: 1 });
+    }
+    ghostTrail.update(dt, !!sim.triggers?.rt.ghost && !sim.dead && !sim.ended && !endSeq,
+      [ghostPose[0], sim.dual && !sim.dual.dead ? ghostPose[1] : null]);
+  };
+  const drainEffects = (dt: number) => advancePresentation(dt, sim.effects.splice(0));
+  const pressSim = () => { simPress(sim, world); drainEffects(0); };
+  const stepGame = (camera = true) => {
+    simStep(sim, world, STEP, holding, warnDual);
+    drainEffects(STEP);
+    if (camera) stepCameraY();
+    if (!sim.ended) runSteps++;
+  };
+
   let holding = false;
   /**
    * A press no step has seen yet. The frame loop runs its 240 Hz steps only
@@ -793,11 +914,32 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     holding = true;
     releaseAfterStep = false;
     pressUnseen = true;
-    simPress(sim, world);
+    pressSim();
   };
   const release = () => {
     if (pressUnseen && !paused) { releaseAfterStep = true; return; }
     holding = false;
+  };
+  // Controls are rebuilt each frame, so retain the ID and input layer, not a
+  // stale button/action. A canceled UI gesture must never turn into a jump.
+  let pointer: {
+    id: number; button: string | null; canceled: boolean;
+    paused: boolean; completed: boolean; practice: boolean;
+  } | null = null;
+  const cancelPointer = () => {
+    const active = pointer;
+    pointer = null;
+    if (!active) return;
+    if (renderer.canvas.hasPointerCapture(active.id)) renderer.canvas.releasePointerCapture(active.id);
+    release();
+  };
+  const pointerButton = (e: PointerEvent) => {
+    if (!pointer || pointer.canceled || gameOptions || pointer.paused !== paused
+      || pointer.completed !== completed || pointer.practice !== practice) return undefined;
+    const { scale } = resolveView(renderer.canvas.width, renderer.canvas.height);
+    const p = toDesignSpace(renderer.canvas, e.clientX, e.clientY, scale);
+    return uiButtons.find(b => b.id === pointer!.button
+      && Math.abs(p.x - b.x) <= b.w / 2 && Math.abs(p.y - b.y) <= b.h / 2);
   };
   const isJumpKey = (e: KeyboardEvent) =>
     e.code === "Space" || e.code === "ArrowUp" || e.code === "KeyW";
@@ -811,6 +953,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     // (`+0x3360`), until the results layer takes over
     if (v && sim.ended && !completed) return;
     paused = v;
+    cancelPointer();
     if (v) release();
     void audio.setSuspended(v);
   };
@@ -911,8 +1054,9 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     if (practice && !sim.dead && (e.code === "KeyZ" || e.code === "KeyX")) {
       e.preventDefault();
       if (e.repeat) return;
-      if (e.code === "KeyZ" && !save.settings().disableCheckpoints) checkpoints.place(sim, camY, true);
-      else checkpoints.remove();
+      if (e.code === "KeyZ") {
+        if (!save.settings().disableCheckpoints) checkpoints.place(sim, camY, true);
+      } else checkpoints.remove();
       return;
     }
     if (!isJumpKey(e)) return;
@@ -922,27 +1066,37 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
   addEventListener("keyup", (e) => { if (isJumpKey(e)) release(); });
   renderer.canvas.style.touchAction = "none";
   addEventListener("pointerdown", (e) => {
-    if (e.button !== 0 || !e.isPrimary) return;
-    // the popup's MenuHost is on the canvas and runs first; the level must not
-    // also treat that same press as a jump
-    if (gameOptions) return;
+    if (e.button !== 0 || !e.isPrimary || pointer) return;
+    // Popup menus and slider thumbs claim their own gestures before this handler.
+    if (gameOptions || e.target !== renderer.canvas) return;
     e.preventDefault();
     const canvas = renderer.canvas;
-    const rect = canvas.getBoundingClientRect();
     const { scale } = resolveView(canvas.width, canvas.height);
-    const x = ((e.clientX - rect.left) * canvas.width / rect.width - canvas.width / 2) / scale;
-    const y = (canvas.height / 2 - (e.clientY - rect.top) * canvas.height / rect.height) / scale;
+    const { x, y } = toDesignSpace(canvas, e.clientX, e.clientY, scale);
     const button = uiButtons.find(b => Math.abs(x - b.x) <= b.w / 2 && Math.abs(y - b.y) <= b.h / 2);
+    pointer = { id: e.pointerId, button: button?.id ?? null, canceled: false, paused, completed, practice };
+    canvas.setPointerCapture(e.pointerId);
+    if (button) release();
+    else if (!paused && !completed && !sim.ended) press();
+  });
+  addEventListener("pointermove", (e) => {
+    if (pointer?.id !== e.pointerId || !pointer.button) return;
+    if (!renderer.canvas.hasPointerCapture(e.pointerId) || !pointerButton(e)) pointer.canceled = true;
+  });
+  addEventListener("pointerup", (e) => {
+    if (pointer?.id !== e.pointerId || !e.isPrimary || e.button !== 0) return;
+    // Explicit release can precede delivery of `lostpointercapture`.
+    const button = renderer.canvas.hasPointerCapture(e.pointerId) ? pointerButton(e) : undefined;
+    cancelPointer();
     if (button) {
       uiButtons = [];
-      release();
       button.action();
-      return;
     }
-    press();
   });
-  addEventListener("pointerup", release);
-  addEventListener("pointercancel", release);
+  addEventListener("pointercancel", (e) => { if (pointer?.id === e.pointerId) cancelPointer(); });
+  renderer.canvas.addEventListener("lostpointercapture", (e) => {
+    if (pointer?.id === e.pointerId) cancelPointer();
+  });
   addEventListener("blur", () => setPaused(true));
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) setPaused(true);
@@ -1022,6 +1176,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     let frame = (now - last) / 1000;
     last = now;
     if (frame > MAX_FRAME) frame = MAX_FRAME;
+    const cosmeticWallTime = sim.dead || sim.ended ? frame : 0;
     if (frame > 0) info.fps += (1 / frame - info.fps) * 0.1;
     // the camera's per-frame eases (a static's follow, the sideways chase) run on
     // the time the simulation covered: the wall-clock frame in play, but in a
@@ -1058,13 +1213,9 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       }
     } else {
       acc = advanceFixedSteps(acc, frame, () => {
-        simStep(sim, world, STEP, holding, warnDual);
-        stepCameraY();
+        stepGame();
         pressUnseen = false;
         if (releaseAfterStep) { releaseAfterStep = false; holding = false; }
-        // drained per step: `sim.effects` only ever holds the last one's
-        for (const e of sim.effects) stepEffects.push(e);
-        if (!sim.ended) runSteps++;
         return !sim.dead;
       });
       if (progX(player.x) > best) best = progX(player.x);
@@ -1073,42 +1224,17 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     bankJumps();
     // practice checkpoints drop as you go, once per frame (see checkpoints.ts)
     if (practice && !paused && !sim.ended) checkpoints.update(sim, camY);
-    for (const idx of sim.collected) {
-      if (coinsSeen.has(idx)) continue;
-      coinsSeen.add(idx);
-      const coinSfx = gameplaySfx("coin");
-      if (coinSfx) void audio.playSfx(coinSfx);
-      // `GameObject::spawnDefaultPickupParticle`: coinPickupEffect at the coin
-      const coin = world.interactives[idx];
-      if (fxLib && coin && !paused) oneShots.add(oneShot(fxLib, "coinPickupEffect", coin.x, coin.y));
-      // Held for this attempt only. The save is written on a normal-mode
-      // completion (see the `complete` branch); a death drops it.
-      const ord = coinOrdinal.get(idx);
-      if (scored && ord !== undefined) pending.take(ord);
-    }
-    // --- particles and streaks ---
-    // Driven off frame time rather than the physics step: these are cosmetic,
-    // and the engine integrates on the frame like cocos's own update.
+
+    // Gameplay particles/actions advance inside stepGame/drainEffects. Only
+    // death/end remnants and screen-space effects use wall time here.
     if (!paused) {
       // activations the original announces from inside the rules — an orb
       // fired, a pad launched, gravity flipped, the speed changed — read off
       // the sim's state rather than added to it
-      // A13: every orb the sim fired this frame, multi-activate ones included.
-      // The scene used to diff `sim.usedOrbs`, which a key-99 orb never enters.
-      for (const e of stepEffects) {
-        const type = OBJECT_DEFS.get(e.id)?.type ?? 11;
-        pfx1?.activateStreak();
-        // `orbWaveColor` returns null for the drop ring: its wave takes colour
-        // channel 1007, which only the runtime knows
-        const col = orbWaveColor(type)
-          ?? (sim.triggers ? channelRgb(sim.triggers.rt, 1007) : [255, 255, 255]);
-        waves.push({
-          spec: { from: orbWaveFrom(type), to: ORB_WAVE_TO, duration: ORB_WAVE_DURATION,
-            fadeIn: true, outline: false, lineWidth: 4 },
-          x: e.x, y: e.y, t: 0, color: col, alpha: 1,
-        });
-      }
-      stepEffects.length = 0;
+      // A13: orb events, including multi-activate orbs, were drained per step.
+      // Death/end stop simulation time; let already-created cosmetic actions
+      // finish on wall time, including in manual mode. Pause freezes both.
+      if (sim.dead || sim.ended) advancePresentation(cosmeticWallTime);
       for (const idx of sim.touching) {
         if (seenPads.has(idx) || world.interactives[idx]?.kind !== "pad") continue;
         pfx1?.activateStreak();
@@ -1124,27 +1250,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       }
       seenSpeed = run.speed;
 
-      const charging = (p: PlayerState) => p.mode === "robot" && p.jumping && holding
-        && !p.onGround && p.holdTime < ROBOT_HOLD_MAX;
-      if (pfx1) {
-        if (!sim.dead && !sim.ended) pfx1.update(frame, player, holding, charging(player), run.speed);
-        else pfx1.tick(frame);
-      }
-      if (sim.dual && !pfx2) pfx2 = makePlayerFx();
-      if (pfx2) {
-        if (sim.dual && !sim.dead && !sim.ended) {
-          pfx2.update(frame, sim.dual.player, holding, charging(sim.dual.player), run.speed);
-        } else pfx2.tick(frame);
-      }
-      oneShots.update(frame);
-      // the trail stops with the player (`playerDestroyed` and `playCompleteEffect`
-      // toggle it off) but the copies already made fade on
-      ghostTrail.update(frame, !!sim.triggers?.rt.ghost && !sim.dead && !sim.ended && !endSeq,
-        [ghostPose[0], sim.dual && !sim.dual.dead ? ghostPose[1] : null]);
-      for (let i = waves.length - 1; i >= 0; i--) {
-        waves[i].t += frame;
-        if (waves[i].t > waves[i].spec.duration) waves.splice(i, 1);
-      }
+
       // `showCompleteEffect`'s `shakeCamera(1.755, 3, 0)`, held like a trigger's
       if (endSeq?.shaking()) shake.add(COMPLETE_SHAKE_STRENGTH);
       // a shake trigger (1520) in flight drives the same camera shake as a death
@@ -1657,7 +1763,8 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       if (!icons) return;
       const ia = iconAnim[slot];
       const vehicle = iconFrame(player.mode);
-      const sizeScale = player.mini ? MINI_SCALE : 1;
+      const dashPose = !endSeq && player.dash ? dashArt[slot].loop : null;
+      const sizeScale = (player.mini ? MINI_SCALE : 1) * (dashPose?.playerScale ?? 1);
       const g = gravitySign(player);
       const speed = run.speed;
 
@@ -1706,6 +1813,10 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
           break;
       }
 
+      if (dashPose) {
+        angle = dashPose.rotation * 180 / Math.PI - dashPose.iconSpin;
+        flipY = dashPose.scaleY < 0;
+      }
       // the ending's `CCRotateBy` turns the whole player node, clockwise
       const rot = ((angle - spinDeg) * Math.PI) / 180;
       ghostPose[slot] = { x: player.x, y: player.y, rot, flipY, mode: player.mode, mini: player.mini };
@@ -1854,6 +1965,18 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
       }
     }
 
+    for (const pickup of coinPickups) scene.drawCoinPickup(pickup);
+    for (const slot of [0, 1] as const) {
+      const fx = slot === 0 ? pfx1 : pfx2;
+      const kit = fx?.dash.cfg.startColor ?? [strongCol1[0] / 255, strongCol1[1] / 255, strongCol1[2] / 255];
+      for (const pose of dashArtSprites(dashArt[slot])) {
+        const mix = pose.kitColorMix ?? 1;
+        const color = pose.color ?? [1 + (kit[0] - 1) * mix, 1 + (kit[1] - 1) * mix, 1 + (kit[2] - 1) * mix];
+        drawIconSprite(dashSprites.require(pose.frame), pose.x, pose.y, pose.rotation, HD,
+          pose.scaleX, pose.scaleY, false, false, color[0], color[1], color[2], pose.alpha, pose.blend);
+      }
+    }
+
     // the ghost trail's copies sit just under the player (`trailSnapshot` adds
     // each at the icon's z − 1), additive in the strong form of colour 1 —
     // or plain black when colour 1 is black (`toggleGhostEffect` +96..196)
@@ -1874,14 +1997,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     }
 
     if (!sim.dead) {
-      // Advance the limb clocks on the render frame, not the physics step: this
-      // is presentation, and `sim.ts` stays the only place with rules.
-      const tick = (p: PlayerState, a: typeof limbAnim.p1) => {
-        if (p.mode !== "robot" && p.mode !== "spider") return;
-        stepAnim(a, p.mode, p.onGround, p.yVel * gravitySign(p) > 0, frame);
-      };
-      tick(player, limbAnim.p1);
-      if (sim.dual) tick(sim.dual.player, limbAnim.p2);
+
       if (endSeq) {
         // the ghost trail sits under the icons it copies
         const vehicle = iconFrame(player.mode).main;
@@ -2073,6 +2189,19 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
         fillColor: P1,
         pauseFrame, pauseScale: 1,
       });
+      if (hudSettings.showPauseButton && pauseFrame && !paused && !sim.ended) {
+        uiButtons.push({
+          id: "pause", x: geometry.pauseX, y: geometry.pauseY,
+          // Native `CCMenuItemSpriteExtra::setSizeMult(4)`, not the trimmed art.
+          w: pauseFrame.frame.sourceW * HD * PAUSE_SIZE_MULT,
+          h: pauseFrame.frame.sourceH * HD * PAUSE_SIZE_MULT,
+          action: () => {
+            setPaused(true);
+            menuIndex = PAUSE_ROW.findIndex(r => r.id === "resume");
+            menuKeys = false;
+          },
+        });
+      }
       // `Show Time` (0145): the attempt's clock under the bar. APPROXIMATION: the
       // label's format and place are not decoded; m:ss.cc, centred below the bar.
       if (st.showTime) {
@@ -2420,7 +2549,22 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
         skippedInvisible: scene.skippedInvisible,
         unknownIds: [...scene.unknownIds],
         objects: scene.level.objects.length,
+        effects: {
+          events: { coin: effectEvents.coin, collect: effectEvents.collect,
+            orb: [...effectEvents.orb], dash: [...effectEvents.dash] },
+          destroyed: [...sim.destroyed],
+          pendingCoins: [...pending.ordinals()],
+          coinPickups: coinPickups.map(s => ({ age: s.age, ...coinPickupPose(s) })),
+          waves: waves.map(w => ({ kind: w.kind ?? "death", x: w.x, y: w.y, t: w.t,
+            from: w.spec.from, to: w.spec.to, duration: w.spec.duration, pose: circleWaveAt(w.spec, w.t) })),
+          dash: dashArt.map((s, slot) => ({ totalTime: s.totalTime, age: s.age, loop: s.loop,
+            entries: s.entries.length, remnants: s.remnants.length, sprites: dashArtSprites(s),
+            emitterActive: (slot === 0 ? pfx1 : pfx2)?.dash.active ?? false,
+            particles: (slot === 0 ? pfx1 : pfx2)?.dash.count ?? 0,
+            limb: slot === 0 ? { ...limbAnim.p1 } : { ...limbAnim.p2 } })),
+        },
         particles: (pfx1?.emitters().reduce((n, e) => n + e.count, 0) ?? 0)
+          + (pfx2?.emitters().reduce((n, e) => n + e.count, 0) ?? 0)
           + oneShots.live.reduce((n, o) => n + o.e.count, 0)
           + [...objFx.values()].reduce((n, e) => n + e.count, 0),
         emitters: { objects: objFx.size, oneShots: oneShots.live.length,
@@ -2444,7 +2588,9 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     placeCheckpoint: () => checkpoints.place(sim, camY, true),
     removeCheckpoint: () => checkpoints.remove(),
     kill: () => { sim.dead = true; },
-    jump: () => { holding = true; simPress(sim, world); },
+    jump: () => { if (!paused && !sim.dead && !sim.ended && !completed) { holding = true; pressSim(); } },
+    reset,
+    respawnAtCheckpoint,
     endJump: () => { holding = false; },
     /**
      * Advance exactly one 60 Hz input tick (used with `?manual=1` to replay a
@@ -2453,11 +2599,13 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
      */
     stepTick: (held: boolean) => {
       // the same gate `press` has: nothing reaches a locked player
-      if (held && !holding && !sim.ended) simPress(sim, world);
+      if (paused || completed) return !sim.dead;
+      if (held && !holding && !sim.ended) pressSim();
       holding = held;
       for (let i = 0; i < 4 && !sim.dead; i++) {
-        simStep(sim, world, STEP, holding, warnDual);
-        if (!sim.ended) runSteps++;
+        stepGame();
+        pressUnseen = false;
+        if (releaseAfterStep) { releaseAfterStep = false; holding = false; }
       }
       if (progX(player.x) > best) best = progX(player.x);
       return !sim.dead;
@@ -2474,17 +2622,15 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     followTrace: (flat: number[]) => {
       for (let i = 0; i + 2 < flat.length; i += 3) {
         const held = flat[i + 2] !== 0;
-        if (held && !holding) simPress(sim, world);
+        if (paused || completed) break;
+        if (held && !holding) pressSim();
         holding = held;
         const ny = flat[i + 1];
         player.yVel = (ny - player.y) / STEP;
         player.x = flat[i];
         player.y = ny;
         sim.dead = false;
-        simStep(sim, world, STEP, holding, warnDual);
-        // count the step like `stepTick` does: the view's speed (a smooth-velocity
-        // static's start) is measured over the simulated time
-        if (!sim.ended) runSteps++;
+        stepGame(false);
         // The game moves its camera every step, and the cube deadzone depends
         // on where the camera already is — so ease it here too, with the render
         // loop's own rule, or a capture lands with the camera wherever it

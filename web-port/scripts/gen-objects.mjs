@@ -117,10 +117,12 @@ const EXTRA = {
   1594: { texture_name: "ring_custom_01_001.png", object_type: 36, color_channel: "base",
           default_primary_channel: 1004, default_secondary_channel: -1,
           default_z_layer: 3, default_z_order: 1, children: [] },
-  1704: { texture_name: "dashRing_01_001.png",      object_type: 36, color_channel: null,
+  // Native GameObjectType: 36 is CustomRing, 37 dash, 38 gravity dash.
+  // ringJump uses these types for the green / magenta activation waves.
+  1704: { texture_name: "dashRing_01_001.png",      object_type: 37, color_channel: null,
           default_primary_channel: -1, default_secondary_channel: -1,
           default_z_layer: 5, default_z_order: 10, children: [] },
-  1751: { texture_name: "dashRing_02_001.png",      object_type: 37, color_channel: null,
+  1751: { texture_name: "dashRing_02_001.png",      object_type: 38, color_channel: null,
           default_primary_channel: -1, default_secondary_channel: -1,
           default_z_layer: 5, default_z_order: 10, children: [] },
   // NOT added: id 3006. An earlier table had it as a teleport orb
@@ -557,6 +559,12 @@ async function main() {
       offsetClamped.push(`${d.id} ${name} (${dx}, ${dy})`);
       dx = 0; dy = 0;
     }
+    // Detached slope overlays carry the instance's signed scale, just like
+    // its world rotation above. Keeping it as a child scale mirrors the art
+    // twice (1187–1190 in Deadlocked), crossing the black border over the ramp.
+    // Limit this correction to slope art; other detached sprite families have
+    // not been visually verified. Parented/live nodes already use local scale.
+    const looseSlope = !isChild && loose && d.frame.includes("_slope_");
     const child = {
       frame: name, sheet: f.sheet, dx, dy, z: cs.z, color: "detail",
       // no baked tint: the game draws this sprite in the detail channel alone,
@@ -567,7 +575,9 @@ async function main() {
       // the child takes the difference. A child node is already relative.
       flipX: !!cs.fx, flipY: !!cs.fy,
       rot: loose ? (cs.rot ?? 0) - (g.self.rot ?? 0) : cs.rot ?? 0,
-      scaleX: cs.sx ?? 1, scaleY: cs.sy ?? 1, children: [],
+      scaleX: looseSlope ? (cs.sx ?? 1) / (g.self.sx ?? 1) : cs.sx ?? 1,
+      scaleY: looseSlope ? (cs.sy ?? 1) / (g.self.sy ?? 1) : cs.sy ?? 1,
+      children: [],
     };
     if (!isChild && PIXEL_DETAIL_CHANNELS.has(d.id)) child.z = PIXEL_DETAIL_Z;
     // where the colour sprite sits among the game's own child nodes decides

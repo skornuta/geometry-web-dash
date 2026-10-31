@@ -225,11 +225,16 @@ export interface SimState {
 
 /** one thing the sim did that the scene may want to draw */
 export interface SimEffect {
-  kind: "orb";
+  kind: "orb" | "coin" | "collect";
+  /** Player slot, including events raised synchronously by simPress. */
+  player: 0 | 1;
+  /** Index into level.objects (not the interactive index). */
+  obj: number;
   /** object id, so the scene can pick the wave's colour and radius */
   id: number;
   /** index into `CollisionWorld.interactives` */
   index: number;
+  /** Resolved world coordinates at the event, including moving groups. */
   x: number;
   y: number;
 }
@@ -433,11 +438,11 @@ export function cloneSim(s: SimState): SimState {
   };
   if (s.dual) {
     const dual = cloneSim(s.dual);
-    // preserve the sharing across the clone: one trigger runtime, one set of
-    // destroyed blocks. Cloning them independently would let the two players
-    // drift apart inside a single autopilot branch.
+    // Preserve shared world state across the clone; otherwise the players
+    // could collect the same item independently after branching or rewinding.
     dual.triggers = out.triggers;
     dual.destroyed = out.destroyed;
+    dual.collected = out.collected;
     out.dual = dual;
   }
   return out;
@@ -487,6 +492,7 @@ export function restoreSim(s: SimState, snap: SimState) {
     const dual = cloneSim(snap.dual);
     dual.triggers = s.triggers;
     dual.destroyed = s.destroyed;
+    dual.collected = s.collected;
     s.dual = dual;
   } else {
     s.dual = undefined;
@@ -547,8 +553,8 @@ export function applyPortalsBefore(s: SimState, world: CollisionWorld, x: number
  * only reads `holding` — which is why the partner looked like it half-worked
  * (it ran and jumped) but "couldn't click orbs".
  */
-export function simPress(s: SimState, world?: CollisionWorld, partner = false) {
-  if (s.dual) simPress(s.dual, world, true);
+export function simPress(s: SimState, world?: CollisionWorld, partner = false, root = s) {
+  if (s.dual) simPress(s.dual, world, true, root);
   // an Options trigger (2899) has switched this player's controls off
   if (s.triggers?.rt.controlsOff[partner ? 1 : 0]) return;
   s.player.queuedHold = true;
@@ -579,7 +585,7 @@ export function simPress(s: SimState, world?: CollisionWorld, partner = false) {
     const p = s.player;
     const l = toLocal(p, p.x, p.y);
     p.x = l.x; p.y = l.y;
-    fireTouchedOrb(s, true, s, viewFor(world, p));
+    fireTouchedOrb(s, true, root, viewFor(world, p), partner ? 1 : 0);
     s.teleportedStep = true;
     const w = toWorld(p, p.x, p.y);
     p.x = w.x; p.y = w.y;
@@ -769,6 +775,7 @@ function spawnDual(s: SimState, portalY: number): SimState {
  */
 function fireTouchedOrb(
   s: SimState, holding: boolean, root: SimState, world?: WorldView,
+  slot: 0 | 1 = s === root ? 0 : 1,
 ): boolean {
   const it = s.touchedOrb;
   const { player } = s;
@@ -798,7 +805,8 @@ function fireTouchedOrb(
   root.jumps++;
   // the scene's activation wave — pushed here rather than diffed out of
   // `usedOrbs`, which a key-99 orb never enters
-  root.effects.push({ kind: "orb", id: it.id, index: it.index, x: it.x, y: it.y });
+  root.effects.push({ kind: "orb", player: slot, obj: it.obj, id: it.id, index: it.index,
+    ...toWorld(player, it.x, it.y) });
   // key 99 orbs may be re-used; every other orb is spent for as long as the
   // player stays on it
   if (!propBool(it.props, P.MULTI_ACTIVATE_ORB)) s.usedOrbs.add(it.index);
@@ -1824,6 +1832,9 @@ function stepCore(
       case "coin":
         if (!s.collected.has(it.index)) {
           s.collected.add(it.index);
+          s.destroyed.add(it.obj);
+          root.effects.push({ kind: "coin", player: s === root ? 0 : 1,
+            obj: it.obj, id: it.id, index: it.index, ...toWorld(player, it.x, it.y) });
           run.coins++;
         }
         break;
@@ -1836,6 +1847,8 @@ function stepCore(
         if (!s.collected.has(it.index)) {
           s.collected.add(it.index);
           s.destroyed.add(it.obj);
+          root.effects.push({ kind: "collect", player: s === root ? 0 : 1,
+            obj: it.obj, id: it.id, index: it.index, ...toWorld(player, it.x, it.y) });
           if (!skipTriggers && s.triggers) {
             const item = propInt(it.props, P.ITEM_ID, 0);
             if (item) {

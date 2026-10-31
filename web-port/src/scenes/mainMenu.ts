@@ -25,6 +25,7 @@ import { SceneFade } from "../engine/transition.ts";
 import { Renderer } from "../engine/renderer.ts";
 import { createTexture, loadAtlas, loadImage, setRepeatWrap, type SpriteFrame } from "../engine/atlas.ts";
 import { AudioEngine } from "../engine/audio.ts";
+import { MenuMusic } from "../engine/menuMusic.ts";
 import { LoadedFont } from "../engine/bmfont.ts";
 import { resolveView } from "../gd/camera.ts";
 import { HD } from "../gd/sheets.ts";
@@ -218,6 +219,7 @@ export async function startMainMenu(renderer: Renderer) {
     LoadedFont.load(renderer, `${ASSET}goldFont-hd.fnt`, `${ASSET}goldFont-hd.png`),
   ]);
   const audio = new AudioEngine(save.settings());
+  const menuMusic = new MenuMusic(audio, () => save.settings().menuMusic);
   const kit = save.icons();
 
   /* ---------------- navigation ---------------- */
@@ -259,13 +261,13 @@ export async function startMainMenu(renderer: Renderer) {
 
   const goOptions = () => {
     if (overlay) return;
-    startMusic();
     // the async half only runs once; afterwards this opens on the same frame
     if (!optionsArtLoaded) { void loadOptionsArt().then(goOptions); return; }
     overlay = new OptionsOverlay({
       renderer, sprites, font, goldFont, textures: optionsTextures,
       setMusicVolume: (v) => audio.setMusicVolume(v),
       setSfxVolume: (v) => audio.setSfxVolume(v),
+      setMenuMusic: () => menuMusic.sync(),
       onClose: closeOptions,
     });
     // `disableUI()`: the menu underneath stops taking touches while it is up
@@ -279,7 +281,6 @@ export async function startMainMenu(renderer: Renderer) {
   /** the Stats button: a page over the menu, like the settings drop-down */
   const goStats = () => {
     if (overlay || stats) return;
-    startMusic();
     if (!optionsArtLoaded) { void loadOptionsArt().then(goStats); return; }
     stats = new StatsLayer({
       renderer, sprites, font, white, goldFont, button: optionsTextures.button,
@@ -390,20 +391,15 @@ export async function startMainMenu(renderer: Renderer) {
 
   /* ---------------- audio ---------------- */
 
-  let musicStarted = false;
-  const startMusic = () => {
-    // `GameManager::fadeInMenuMusic()` runs inside MenuLayer::init; a browser
-    // cannot, so the same track starts on the first gesture instead.
-    if (musicStarted) return;
-    musicStarted = true;
-    audio.ensure();
-    void audio.playMenuMusic();
-  };
+  const startMusic = () => menuMusic.gesture();
+  // The base menu's host is disposed under overlays. Capture input here so
+  // Settings deep links and slider gestures can still unlock browser audio.
+  renderer.canvas.addEventListener("pointerdown", startMusic, { capture: true });
 
   /* ---------------- input ---------------- */
 
   const makeHost = () => new MenuHost(renderer.canvas, menus,
-    () => resolveView(renderer.canvas.width, renderer.canvas.height).scale, startMusic);
+    () => resolveView(renderer.canvas.width, renderer.canvas.height).scale);
   let host = makeHost();
 
   addEventListener("keydown", (e) => {

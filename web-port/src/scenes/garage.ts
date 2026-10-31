@@ -22,6 +22,7 @@ import { Renderer } from "../engine/renderer.ts";
 import { createTexture, loadImage, type SpriteFrame } from "../engine/atlas.ts";
 import { LoadedFont } from "../engine/bmfont.ts";
 import { AudioEngine } from "../engine/audio.ts";
+import { MenuMusic } from "../engine/menuMusic.ts";
 import { resolveView } from "../gd/camera.ts";
 import { HD } from "../gd/sheets.ts";
 import {
@@ -125,6 +126,9 @@ const GRID_START_DX = -(GRID_COLS * 0.5 * GRID_OFFSET)
 /** top row is `(rows-1)/2` steps above the centre */
 const GRID_START_DY = ((GRID_ROWS - 1) / 2) * GRID_STEP_Y;
 const PER_PAGE = GRID_COLS * GRID_ROWS;
+/** `ListButtonBar::create`'s arrowOffset = 220, arrowType = 1 (§12.1). */
+const PAGE_ARROW_OFFSET = 220;
+const PAGE_ARROW_FRAME = "GJ_arrow_01_001.png";
 /** back arrow `(screenLeft + 24, screenTop - 23)`, sizeMult 1.6 — init +3168..3188 */
 const BACK_INSET_X = 24;
 const BACK_INSET_Y = 23;
@@ -256,7 +260,7 @@ function swatchOffset(slot: number): { x: number; y: number } {
 const GARAGE_FRAMES = [
   "GJ_sideArt_001.png", "floorLine_001.png", "playerSquare_001.png",
   "gj_navDotBtn_on_001.png", "gj_navDotBtn_off_001.png",
-  "GJ_arrow_03_001.png", "GJ_paintBtn_001.png", "GJ_select_001.png",
+  "GJ_arrow_03_001.png", PAGE_ARROW_FRAME, "GJ_paintBtn_001.png", "GJ_select_001.png",
   "GJ_closeBtn_001.png", "GJ_starsIcon_001.png", "GJ_coinsIcon_001.png",
   "GJ_unlockTxt_001.png", "GJ_shardsBtn_001.png", "shopRope_001.png",
   ...Object.values(TAB_FRAMES).flat(),
@@ -318,6 +322,7 @@ export async function startGarage(renderer: Renderer) {
   const font = await LoadedFont.load(renderer, `${ASSET}bigFont-hd.fnt`, `${ASSET}bigFont-hd.png`);
   const white = whiteTexture(renderer);
   const audio = new AudioEngine(save.settings());
+  const menuMusic = new MenuMusic(audio, () => save.settings().menuMusic);
 
   const kit = save.icons();
 
@@ -350,13 +355,7 @@ export async function startGarage(renderer: Renderer) {
   const syncPage = () => { page = Math.floor((selected() - 1) / PER_PAGE); };
   syncPage();
 
-  let musicStarted = false;
-  const startMusic = () => {
-    if (musicStarted) return;
-    musicStarted = true;
-    audio.ensure();
-    void audio.playMenuMusic();
-  };
+  const startMusic = () => menuMusic.gesture();
 
   const back = () => {
     if (popup) { popup = null; rebuild(); return; }
@@ -457,6 +456,23 @@ export async function startGarage(renderer: Renderer) {
       }
       built.push(grid);
 
+      if (pageCount() > 1) {
+        const arrows = new UiMenu("pageArrows");
+        const frame = sprites.require(PAGE_ARROW_FRAME);
+        for (const [id, direction] of [["prev", -1], ["next", 1]] as const) {
+          arrows.add(new MenuItem({
+            id, frame,
+            render: (r, x, y, scale) => drawUiSprite(r, frame, x, y,
+              { scale, flipX: direction > 0 }),
+            onActivate: () => {
+              page = (page + direction + pageCount()) % pageCount();
+              rebuild();
+            },
+          }));
+        }
+        built.push(arrows);
+      }
+
       const dots = new UiMenu("dots");
       for (let p = 0; p < pageCount(); p++) {
         dots.add(new MenuItem({
@@ -492,6 +508,11 @@ export async function startGarage(renderer: Renderer) {
 
   addEventListener("keydown", (e) => {
     startMusic();
+    if (popup) {
+      e.preventDefault();
+      if (e.code === "Escape" && !e.repeat) back();
+      return;
+    }
     switch (e.code) {
       case "Escape": e.preventDefault(); back(); break;
       case "Tab": e.preventDefault(); openTab((tab + 1) % GARAGE_TABS.length); rebuild(); break;
@@ -624,6 +645,12 @@ export async function startGarage(renderer: Renderer) {
         item.y = panel.y + GRID_START_DY - row * GRID_STEP_Y;
       });
     }
+    const arrows = byId("pageArrows");
+    if (arrows) {
+      arrows.setPosition(panel.x, panel.y);
+      arrows.items[0].x = -PAGE_ARROW_OFFSET;
+      arrows.items[1].x = PAGE_ARROW_OFFSET;
+    }
     const dots = byId("dots");
     if (dots) {
       const p = gd(viewW * 0.5, DOTS_BOTTOM_Y);
@@ -720,6 +747,7 @@ export async function startGarage(renderer: Renderer) {
         tabs.x + tabItem.x, tabs.y + tabItem.y, { scale: SELECT_SCALE });
     }
 
+    menus.find((m) => m.id === "pageArrows")?.draw(renderer);
     menus.find((m) => m.id === "dots")?.draw(renderer);
     // The Shop's sign, static (see SHOP_DX)
     const shopP = gd(viewW * 0.5 + SHOP_DX, viewH + SHOP_DY);

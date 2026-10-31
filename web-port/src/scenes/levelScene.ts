@@ -40,6 +40,7 @@ import {
 import {
   animationFor, frameIndexAt, rotationFor, type AnimTiming,
 } from "../gd/objectAnim.ts";
+import { coinPickupPose, type CoinPickup } from "../gd/coinPickup.ts";
 import { ASSET } from "../assetBase.ts";
 
 /** hd art is 2x the world unit scale (1 block = 30 world units = 60 hd px) */
@@ -185,6 +186,8 @@ interface DrawItem {
    * for coin sprites that have a `_b_` counterpart in the atlas.
    */
   outline?: SpriteFrame;
+  /** Saved outline spins on the same clock, with its own trim geometry. */
+  outlineFrames?: SpriteFrame[];
   /**
    * An object's glow (`gd/glow.ts`): `white`, or `bg` for the few ids whose
    * glow `PlayLayer::updateVisibility` tints from the background channel. Pulses leave glows alone —
@@ -320,13 +323,13 @@ export class LevelScene {
   private whiteTex: WebGLTexture | null = null;
   /** source object index for whatever is being emitted right now */
   private curObj = -1;
-  /** objects the player has destroyed this attempt (breakable blocks) */
+  /** Objects removed this attempt (breakable blocks and collected coins). */
   destroyed?: Set<number>;
   /**
    * Object indices of secret coins already collected **in a previous session**
    * (from the save). Those draw as white outlines, as the game does. Coins
-   * picked up during the current attempt keep their gold art until the level is
-   * restarted, again matching the original.
+   * picked up during the current attempt disappear via `destroyed`; their
+   * separate pickup sprite retains the gold/outline choice from this set.
    */
   collectedCoins?: Set<number>;
   skipped = 0;
@@ -666,14 +669,17 @@ export class LevelScene {
     y += tox * ss + toy * sc;
 
     // `secretCoin_01_001` -> `secretCoin_b_01_001`: the outline the game shows
-    // once you have already collected that coin. Looked up here, at build time,
-    // so the draw loop stays a straight swap.
+    // once you have already collected that coin. Resolve both animation lists
+    // at build time; their frames have different trimmed sizes and offsets.
     const outline = frameName.startsWith("secretCoin_")
       ? sheet.atlas.get(frameName.replace(/^secretCoin_/, "secretCoin_b_"))
       : undefined;
 
     const animFrames = this.curAnim
       ? this.animFrameList(sheetName, sheet, frameName, this.curAnim.frames)
+      : undefined;
+    const outlineFrames = outline && this.curAnim
+      ? this.animFrameList(sheetName, sheet, frameName.replace(/^secretCoin_/, "secretCoin_b_"), this.curAnim.frames)
       : undefined;
     this.items.push({
       tex: sheet.tex, texW: sheet.texW, texH: sheet.texH, frame,
@@ -682,7 +688,7 @@ export class LevelScene {
       flipX, flipY,
       cull: Math.max(Math.abs(w), Math.abs(h)) * 0.75 + 30,
       ch: col.ch, detail: col.detail === true, main: this.curMain || undefined,
-      groups, obj: this.curObj, outline,
+      groups, obj: this.curObj, outline, outlineFrames,
       spin: this.curSpin, spinCX: objX, spinCY: objY,
       invisibleHW: this.curInvisibleHW,
       animFrames, animT: animFrames ? this.curAnim! : undefined,
@@ -1441,7 +1447,7 @@ export class LevelScene {
           : (own.ch >= 0 ? this.liveRgba(own.ch, own).blend : own.blend) === "additive";
         if (additive !== (pass === 0)) continue;
       }
-      // a smashed breakable block stops being drawn as well as colliding
+      // Removed objects (including collected coins) no longer draw.
       if (this.destroyed?.has(it.obj)) continue;
       // group transform first: a moved sprite has to be culled where it is now
       let dx = 0, dy = 0, alpha = 1;
@@ -1473,7 +1479,8 @@ export class LevelScene {
         const bp = beastPose(it.beast, it.frame, t);
         if (bp) { ix = bp.x; iy = bp.y; iw = bp.w; ih = bp.h; irot = bp.rot; }
       }
-      if (it.animFrames && !already) {
+      const animFrames = already ? it.outlineFrames : it.animFrames;
+      if (animFrames) {
         // key 123 holds frame 1 until an animate trigger starts the loop
         let at = t;
         if (it.animWait) {
@@ -1489,7 +1496,7 @@ export class LevelScene {
           if (started < 0) continue;
           at = t - started - it.animT!.offset;
         }
-        frame = it.animFrames[frameIndexAt(it.animT!, at) - 1];
+        frame = animFrames[frameIndexAt(it.animT!, at) - 1];
         const kx = it.animKX!, ky = it.animKY!;
         iw = frame.w * kx;
         ih = frame.h * ky;
@@ -1631,6 +1638,25 @@ export class LevelScene {
     this.drawParticlesUpTo(zHi, pi);
     drawGradsBelow(zHi);
     this.drawCounters(left, right);
+  }
+
+  /**
+   * Draw a detached secret-coin pickup through the current world camera. The
+   * caller owns lifetime/order; this deliberately ignores source-object removal
+   * and subsequent group transforms. Uses atlas trim offsets; texture rotation
+   * remains renderer-owned.
+   */
+  drawCoinPickup(state: CoinPickup) {
+    const pose = coinPickupPose(state);
+    if (pose.alpha <= 0) return;
+    const sheet = this.sheets.get("game02");
+    const name = `secretCoin_${pose.outline ? "b_" : ""}01_${String(pose.frame).padStart(3, "0")}.png`;
+    const frame = sheet?.atlas.get(name);
+    if (!sheet || !frame) return;
+    const k = HD * pose.scale;
+    this.renderer.draw(sheet.tex, sheet.texW, sheet.texH, frame,
+      pose.x + frame.offsetX * k, pose.y + frame.offsetY * k,
+      frame.w * k, frame.h * k, 0, 1, 1, 1, pose.alpha, "normal");
   }
 
   /**
