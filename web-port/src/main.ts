@@ -1,5 +1,6 @@
 import { Renderer } from "./engine/renderer.ts";
 import { startLevelView } from "./scenes/levelView.ts";
+import { mountBugReport } from "./bugReport.ts";
 import { startPlayLevel } from "./scenes/playLevel.ts";
 import { startMainMenu } from "./scenes/mainMenu.ts";
 import { startMenu } from "./scenes/menu.ts";
@@ -49,6 +50,11 @@ const start = custom
   : params.has("static")
     ? () => startLevelView(renderer, parseInt(params.get("level")!, 10))
     : () => startPlayLevel(renderer, parseInt(params.get("level")!, 10));
+
+// Gameplay hides the link (a stray click mid-run would leave the level); the
+// pause menu shows it again.
+const inGameplay = !!custom || (params.has("level") && !params.has("static"));
+mountBugReport(canvas, !inGameplay);
 
 // Drop a `.gmd` (a level exported from the game) anywhere to play it.
 window.addEventListener("dragover", (e) => e.preventDefault());

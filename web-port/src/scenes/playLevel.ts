@@ -11,6 +11,7 @@ import {
 } from "../game/sim.ts";
 import { CheckpointStack } from "../gd/checkpoints.ts";
 import * as save from "../gd/save.ts";
+import { showBugReport } from "../bugReport.ts";
 import { PendingCoins } from "../gd/pendingCoins.ts";
 import { createCoinPickup, stepCoinPickup, coinPickupPose, type CoinPickup } from "../gd/coinPickup.ts";
 import { createDashArt, stepDashArt, dashArtSprites, nativeDashSpeed,
@@ -953,6 +954,7 @@ export async function startPlayLevel(renderer: Renderer, levelNum: number, custo
     // (`+0x3360`), until the results layer takes over
     if (v && sim.ended && !completed) return;
     paused = v;
+    showBugReport(v);
     cancelPointer();
     if (v) release();
     void audio.setSuspended(v);
