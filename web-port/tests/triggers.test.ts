@@ -11,18 +11,20 @@ import {
   resetRuntime, resolveColor, restoreRuntime,
   updateTriggers,
 } from "../src/gd/triggers.ts";
+import { CollisionWorld } from "../src/game/collision.ts";
+import { createSim, simStep } from "../src/game/sim.ts";
 
 const assets = join(dirname(fileURLToPath(import.meta.url)), "..", "public", "assets");
 const loadLevel = (n: number) =>
   decodeLevelString(readFileSync(join(assets, "levels", `${n}.txt`), "utf8"));
 
 /** a level containing just the given trigger objects */
-function fakeLevel(objs: { id: number; x: number; props: Record<number, string> }[]): Level {
+function fakeLevel(objs: { id: number; x: number; y?: number; props: Record<number, string> }[]): Level {
   return {
     colors: new Map(), bgColorChannel: 0, groundColorChannel: 0,
     lineColorChannel: 0, rawHeader: "",
     objects: objs.map((o) => ({
-      id: o.id, x: o.x, y: 0,
+      id: o.id, x: o.x, y: o.y ?? 0,
       props: new Map(Object.entries(o.props).map(([k, v]) => [Number(k), v])),
     })),
   } as unknown as Level;
@@ -348,3 +350,82 @@ test("Spawn Particle (3608) queues a copy of group 51's particles at group 71's 
   updateTriggers(rt, triggers, 250, 1 / 240);
   assert.deepEqual(rt.particleSpawns.map((q) => [q.group, q.posGroup, q.x]), [[7, 9, 100], [8, 0, 200]]);
 });
+
+test("Move trigger (901) target pos mode (key 100) moves target group to delta between target and source", () => {
+  // Source marker (group 541) at (100, 273.5), target marker (group 542) at (100, 151.5)
+  // Target group being moved: group 265
+  // Move trigger at x=50: key 100=1 (target mode), 101=2 (y-only), 51=265 (target group), 71=542 (target marker), 395=541 (source marker), 10=0.5 (dur)
+  const level = fakeLevel([
+    { id: 1, x: 100, y: 273.5, props: { 57: "541" } },
+    { id: 1, x: 100, y: 151.5, props: { 57: "542" } },
+    { id: 901, x: 50, props: { 51: "265", 71: "542", 395: "541", 100: "1", 101: "2", 10: "0.5" } },
+  ]);
+  const triggers = buildTriggers(level);
+  const rt = createRuntime(level);
+  updateTriggers(rt, triggers, 60, 0); // fires
+  updateTriggers(rt, triggers, 60, 0.5); // completes tween
+  const g = groupState(rt, 265);
+  assert.equal(g.dx, 0);
+  assert.ok(Math.abs(g.dy - (151.5 - 273.5)) < 1e-4, `dy should be -122.0, got ${g.dy}`);
+});
+
+test("Move trigger target pos mode respects axis mode (0: both, 1: x-only, 2: y-only)", () => {
+  const level = fakeLevel([
+    { id: 1, x: 200, y: 300, props: { 57: "10" } }, // source
+    { id: 1, x: 250, y: 360, props: { 57: "20" } }, // target (dx = 50, dy = 60)
+    { id: 901, x: 20, props: { 51: "1", 71: "20", 395: "10", 100: "1", 101: "0", 10: "0" } },
+    { id: 901, x: 40, props: { 51: "2", 71: "20", 395: "10", 100: "1", 101: "1", 10: "0" } },
+    { id: 901, x: 60, props: { 51: "3", 71: "20", 395: "10", 100: "1", 101: "2", 10: "0" } },
+  ]);
+  const triggers = buildTriggers(level);
+  const rt = createRuntime(level);
+  updateTriggers(rt, triggers, 70, 0);
+  assert.equal(groupState(rt, 1).dx, 50);
+  assert.equal(groupState(rt, 1).dy, 60);
+  assert.equal(groupState(rt, 2).dx, 50);
+  assert.equal(groupState(rt, 2).dy, 0);
+  assert.equal(groupState(rt, 3).dx, 0);
+  assert.equal(groupState(rt, 3).dy, 60);
+});
+
+test("Move trigger target pos mode computes delta from live positions after prior group moves", () => {
+  // Source marker in group 10 at (0, 100). Target marker in group 20 at (0, 200).
+  // First, group 10 is moved up by 50 at instant x=10 (now at y=150).
+  // Then target move trigger at x=30 moves group 1 to delta (200 - 150 = 50).
+  const level = fakeLevel([
+    { id: 1, x: 0, y: 100, props: { 57: "10" } },
+    { id: 1, x: 0, y: 200, props: { 57: "20" } },
+    { id: 901, x: 10, props: { 51: "10", 29: "50", 10: "0" } },
+    { id: 901, x: 30, props: { 51: "1", 71: "20", 395: "10", 100: "1", 101: "2", 10: "0" } },
+  ]);
+  const triggers = buildTriggers(level);
+  const rt = createRuntime(level);
+  updateTriggers(rt, triggers, 40, 0);
+  assert.equal(groupState(rt, 10).dy, 50);
+  assert.equal(groupState(rt, 1).dy, 50);
+});
+
+test("Dash (Level 22) crusher ceiling (group 265) descends and holds flat at -122.1", async () => {
+  const level = await loadLevel(22);
+  const world = new CollisionWorld(level, () => ({ w: 30, h: 30 }));
+  const sim = createSim(2600, 311.58, level);
+  if (sim.triggers) {
+    while (sim.triggers.rt.next < sim.triggers.list.length && sim.triggers.list[sim.triggers.rt.next].x <= 2600) {
+      sim.triggers.rt.next++;
+    }
+    sim.triggers.rt.channel = 0;
+    sim.triggers.rt.dir = 4;
+  }
+  sim.player.sideways = false;
+  sim.player.y = 400;
+  const dt = 1 / 240;
+  let t = 0;
+  while (sim.player.x < 3600 && t < 4) {
+    simStep(sim, world, dt, false);
+    sim.dead = false; sim.deathCause = undefined; sim.player.y = 400; sim.player.yVel = 0;
+    t += dt;
+  }
+  const g = groupState(sim.triggers!.rt, 265);
+  assert.ok(Math.abs(g.dy - -122.1) < 0.2, `expected g265.dy ≈ -122.1, got ${g.dy}`);
+});
+

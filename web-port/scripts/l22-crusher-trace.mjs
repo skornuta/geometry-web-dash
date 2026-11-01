@@ -15,6 +15,14 @@ import { groupState } from "../src/gd/triggers.ts";
 
 const { level, world } = await loadWorld(22);
 const sim = createSim(2600, 311.58, level);
+if (sim.triggers) {
+  while (sim.triggers.rt.next < sim.triggers.list.length && sim.triggers.list[sim.triggers.rt.next].x <= 2600) {
+    sim.triggers.rt.next++;
+  }
+  sim.triggers.rt.channel = 0;
+  sim.triggers.rt.dir = 4;
+}
+sim.player.sideways = false;
 sim.player.y = 400;
 const dt = 1 / 240;
 let t = 0, last = -1;
