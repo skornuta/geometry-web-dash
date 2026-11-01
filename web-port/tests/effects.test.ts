@@ -201,3 +201,41 @@ test("reset clears a shake immediately", () => {
   assert.equal(s.x, 0);
   assert.equal(s.y, 0);
 });
+
+test("swingBurstEffect is loaded and fires alternating bursts on direction flip in swing mode", () => {
+  const fx = new PlayerEffects(lib);
+  assert.ok(fx.swingBurst, "swingBurst emitters created");
+  assert.equal(fx.swingBurst.length, 2);
+  assert.equal(fx.swingBurst[0].active, false);
+  assert.equal(fx.swingBurst[1].active, false);
+
+  // entering swing mode
+  fx.update(0.02, view("swing", false, { x: 100, y: 150, gravityFlipped: false }), false, false, 311);
+  assert.equal(fx.swingBurst[0].active, false);
+  assert.equal(fx.swingBurst[1].active, false);
+
+  // flipping gravity in swing mode fires first burst at the rear
+  fx.update(0.02, view("swing", false, { x: 120, y: 160, gravityFlipped: true }), false, false, 311);
+  assert.equal(fx.swingBurst[0].active, true);
+  assert.equal(fx.swingBurst[0].x, 110, "placed at x - 10 * size");
+  assert.equal(fx.swingBurst[1].active, false);
+
+  // flipping back fires second alternating burst
+  fx.update(0.02, view("swing", false, { x: 140, y: 155, gravityFlipped: false }), false, false, 311);
+  assert.equal(fx.swingBurst[1].active, true);
+  assert.equal(fx.swingBurst[1].x, 130);
+
+  // constant gravity does not fire a new burst
+  fx.tick(0.1);
+  assert.equal(fx.swingBurst[0].active, false);
+  assert.equal(fx.swingBurst[1].active, false);
+  fx.update(0.02, view("swing", false, { x: 160, y: 150, gravityFlipped: false }), false, false, 311);
+  assert.equal(fx.swingBurst[0].active, false);
+  assert.equal(fx.swingBurst[1].active, false);
+
+  // reset clears all
+  fx.reset();
+  assert.equal(fx.swingBurst[0].active, false);
+  assert.equal(fx.swingBurst[1].active, false);
+});
+

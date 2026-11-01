@@ -31,7 +31,7 @@ export const EFFECT_PLISTS = [
   "speedEffect_normal", "speedEffect_fast", "speedEffect_vfast", "speedEffect_vvfast",
   "coinPickupEffect", "endEffectPortal", "levelComplete01", "firework",
   "boost_01_effect", "boost_02_effect", "boost_03_effect", "boost_04_effect",
-  "glitterEffect", "dashEffect",
+  "glitterEffect", "dashEffect", "swingBurstEffect",
 ] as const;
 export type EffectName = typeof EFFECT_PLISTS[number];
 export type EffectLibrary = ReadonlyMap<EffectName, ParticleConfig>;
@@ -116,11 +116,16 @@ export class PlayerEffects {
   readonly robotBurst: CCEmitter;
   /** GD 2.209 `[0x8a0]`: dashEffect, relative, resumed only while dashing. */
   readonly dash: CCEmitter;
+  /** GD 2.2 `[0x8a0]`/`[0x8a8]`: swingBurstEffect ×2, grouped — swing tap / direction change */
+  readonly swingBurst?: [CCEmitter, CCEmitter];
   /** `setupStreak`: streak 1 = `CCMotionStreak(0.3, 5, 10, white, streak_01_001)` */
   readonly streak = new MotionStreak(0.3, 5, 10);
   readonly wave = new WaveTrail();
   /** `hitGround` alternates between its two landing emitters (`[0x8b0]`) */
   private landNext = 0;
+  private swingBurstNext = 0;
+  private wasSwing = false;
+  private lastSwingGravity = false;
   /** the drag keeps emitting 0.06 s after leaving the ground (`update` +1968..2052) */
   private dragGrace = 0;
   private streakOn = false;
@@ -182,6 +187,19 @@ export class PlayerEffects {
     this.dash.positionType = "relative";
     this.dash.stop();
     this.setDashColor([255, 255, 255]);
+
+    const sb = lib.get("swingBurstEffect");
+    if (sb) {
+      this.swingBurst = [new CCEmitter(sb), new CCEmitter(sb)];
+      for (const s of this.swingBurst) {
+        s.positionType = "grouped";
+        s.cfg.duration = 0.05;
+        // Native overrides: start (1, 0.392, 0, 1), end red (1, 0, 0, 1)
+        s.cfg.startColor = [1, 100 / 255, 0, 1];
+        s.cfg.endColor = [1, 0, 0, 1];
+        s.stop();
+      }
+    }
   }
 
   /** `updateGlowColor`: tint the drag, landing and streak from the kit */
@@ -231,10 +249,30 @@ export class PlayerEffects {
     this.streakOn = false;
     this.dragGrace = 0;
     this.wasGround = true;
+    this.wasSwing = false;
+    this.lastSwingGravity = false;
   }
 
   emitters(): CCEmitter[] {
-    return [this.drag, this.flame, this.thrust, this.shipDrag, this.land[0], this.land[1], this.robotBurst, this.dash];
+    const list = [this.drag, this.flame, this.thrust, this.shipDrag, this.land[0], this.land[1], this.robotBurst, this.dash];
+    if (this.swingBurst) list.push(...this.swingBurst);
+    return list;
+  }
+
+  /**
+   * GD 2.2 swing direction-change burst (`[0x8a0]`/`[0x8a8]`):
+   * Alternates between the two grouped emitters at the rear of the swing copter (-10 * size, 0).
+   */
+  triggerSwingBurst(px: number, py: number, mini: boolean, gravityFlipped: boolean) {
+    if (!this.swingBurst) return;
+    const size = mini ? 0.6 : 1;
+    const g = gravityFlipped ? -1 : 1;
+    const e = this.swingBurst[this.swingBurstNext];
+    this.swingBurstNext ^= 1;
+    e.x = px - 10 * size;
+    e.y = py;
+    e.cfg.gravityY = -Math.abs(e.cfg.gravityY) * g;
+    e.reset();
   }
 
   /**
@@ -330,6 +368,17 @@ export class PlayerEffects {
       // startDashing deactivates the normal streak, even for flying modes.
       this.streakOn = false;
     } else if (this.dash.active) this.dash.stop();
+
+    // --- swing direction-change burst (`[0x8a0]`/`[0x8a8]`) ---
+    if (p.mode === "swing") {
+      if (this.wasSwing && p.gravityFlipped !== this.lastSwingGravity) {
+        this.triggerSwingBurst(p.x, p.y, p.mini, p.gravityFlipped);
+      }
+      this.lastSwingGravity = p.gravityFlipped;
+      this.wasSwing = true;
+    } else {
+      this.wasSwing = false;
+    }
 
     for (const e of this.emitters()) e.update(dt);
 

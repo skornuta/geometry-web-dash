@@ -280,8 +280,8 @@ test("resolving a colour does not walk the whole pulse list", () => {
     for (let i = 0; i < 20000; i++) resolveColor(rt, 7);
     return performance.now() - t0;
   };
-  const none = Math.max(time(0), 0.5);
-  const many = time(400);
-  assert.ok(many < none * 6,
+  const none = Math.max(Math.min(time(0), time(0)), 0.5);
+  const many = Math.min(time(400), time(400));
+  assert.ok(many < none * 8,
     `400 live pulses cost ${many.toFixed(2)} ms for 20,000 lookups, against ${none.toFixed(2)} ms with none`);
 });

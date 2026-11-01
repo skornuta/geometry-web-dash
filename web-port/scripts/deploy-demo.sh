@@ -8,4 +8,16 @@ GD_BASE=/geometry-web-dash-demo/ npm run build
 # replace everything but the repo's own files
 find "$DEMO" -mindepth 1 -maxdepth 1 ! -name .git ! -name README.md ! -name .nojekyll -exec rm -rf {} +
 cp -R dist/. "$DEMO"/
-cd "$DEMO" && git add -A && git commit -m "Update demo build" && git push
+cd "$DEMO"
+for i in 1 2 3 4 5; do
+  if git add -A 2>/dev/null; then
+    break
+  fi
+  sleep 0.2
+done
+git add -A
+if git diff --cached --quiet; then
+  echo "Demo build is already up to date."
+else
+  git commit -m "Update demo build" && git push
+fi
