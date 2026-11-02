@@ -4,7 +4,8 @@
 set -e
 DEMO="${DEMO_DIR:-$(cd .. && cd .. && pwd)/geometry-web-dash-demo}"
 [ -d "$DEMO/.git" ] || { echo "no demo repo at $DEMO (set DEMO_DIR)"; exit 1; }
-GD_BASE=/geometry-web-dash-demo/ npm run build
+# relative base: the build works under any repo name, so forks need no changes
+GD_BASE=./ npm run build
 # replace everything but the repo's own files
 find "$DEMO" -mindepth 1 -maxdepth 1 ! -name .git ! -name README.md ! -name .nojekyll -exec rm -rf {} +
 cp -R dist/. "$DEMO"/
